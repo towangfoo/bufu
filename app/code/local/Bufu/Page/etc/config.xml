@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_Page>
+            <version>0.1.0</version>
+        </Bufu_Page>
+    </modules>
+    <global>
+        <blocks>
+            <page>
+                <rewrite>
+                    <html>Bufu_Page_Block_Html</html>
+                </rewrite>
+            </page>
+        </blocks>
+    </global>
+</config>

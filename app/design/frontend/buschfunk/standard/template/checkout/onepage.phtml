@@ -1,0 +1,54 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Checkout > Onepage
+ */
+?>
+<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+
+<div class="page-head">
+    <h2><?php echo $this->__('Complete Checkout') ?></h2>
+</div>
+
+<ol id="checkoutSteps" class="one-page-checkout">
+<?php $i=1; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; ?>
+    <?php
+        // do not show login method section!
+        if ($_stepId != 'login') :
+    ?>
+    <li id="opc-<?php echo $_stepId ?>" class="section <?php echo !empty($_stepInfo['allow'])?'allow':'' ?> <?php echo !empty($_stepInfo['complete'])?'saved':'' ?>">
+        <div class="head">
+            <h3><span class="step-count">Schritt <?php echo $i ?></span> &nbsp;<?php echo $_stepInfo['label'] ?></h3><a href="#"><?php echo $this->__('Edit') ?></a>
+        </div>
+        <div id="checkout-step-<?php echo $_stepId ?>" class="box<?php if($_stepId=='shipping_method'): ?>-no-padding<?php endif; ?> a-item" style="display:none;">
+            <?php echo $this->getChildHtml($_stepId) ?>
+        </div>
+    </li>
+    <?php $i++; endif; ?>
+<?php endforeach ?>
+</ol>
+
+<script type="text/javascript">
+//<![CDATA[
+    var accordion = new Accordion('checkoutSteps', '.head', true);
+    <?php if($this->getActiveStep()): ?>
+    accordion.openSection('opc-<?php echo $this->getActiveStep() ?>');
+    <?php endif ?>
+
+    var checkout = new Checkout(accordion,{
+        progress: '<?php echo $this->getUrl('checkout/onepage/progress') ?>',
+        review: '<?php echo $this->getUrl('checkout/onepage/review') ?>',
+        saveMethod: '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>',
+        failure: '<?php echo $this->getUrl('checkout/cart') ?>'},
+        true <?php /* automatically use guest checkout method */ ?>
+    );
+
+    Event.observe(window, "load", function() {
+        checkout.fireAutoSetGuestCheckout();
+    });
+
+//]]>
+</script>

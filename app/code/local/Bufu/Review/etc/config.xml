@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_Review>
+            <version>0.1.0</version>
+        </Bufu_Review>
+    </modules>
+    <global>
+        <events>
+            <bufu_review_controller_product_post>
+                <observers>
+                    <bufuObserver>
+                        <type>singleton</type>
+                        <class>bufuObserver/review</class>
+                        <method>bufu_review_controller_product_post</method>
+                    </bufuObserver>
+                </observers>
+            </bufu_review_controller_product_post>
+        </events>
+    </global>
+    
+    <default>
+        <catalog>
+            <review>
+                <notification_send>0</notification_send>
+                <notification_sender>shop@buschfunk.com</notification_sender>
+                <notification_sendername>BuschFunk</notification_sendername>
+            </review>
+        </catalog>
+    </default>
+    
+    <!-- change routing for review controller -->
+    <frontend>
+        <routers>
+            <review>
+                <use>standard</use>
+                <args>
+                    <module>Bufu_Review</module>
+                    <frontName>review</frontName>
+                </args>
+            </review>
+        </routers>
+    </frontend>
+</config>

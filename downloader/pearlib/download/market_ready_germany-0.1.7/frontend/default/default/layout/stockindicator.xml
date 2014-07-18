@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Symmetrics
+ * @package Symmetrics_StockIndicator
+ * @author symmetrics gmbh <info@symmetrics.de>, Andreas Timm <at@symmetrics.de>
+ * @copyright symmetrics gmbh
+ * @license http://opensource.org/licenses/osl-3.0.php  Open Software 
+ */
+--> 
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/stock_indicator.css</stylesheet></action>
+        </reference>
+    </default>
+    <catalog_product_view>
+        <reference name="alert.urls">
+			<block type="stockindicator/indicator" name="product.info.stockindicator" template="stockindicator/indicator.phtml"/>
+        </reference>
+    </catalog_product_view>
+</layout>

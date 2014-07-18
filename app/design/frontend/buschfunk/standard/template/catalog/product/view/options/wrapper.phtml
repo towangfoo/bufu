@@ -1,0 +1,15 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Catalog > View > Options Wrapper
+ */
+?>
+
+<fieldset class="product-options" id="product-options-wrapper">
+    <h4>Optionen für dieses Produkt:</h4>
+    <?php echo $this->getChildHtml('', true, true);?>
+    <?php if ($this->hasRequiredOptions()):?>
+        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+    <?php endif;?>
+    </fieldset>
+<script type="text/javascript">decorateGeneric($$('#product-options-wrapper dl'), ['last']);</script>

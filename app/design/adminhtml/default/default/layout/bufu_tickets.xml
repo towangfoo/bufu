@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Layout updates for Ticket products.
+ *
+ * TODO: License
+ *
+ * @category   Que
+ * @package    Que_Mytunes
+ * @author     Steffen Mücke <mail@quellkunst.de>
+ */
+-->
+
+<layout version="0.1.0">
+
+    <!-- add Tab to show Ticket Options with Simple Products -->
+    <adminhtml_catalog_product_simple>
+        <reference name="head">
+            <action method="addJs"><script>bufu/tickets/adminhtml.js</script></action>
+            <action method="addCss"><stylesheet>bufu_styles.css</stylesheet></action>
+        </reference>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>bufu_tickets_events</name>
+                <block>bufu_tickets/adminhtml_catalog_product_edit_tab_event</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_simple>
+
+</layout>

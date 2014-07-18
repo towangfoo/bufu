@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_Review>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+               <Mage_Review />
+            </depends>
+        </Bufu_Review>
+    </modules>
+</config>

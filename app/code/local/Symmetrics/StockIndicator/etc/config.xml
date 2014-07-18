@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Symmetrics
+ * @package Symmetrics_StockIndicator
+ * @author symmetrics gmbh <info@symmetrics.de>, Andreas Timm <at@symmetrics.de>, Eric Reiche <er@symmetrics.de>
+ * @copyright symmetrics gmbh
+ * @license http://opensource.org/licenses/osl-3.0.php  Open Software 
+ */
+-->
+<config>
+	<modules>
+		<Symmetrics_StockIndicator>
+			<version>0.1.6</version>
+		</Symmetrics_StockIndicator>
+	</modules>
+	<global>
+		<blocks>
+            <stockindicator>
+                <class>Symmetrics_StockIndicator_Block</class>
+            </stockindicator>
+		</blocks>
+		<models>
+            <stockindicator>
+                <class>Symmetrics_StockIndicator_Model</class>
+            </stockindicator>
+		</models>
+        <resources>
+            <stockindicator_setup>
+                <setup>
+                    <module>Symmetrics_StockIndicator</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </stockindicator_setup>
+            <stockindicator_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </stockindicator_write>
+            <stockindicator_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </stockindicator_read>
+        </resources>
+	</global>
+    <frontend>
+        <layout>
+            <updates>
+                <stockindicator>
+                    <file>stockindicator.xml</file>
+                </stockindicator>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Symmetrics_StockIndicator>
+                    <files>
+                        <default>Symmetrics_StockIndicator.csv</default>
+                    </files>
+                </Symmetrics_StockIndicator>
+            </modules>
+        </translate>
+    </adminhtml>
+</config>

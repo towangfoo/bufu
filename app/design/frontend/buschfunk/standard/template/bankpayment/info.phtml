@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * BuschFunk Templates
+ * Payment > Info
+ */
+
+?>
+<div class="payment-info">
+    <p class="title"><?php echo $this->getMethod()->getTitle(); ?></p>
+    <dl>
+        <?php if ($this->getMethod()->getAccountHolder()): ?>
+            <dt><?php echo $this->__('Payment Account holder') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getAccountHolder()) ?></dd>
+        <?php endif; ?>
+        <?php if ($this->getMethod()->getAccountNumber()): ?>
+            <dt><?php echo $this->__('Payment Account number') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getAccountNumber()) ?></dd>
+        <?php endif; ?>
+        <?php if ($this->getMethod()->getSortCode()): ?>
+            <dt><?php echo $this->__('Payment Sort code') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getSortCode()) ?></dd>
+        <?php endif; ?>
+        <?php if ($this->getMethod()->getBankName()): ?>
+            <dt><?php echo $this->__('Payment Bank name') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getBankName()) ?></dd>
+        <?php endif; ?>
+        <?php if ($this->getMethod()->getIBAN() && $this->getMethod()->getBIC()): ?>
+            <dt><?php echo $this->__('Payment IBAN') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getIBAN()) ?></dd>
+            <dt><?php echo $this->__('Payment BIC') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getBIC()) ?></dd>
+        <?php endif; ?>
+        <?php if ($this->getMethod()->getCustomText()): ?>
+            <dt><?php echo $this->__('Additional Payment Information') ?></dt>
+            <dd><?php echo $this->htmlEscape($this->getMethod()->getCustomText()) ?></dd>
+        <?php endif; ?>
+    </dl>
+</div>

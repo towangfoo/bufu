@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<config>
+
+  <default>
+    <carriers>
+      <!-- Default Werte fuer das Backend -->
+      <shipcalcmodule>
+        <active>1</active>
+              <allowed_methods>shipcalc</allowed_methods>
+              <methods>shipcalc</methods>
+        <sallowspecific>0</sallowspecific>
+        <model>Mxperts_ShipCalc_Model_Carrier_ShippingMethod</model>
+        <name>Ship Calc</name>
+        <title>Ship Calc</title>
+        <specificerrmsg>
+Zur Zeit ist die Versandmethode nicht verfuegbar
+        </specificerrmsg>
+        <handling_type>F</handling_type>
+      </shipcalcmodule>
+    </carriers>
+  </default>
+
+    <modules>
+<!-- Modulversion definbieren -->
+    <Mxperts_ShipCalc>
+<!-- Diese Version wird fuer Datenbankupdates verwendet -->
+      <version>0.2.0</version>
+    </Mxperts_ShipCalc>
+  </modules>
+
+  <global>
+
+    <models>
+<!-- Alias/Namespace fuer Mage::getModel() -->
+      <shipcalcmodule>
+<!-- Basis-Klasse -->
+        <class>Mxperts_ShipCalc_Model</class>
+      </shipcalcmodule>
+    </models>
+
+    <resources>
+<!-- resource identifier -->
+      <shipcalcmodule_setup>
+<!--  Setup resource fuer upgrades definieren -->
+        <setup>
+<!-- Diese Modul fuer install/upgrade -->
+          <module>Mxperts_ShipCalc</module>
+        </setup>
+<!-- Datenbankverbindung definieren -->
+        <connection>
+<!-- Vordefinierte Verbindung nutzen (core setup) -->
+          <use>core_setup</use>
+        </connection>
+      </shipcalcmodule_setup>
+    </resources>
+
+  </global>
+
+</config>

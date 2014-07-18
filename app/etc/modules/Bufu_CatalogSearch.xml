@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_CatalogSearch>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+               <Mage_CatalogSearch />
+            </depends>
+        </Bufu_CatalogSearch>
+    </modules>
+</config>

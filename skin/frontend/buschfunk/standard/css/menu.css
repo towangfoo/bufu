@@ -1,0 +1,114 @@
+/**
+ * BuschFunk Css Menu
+ */
+
+#nav { padding:0 6px 20px 14px; font-size:1.0em; }
+
+/************** ALL LEVELS  *************/ /* Style consistent throughout all nav levels */
+#nav li {
+    position:relative;
+    text-align:left;
+    background:url(../images/menu_divider_orange.png) right top no-repeat;
+    padding-top:1px;
+}
+#nav li.over { z-index:999; }
+#nav a,
+#nav a:hover { display:block; line-height:1.3em; text-decoration:none; }
+#nav span { display:block; cursor:pointer; white-space:nowrap; }
+#nav li ul span { white-space:normal; }
+
+/************ 0 LEVEL  ***************/
+#nav li { display:block; }
+#nav li.active a { background-color:#F5E5D0; }
+#nav a { display:block; padding:3px 18px 4px 8px; color:#222; font-weight:bold; text-align:left; }
+#nav li.over a,
+#nav a:hover { background-color:#ffe2be; }
+
+/************ 1ST LEVEL ************/
+#nav ul li,
+#nav ul li.active,
+#nav li.over ul li {
+    float:none;
+    margin:0;
+    padding-top:0;
+    padding-bottom:1px;
+    background:#f9f5ed url(../images/menu_divider_grey.png) right bottom no-repeat;
+	position:relative
+}
+#nav ul li.last { background:#ecf3f6; padding-bottom:0; }
+#nav ul a,
+#nav ul a:hover { float:none; padding:0; background:none; }
+#nav ul a,
+#nav li.over ul li a {
+    background-color:#f9f5ed;
+}
+#nav ul a:hover,
+#nav li.over ul li a:hover {
+    background-color:#ffe2be;
+}
+#nav ul li a { font-weight:normal !important; }
+
+/************ 2ND LEVEL ************/
+#nav ul {
+	padding-left:10px;
+	display:none;
+    width:14em;
+    border-top:1px solid #ffa904;
+	margin-bottom:4px
+}
+#nav ul a, #nav ul ul a { text-align:left; }
+
+/* Show menu */
+#nav li.over > ul { display:block }
+#nav li.over ul ul { display:none}
+
+#nav ul span, #nav ul li.last li span { padding:3px 15px 4px 15px;}
+
+/************ 3RD+ LEVEL ************/
+#nav ul ul { position:absolute; left:150px; top:-1px}
+
+#nav li.over > ul li.over ul { display:block }
+
+/************ ICONS *****************/
+#nav li.level0 > a > span {
+    padding-left:22px;
+   /* background:url(../images/icons/cart_add.png) left top no-repeat; */
+}
+#nav li.level0.nav-musik > a > span,
+.category-head h2.cat-4 {
+   /* background-image:url(../images/icons/music.png); */
+}
+#nav li.level0.nav-buecher > a > span,
+.category-head h2.cat-20 {
+   /* background-image:url(../images/icons/book_grey.png); */
+}
+#nav li.level0.nav-hoerbuecher > a > span {
+   /* background-image:url(../images/icons/audiobook.png); */
+    background-position: -2px 1px;
+}
+.category-head h2.cat-5 {
+   /* background-image:url(../images/icons/audiobook.png); */
+    background-position: -2px 9px;
+}
+#nav li.level0.nav-spiele-kalender > a > span,
+.category-head h2.cat-6 {
+   /* background-image:url(../images/icons/status_offline.png); */
+}
+#nav li.level0.nav-dvd > a > span,
+.category-head h2.cat-7 {
+   /* background-image:url(../images/icons/television_grey.png); */
+}
+#nav li.level0.nav-angebote > a > span,
+.category-head h2.cat-8 {
+   /* background-image:url(../images/icons/thumb_up_grey.png); */
+}
+#nav li.level0.nav-konzertkarten > a > span,
+.category-head h2.cat-9 {
+   /* background-image:url(../images/icons/money_grey.png); */
+}
+#nav li.level0.nav-companyLink > a > span {
+   /* background-image:url(../images/icons/door_out_grey.png); */
+}
+#nav .nav-companyLink a {
+    color:#888;
+}

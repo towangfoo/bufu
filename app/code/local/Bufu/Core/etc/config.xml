@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_Core>
+            <version>0.1.0</version>
+        </Bufu_Core>
+    </modules>
+    <global>
+        <blocks>
+            <core>
+                <rewrite>
+                    <messages>Bufu_Core_Block_Messages</messages>
+                </rewrite>
+            </core>
+        </blocks>
+        <models>
+            <core>
+                <rewrite>
+                    <email_template>Bufu_Core_Model_Email_Template</email_template>
+                </rewrite>
+            </core>
+        </models>
+    </global>
+    
+    <default>
+        <system>
+            <smtp>
+                <disable>0</disable>
+                <host>buschfunk.com</host>
+                <port>25</port>
+                <auth>LOGIN</auth>
+                <username></username>
+                <password></password>
+            </smtp>
+            <neuerscheinungen>
+                <!-- 87 für konsum, 45 für local -->
+                <category_id>87</category_id>
+            </neuerscheinungen>
+        </system>
+    </default>
+</config>

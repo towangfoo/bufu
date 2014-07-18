@@ -1,0 +1,47 @@
+.gfx-button {
+    border:0;
+    display:block;
+    float:left;
+    margin-left:10px;
+    background:transparent url(../../../frontend/buschfunk/standard/images/defaults/gfxbtn_r.png) right top no-repeat;
+    height:24px;
+    text-decoration:none;
+    font:13px/1.5em Helvetica, "HelveticaNeue", Arial, sans-serif;
+}
+.gfx-button span {
+    display:block;
+    position:relative;
+    left:-10px;
+    height:24px;
+    background:transparent url(../../../frontend/buschfunk/standard/images/defaults/gfxbtn_l.png) left top no-repeat;
+    padding:0 0 0 10px;
+    color:#fff;
+    line-height:24px;
+    cursor:pointer;
+}
+.gfx-button span span {
+    left:0;
+    padding-left:20px;
+    background-position:left 3px;
+    background-repeat:no-repeat;
+    background-image:none;
+}
+.gfx-button span.printer {
+    background-image: url(./images/printer.png);
+}
+.right {
+    float:right;
+}
+
+#bufuTicketsEvents p.notice.not-available {
+    background: #FFF9E9 url("images/error_msg_icon.gif") 10px 8px no-repeat;
+    border: 1px solid #EEE2BE;
+    color: #444444;
+    font-weight: bold;
+    min-height: 23px;
+    padding: 8px 8px 2px 32px;
+}
+#bufuTicketsEvents .form-list textarea {
+    margin-top:5px;
+    height:60px;
+}

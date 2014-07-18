@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Mage
+ * @package    Mage_BankPayment
+ * @copyright  Copyright (c) 2008 Andrej Sinicyn
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+?>
+<ul id="payment_form_<?php echo $this->getMethodCode(); ?>" style="display:none">
+    <li>
+        <div class="input-box">
+            <?php if ($this->getMethod()->getPayWithinXDays() > 0): ?>
+                <?php echo $this->__('Please transfer the money within %s days to the following bank account', $this->getMethod()->getPayWithinXDays()); ?>:
+            <?php else: ?>
+                <?php echo $this->__('Please transfer the money to the following bank account'); ?>:
+            <?php endif; ?><br /><br />
+            <table>
+                <tbody>
+            <?php if ($this->getMethod()->getAccountHolder()): ?>
+                <?php echo '<tr><td><label>' . $this->__('Account holder') . '</label>:</td><td>' . $this->getMethod()->getAccountHolder() . '</td></tr>'; ?>
+            <?php endif; ?>
+            <?php if ($this->getMethod()->getAccountNumber()): ?>
+                <?php echo '<tr><td><label>' . $this->__('Account number') . '</label>:</td><td>' . $this->getMethod()->getAccountNumber() . '</td></tr>'; ?>
+            <?php endif; ?>
+            <?php if ($this->getMethod()->getSortCode()): ?>
+                <?php echo '<tr><td><label>' . $this->__('Sort code') . '</label>:</td><td>' . $this->getMethod()->getSortCode() . '</td></tr>'; ?>
+            <?php endif; ?>
+            <?php if ($this->getMethod()->getBankName()): ?>
+                <?php echo '<tr><td><label>' . $this->__('Bank name') . '</label>:</td><td>' . $this->getMethod()->getBankName() . '</td></tr>'; ?>
+            <?php endif; ?>
+                </tbody>
+            </table>
+            <?php if ($this->getMethod()->getIBAN() && $this->getMethod()->getBIC()): ?>
+                <br /><br />
+                <?php echo $this->__('For international transfers please use also following data') ?>:<br /><br />
+                <table>
+                    <tbody>
+                    <?php echo '<tr><td><label>' . $this->__('IBAN') . '</label>:</td><td>' . $this->getMethod()->getIBAN() . '</td></tr>'; ?>
+                    <?php echo '<tr><td><label>' . $this->__('BIC') . '</label>:</td><td>' . $this->getMethod()->getBIC() . '</td></tr>'; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+            <?php if ($this->getMethod()->getCustomText()): ?>
+                <br />
+                <?php echo $this->getMethod()->getCustomText(); ?><br />
+            <?php endif; ?>
+        </div>
+    </li>
+</ul>

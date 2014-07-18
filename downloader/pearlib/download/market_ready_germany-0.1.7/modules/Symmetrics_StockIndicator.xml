@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Symmetrics_StockIndicator>
+            <codePool>local</codePool>
+            <active>true</active>
+			<depends>
+				<Mage_Catalog />
+			</depends>
+        </Symmetrics_StockIndicator>
+    </modules>
+</config> 

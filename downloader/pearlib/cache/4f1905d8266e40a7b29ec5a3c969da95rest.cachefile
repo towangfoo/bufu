@@ -1,0 +1,52 @@
+a:9:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.package";s:18:"xsi:schemaLocation";s:80:"http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd";}s:1:"n";s:32:"Biebersdorf_CustomerOrderComment";s:1:"c";s:37:"connect.magentocommerce.com/community";s:2:"ca";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:34:"/Chiara_PEAR_Server_REST/c/Default";}s:8:"_content";s:7:"Default";}s:1:"l";s:27:"Open Software License (OSL)";s:2:"lu";s:42:"http://opensource.org/licenses/osl-3.0.php";s:1:"s";s:52:"Enable customers to write comments for their orders.";s:1:"d";s:4927:"<h5>Hotfix for Magento Versions &gt; 1.4.1.0</h5>
+<p>Pleaser  refer to  http://www.widgetsandburritos.com/technical/programming/customer-order-comment-magento-1-4-1-0/  if you use Magento 1.4.1.0 or greater. For Versions &gt; 1.4.1.0 you  will have to create a column in the sales_flat_order table. (Don't  forget to add your database table-prefix, if you use one.)</p>
+<p>Thanks to David Stinemetze (www.widgetsandburritos.com) for sharing the fix with us.</p>
+<p>&nbsp;</p>
+<p>This small extension adds an EAV-Attribute to the order entity model, so customers can write comments for their orders at review in the checkout. No more, no less. It is not the authors intention to build in more functionality in the near future.</p>
+<h5>To get this extension work, some manual changes in the template files are required</h5>
+<p>In the folder /app/code/community/Biebersdorf/CustomerOrderComment/design/ you will find template files as examples for the latest version of the magento default theme. Copy them to the right places of your design theme modification folder or add the needed changes to your existing template files. Please do not overwrite the original template files (better follow the instructions of the <a href="../../../../design_guide">Designer's Guide</a> and set up your own theme)!</p>
+<h5>Explaination for the needed changes in templates</h5>
+<p>You have to add a HTML textarea field in your copies of the files app/design/frontend/default/default/template/checkout/onepage/agreements.phtml and app/design/frontend/default/default/template/checkout/multishipping/agreements.phtml. For Onepage Checkout place the new textarea inside the form (opening and closing form tags) to be sure the comment variable is submitted. Don't forget to &ldquo;enable Terms and Conditions&rdquo; in configuration  for the templates to get shown. You can enable it here: System &gt; Configuration &gt; Sales &gt; Checkout &gt; Checkout Options &gt; Enable Terms and Conditions.  To display the saved order comments you have to customize the templates where you like the comments to be shown (for security reasons don&rsquo;t forget to escape the data with something like htmlspecialchars()):</p>
+<pre>// If there is an order object:<br />echo $_order-&gt;getBiebersdorfCustomerordercomment();
+// If you only have the order-id (e.g. 11), you have to create an instance first:<br />$_order = Mage::getModel('sales/order')-&gt;load(11);<br />echo $_order-&gt;getBiebersdorfCustomerordercomment();</pre>
+<h5>Email Templates (e.g. New Order Confirmation Template)</h5>
+<p>To show the comment in the order confirmation emails, just add the following at a place of your choice in the order-mail-template at "System &gt; Transactional Emails":</p>
+<pre>{{var order.getBiebersdorfCustomerordercomment()}}</pre>
+<p>If you haven't allready, you need to create a new template (you can use "Load Template &gt; New Order") and assign it to "New Order Confirmation Template" at "System &gt; Configuration &gt; Sales &gt; Sales Emails &gt; Order".</p>
+<h5>Changing Admin Templates</h5>
+<p>For changing your admin templates without modifying the original files, you will have to setup a new admin theme (highly recommended). Please take a look at this <a href="../../../../viewthread/17306/#t64504">Thread about setting up a Custom Admin Theme</a>, if you don't know how to do this.</p>
+<h5>Bugs</h5>
+<p>Please report Bugs in the <a href="../../../../viewforum/13268/">Forum for this Extension</a>. Feel free to <a href="../../../../extension/reviews/module/1036/customer-order-comment">write a review and rate this extension</a>.</p>
+<h5>Release History</h5>
+<ul>
+<li><strong>0.1.3</strong> 
+<ul class="r-menu-layer-list" style="margin-top: 0; margin-bottom: 0px;">
+<li>Fixed Issue: Minor corrections of example template files for 1.4.0.1 compatibility</li>
+<li>Added Language: nl_NL<br />(thanks to user Wilco)</li>
+</ul>
+</li>
+<li><strong>0.1.2</strong> 
+<ul class="r-menu-layer-list" style="margin-top: 0; margin-bottom: 0px;">
+<li>Fixed Issue: Do not create a database entry if the customer does not add a comment<br />(thanks to user Incognito for suggestion)</li>
+<li>Added Language: th_TH</li>
+</ul>
+</li>
+<li><strong>0.1.1</strong> 
+<ul class="r-menu-layer-list" style="margin-top: 0; margin-bottom: 0px;">
+<li>Fixed Issue: Now working with multishipping checkout<br />(thanks to user bdz69 for reporting)</li>
+<li>Added Template: /checkout/multishipping/agreements.phtml</li>
+<li>Stability Change: Changed from alpha to beta</li>
+</ul>
+</li>
+<li><strong>0.0.5</strong> 
+<ul class="r-menu-layer-list" style="margin-top: 0; margin-bottom: 0px;">
+<li>Fixed Issue: Installation on DB with table prefix<br />(thanks to user lbeetles for reporting)</li>
+<li>Added Language: en_GB</li>
+</ul>
+</li>
+<li><strong>0.0.4</strong> 
+<ul class="r-menu-layer-list" style="margin-top: 0; margin-bottom: 0px;">
+<li> Initial release</li>
+</ul>
+</li>
+</ul>";s:1:"r";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:59:"/Chiara_PEAR_Server_REST/r/Biebersdorf_CustomerOrderComment";}}}

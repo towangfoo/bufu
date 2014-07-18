@@ -1,0 +1,12 @@
+a:9:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.package";s:18:"xsi:schemaLocation";s:80:"http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd";}s:1:"n";s:25:"RicoNeitzel_PaymentFilter";s:1:"c";s:37:"connect.magentocommerce.com/community";s:2:"ca";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:34:"/Chiara_PEAR_Server_REST/c/Default";}s:8:"_content";s:7:"Default";}s:1:"l";s:27:"Open Software License (OSL)";s:2:"lu";s:42:"http://opensource.org/licenses/osl-3.0.php";s:1:"s";s:94:"Enables you to limit payment method based on selection for customer groups or single products.";s:1:"d";s:744:"With this Plugin you'll find within System -> Configuration -> Checkout and Customers -> Customer Groups and within each price-section of a product a new section where you can filter for different payment methods.
+
+After Installation you have to setup your customer groups to ENABLE for each payment method.
+
+On the other hand products have the ability to DISABLE single payment methods.
+
+Please remove old version of "cGroupPayments" and execute the following SQLstatement inside you database:
+ALTER TABLE `customer_group` DROP `allowed_payment_methods`; to remove old table columns.
+
+Thanks to Kiat Siong Ng (screenname kiatng) for the bugreport.
+
+Thanks to Netzarbeiter Vinai Kopp and Medienagenten for Sponsorship of the preliminary module!";s:1:"r";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:52:"/Chiara_PEAR_Server_REST/r/RicoNeitzel_PaymentFilter";}}}

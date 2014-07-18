@@ -1,0 +1,28 @@
+a:9:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.package";s:18:"xsi:schemaLocation";s:80:"http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd";}s:1:"n";s:12:"DebitPayment";s:1:"c";s:37:"connect.magentocommerce.com/community";s:2:"ca";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:34:"/Chiara_PEAR_Server_REST/c/Default";}s:8:"_content";s:7:"Default";}s:1:"l";s:27:"Open Software License (OSL)";s:2:"lu";s:42:"http://opensource.org/licenses/osl-3.0.php";s:1:"s";s:57:"Stellt die Zahlungsmöglichkeit Bankeinzug zur Verfügung";s:1:"d";s:1152:"Gerade in Deutschland gehört die Lastschrift (Bankeinzug) zu den populärsten Zahlungsmöglichkeiten. Mit Hilfe dieser Erweiterung können Sie Ihren Kunden die Zahlungsmöglichkeit Lastschrift anbieten.
+
+
+Changelog:
+
+0.3
+- Anzeige der Bankdaten in der Rechnung
+- Anlegen von Bestellungen im Backend nun mit dieser Zahlungsart möglich
+- Bearbeiten von Bestellungen mit dieser Zahlungsart möglich
+- Bugfixes
+
+0.2.5.
+- Der Shopbesitzer kann nun einstellen, ob die Bankdaten verschlüsselt oder unverschlüsselt zum Lastschriftverfahren per E-Mail mitgesendet werden sollen
+
+0.2.1.
+- Bugfix
+
+0.2.0
+- Verschlüsselung der Einträge in der Datenbank
+- Überprüfung der BLZ im Backend und Anzeige, ob ein Fehler vorliegt oder nicht
+
+0.1.0
+- erste Veröffentlichung mit einer Grundfunktionalität
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+This extension was developed only for the german market at the moment because it's one of the most popular payment method there.This extension allows german users to provide this payment method to their customers.";s:1:"r";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:39:"/Chiara_PEAR_Server_REST/r/DebitPayment";}}}

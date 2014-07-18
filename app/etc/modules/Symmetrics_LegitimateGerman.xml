@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Symmetrics_LegitimateGerman>
+			<active>true</active>
+			<codePool>local</codePool>
+			<depends>
+				<Mage_Checkout />
+			</depends>
+		</Symmetrics_LegitimateGerman>     
+	</modules>
+</config>

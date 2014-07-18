@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+* BouncingOrange TinyBrowser Extension
+*
+* @category   BouncingOrange
+* @package    BouncingOrange_TinyBrowser
+* @author     Pierre ROUSSET (p.rousset@gmail.com)
+* @copyright  Copyright (c) 2009 BouncingOrange (http://www.bouncingorange.com)
+* @license    http://opensource.org/licenses/gpl-2.0.php  General Public License (GPL 2.0)
+*/
+-->
+<config>
+    <modules>
+        <BouncingOrange_TinyBrowser>
+            <active>true</active>
+            <codePool>community</codePool>
+        </BouncingOrange_TinyBrowser>
+    </modules>
+</config>

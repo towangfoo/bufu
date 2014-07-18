@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+    <catalog_product_view>
+        <reference name="head">
+            <action method="addJs"><script>bufu/tickets/store.js</script></action>
+            <action method="addCss"><stylesheet>css/bufu_tickets.css</stylesheet></action>
+        </reference>
+        <reference name="product.info">
+            <block type="bufu_tickets/catalog_product_view_options" name="bufu_tickets.view.options" as="bufu_tickets.view.options" before="-" template="bufu/tickets/catalog/product/view/options.phtml">
+                <block type="bufu_tickets/catalog_product_view_addtocart" name="bufu_tickets.addtocart" as="bufu_tickets.addtocart" template="bufu/tickets/catalog/product/view/addtocart.phtml" />
+            </block>
+        </reference>
+        <reference name="product.info.options.wrapper.bottom">
+            <action method="setTemplate"><path>bufu/tickets/catalog/product/view/options/wrapper/bottom.phtml</path></action>
+        </reference>
+    </catalog_product_view>
+</layout>

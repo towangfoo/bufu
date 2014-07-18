@@ -1,0 +1,21 @@
+a:14:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.release";s:18:"xsi:schemaLocation";s:81:"http://pear.php.net/dtd/rest.release     http://pear.php.net/dtd/rest.release.xsd";}s:1:"p";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:52:"/Chiara_PEAR_Server_REST/p/riconeitzel_paymentfilter";}s:8:"_content";s:25:"RicoNeitzel_PaymentFilter";}s:1:"c";s:37:"connect.magentocommerce.com/community";s:1:"v";s:9:"0.1.5beta";s:2:"st";s:4:"beta";s:1:"l";s:8:"OSL v3.0";s:1:"m";s:12:"magentoadmin";s:1:"s";s:120:"Select which payment methods are available for
+every customer group. Also, Payment methods can be disabled for products.";s:1:"d";s:975:"This module enables you to select which payment methods are available for
+every customer group. Also, Payment methods can be disabled for products.
+A customer can only use the payment methods during checkout
+available to his customer group AND not disabled for the products in the
+shopping cart.
+
+It was created by Vinai Kopp <vinai@netzarbeiter.com> for Rico Neitzel
+(http://n-punkt.de/).
+
+After installing this extension you have to configure the payment
+methods available to each customer group. You can do that in the admin interface
+under Customers > Customer Groups. The default is NONE, so if you don't do that NO
+payment methods will be available, abd the customer can not check out.
+
+The default for products is to allow ALL payment methods, so you only have to touch
+the product level configuration if you want to disable payment methods for specific
+products.
+
+The whole extension can be disabled in System > Config > Sales > Checkout on a
+Global or Website scope.";s:2:"da";s:19:"2010-03-16 18:39:10";s:1:"n";s:4:"none";s:1:"f";s:4:"9378";s:1:"g";s:84:"http://connect.magentocommerce.com/community/get/RicoNeitzel_PaymentFilter-0.1.5beta";s:1:"x";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:21:"package.0.1.5beta.xml";}}}

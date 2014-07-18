@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Symmetrics_ExtBankpayment>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_BankPayment />
+            </depends>
+        </Symmetrics_ExtBankpayment>
+    </modules>
+</config>

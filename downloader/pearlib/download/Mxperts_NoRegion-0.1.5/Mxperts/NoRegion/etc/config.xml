@@ -1,0 +1,75 @@
+<!--
+/**
+ * @category Mxperts
+ * @package Mxperts_NoRegion
+ * @authors TMEDIA cross communications <info@tmedia.de>, Johannes Teitge <teitge@tmedia.de>, Igor Jankovic <jankovic@tmedia.de>, Daniel Sasse <info@golox-web.de>
+ * @developer Daniel Sasse <info@golox-web.de, http://www.golox-web.de/>  
+ * @version 0.1.5
+ * @copyright TMEDIA cross communications, Doris Teitge-Seifert
+ * @license http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)  
+ */
+ -->
+<config>
+	<modules>
+        <Mxperts_NoRegion>
+            <version>0.1.5</version>
+			<depends>
+                <Mage_Adminhtml />
+				<Mage_Customer />
+				<Mage_Checkout />
+            </depends>
+        </Mxperts_NoRegion>
+    </modules>
+    
+	<global>	
+	
+		<blocks>			
+			<adminhtml>
+				<rewrite>
+					<customer_grid>Mxperts_NoRegion_Block_Customer_Grid</customer_grid>
+				</rewrite>
+				<rewrite>
+					<customer_edit_tab_addresses>Mxperts_NoRegion_Block_Customer_Edit_Tab_Addresses</customer_edit_tab_addresses>				
+				</rewrite> 				 
+			</adminhtml>
+		</blocks>
+		
+		<models>			
+			 <customer>
+                <rewrite>
+                    <address>Mxperts_NoRegion_Model_Address</address>
+                </rewrite>
+			</customer> 
+			<sales>
+                <rewrite>
+                    <quote_address>Mxperts_NoRegion_Model_Quote_Address</quote_address>
+                </rewrite>
+            </sales>
+        </models>
+		
+		<helpers>
+            <noregion>
+                <class>Mxperts_NoRegion_Helper_Data</class>
+            </noregion>
+        </helpers>
+		
+    </global>
+	
+	<frontend>
+		<layout>
+			<updates>
+				<noregion>
+					<file>noregion.xml</file>
+				</noregion>
+			</updates>
+		</layout>
+	</frontend>	
+	
+	<default>
+		<customer>
+			<noregion>
+				<enabled>1</enabled>
+			</noregion>
+		</customer>
+	</default>
+</config>

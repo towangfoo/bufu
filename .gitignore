@@ -1,0 +1,17 @@
+app/etc/local.*
+downloader/.cache
+downloader/cache.cfg
+downloader/connect.cfg
+var/cache
+var minifycache
+var/session
+var/locks
+var/package
+var/import
+var/export
+var/log
+var/report
+var/tmp
+media/catalog
+media/tmp
+media/useruploads

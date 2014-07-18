@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <BoutikCircus_DeleteOrders>
+            <active>true</active>
+            <codePool>community</codePool>
+        </BoutikCircus_DeleteOrders>
+    </modules>
+</config>

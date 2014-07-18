@@ -1,0 +1,37 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Checkout > Rewiew > Agreements
+ */
+?>
+<?php
+/**
+ * @see Mage_Checkout_Block_Agreements
+ */
+?>
+
+<?php if (!$this->getAgreements()) return; ?>
+
+<p class="hint">
+    <?php echo $this->__('Please read the following terms and conditions and confirm, that you understand and accept them.') ?>
+</p>
+
+<form action="" id="checkout-agreements" onsubmit="return false;">
+<ol class="checkout-agreements">
+<?php foreach ($this->getAgreements() as $_a): ?>
+    <li>
+        <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '')?>>
+            <?php if ($_a->getIsHtml()):?>
+                <?php echo $_a->getContent() ?>
+            <?php else:?>
+                <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+            <?php endif; ?>
+        </div>
+        <p class="agree">
+            <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" />&nbsp;
+            <label for="agreement-<?php echo $_a->getId()?>"><?php echo $_a->getCheckboxText()?></label>
+        </p>
+    </li>
+<?php endforeach ?>
+</ol>
+</form>

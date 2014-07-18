@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @package    Mage_Debit
+ * @copyright  Copyright (c) 2009 ITABS GbR - Rouven Alexander Rieker
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+?>
+
+<?php 
+$accountNumber = $this->getInfo()->getCcNumberEnc();
+if(strlen(intval($accountNumber)) == 1) {
+	$accountNumber = Mage::helper('core')->decrypt($accountNumber);
+	$accountNumber = Mage::helper('core')->decrypt($accountNumber);
+}
+$accountBlz = $this->getInfo()->getCcType();
+$accountBlz = Mage::helper('core')->decrypt($accountBlz);
+?>
+
+<?php echo $this->getMethod()->getTitle() ?>
+{{pdf_row_separator}}
+Kontoinhaber: <?php echo $this->htmlEscape($this->getInfo()->getCcOwner()) ?>
+{{pdf_row_separator}}
+Kontonummer: <?php echo $this->htmlEscape($accountNumber) ?>
+{{pdf_row_separator}}
+BLZ: <?php echo $this->htmlEscape($accountBlz) ?>

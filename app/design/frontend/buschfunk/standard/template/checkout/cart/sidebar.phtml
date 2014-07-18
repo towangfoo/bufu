@@ -1,0 +1,35 @@
+<?php
+/**
+ * BuschFunk Templates
+ * > Mini cart in header
+ *
+ * @see Mage_Checkout_Block_Cart_Sidebar
+ */
+?>
+<div class="box mini-cart">
+    <?php $_cartQty = $this->getSummaryCount() ?>
+    <?php if ($_cartQty>0): ?>
+        <div class="head">
+            <?php $_cartQty = $this->getSummaryCount() ?>
+            <strong>Im Warenkorb:</strong>
+            <?php echo $_cartQty ?> Artikel | <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+            <?php /* <small>(<?php echo $this->__("excl. Shipping") ?>)</small> */ ?>
+        </div>
+        <div class="actions">
+            <a class="gfx-button" href="<?php echo $this->getUrl('checkout/cart') ?>" title="<?php echo $this->__('To Cart') ?>">
+                <span>
+                    <span class="cart"><?php echo $this->__('To Cart') ?></span>
+                </span>
+            </a>
+            <a class="gfx-button right" href="<?php echo $this->getCheckoutUrl() ?>" title="<?php echo $this->__('Checkout') ?>">
+                <span>
+                    <span class="cart-go"><?php echo $this->__('Checkout') ?></span>
+                </span>
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="no-items">
+            <p><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+        </div>
+    <?php endif ?>
+</div>

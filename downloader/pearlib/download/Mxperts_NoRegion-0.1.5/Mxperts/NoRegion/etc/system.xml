@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Mxperts
+ * @package Mxperts_NoRegion
+ * @authors TMEDIA cross communications <info@tmedia.de>, Johannes Teitge <teitge@tmedia.de>, Igor Jankovic <jankovic@tmedia.de>, Daniel Sasse <info@golox-web.de>
+ * @developer Daniel Sasse <info@golox-web.de, http://www.golox-web.de/>  
+ * @version 0.1.5
+ * @copyright TMEDIA cross communications, Doris Teitge-Seifert
+ * @license http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)  
+ */
+ -->
+<config>	
+    <sections>
+         <customer translate="label" module="core">
+            <frontend_type>text</frontend_type>
+            <sort_order>920</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <noregion translate="label">
+                    <label>Mxperts - NoRegion</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+							<comment><![CDATA[- <b>Hide</b> the Field <b>State / Province</b>? <br /> - Das Feld <b>Bundesland</b> verstecken?]]></comment> 
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                    </fields>					
+                </noregion>				
+			</groups>
+		</customer>
+    </sections>
+</config>

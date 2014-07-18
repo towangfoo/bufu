@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_CatalogSearch>
+            <version>0.1.0</version>
+        </Bufu_CatalogSearch>
+    </modules>
+    <global>
+        <blocks>
+            <catalogSearch>
+                <rewrite>
+                    <result>Bufu_CatalogSearch_Block_Result</result>
+                </rewrite>
+            </catalogSearch>
+        </blocks>
+        <helpers>
+            <catalogSearch>
+                <rewrite>
+                    <data>Bufu_CatalogSearch_Helper_Data</data>
+                </rewrite>
+            </catalogSearch>
+        </helpers>
+        <models>
+            <catalogSearch>
+                <rewrite>
+                    <query>Bufu_CatalogSearch_Model_Query</query>
+                </rewrite>
+            </catalogSearch>
+        </models>
+    </global>
+</config>

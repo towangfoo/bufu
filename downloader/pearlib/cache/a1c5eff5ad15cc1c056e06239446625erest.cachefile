@@ -1,0 +1,29 @@
+a:9:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.package";s:18:"xsi:schemaLocation";s:80:"http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd";}s:1:"n";s:14:"CashOnDelivery";s:1:"c";s:37:"connect.magentocommerce.com/community";s:2:"ca";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:34:"/Chiara_PEAR_Server_REST/c/Default";}s:8:"_content";s:7:"Default";}s:1:"l";s:27:"Open Software License (OSL)";s:2:"lu";s:42:"http://opensource.org/licenses/osl-3.0.php";s:1:"s";s:105:"Cash on Delivery allows to book additional fee on delivery depending on inland or international delivery.";s:1:"d";s:706:"Changelog
+0.3.4:
+- Fixed tax issue with Market Ready Germany module
+
+0.3.3:
+- Supports control of COD method availability for specific shipment methods 
+- Fixes configuration issue while upgrading from earlier versions
+
+0.3.2:
+- Removed support for MultiShipping checkout
+
+0.3-0.3.1:
+- Uses shipping country instead of billing country in checkout
+- Added COD fee to order total summary
+- Now supports separate tax configuration
+- Fixed several tax issues
+- Fixed some backend issues when creating orders
+
+0.2.1:
+- added Polish locale
+
+0.2.0:
+- finally the shipping costs and taxes are calculated (really) properly
+
+0.1.1:
+- quick update to correctly calculate shipping taxes
+
+0.1.0
+- initial public release";s:1:"r";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:41:"/Chiara_PEAR_Server_REST/r/CashOnDelivery";}}}

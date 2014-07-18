@@ -1,0 +1,89 @@
+<?php
+/**
+ * html to show the Ticket events GUI
+ *
+ * @category   Que
+ * @package    Que_Mytunes
+ * @author     Steffen Mücke <mail@quellkunst.de>
+ */
+?>
+
+<?php if ($this->productIsATicket()) : ?>
+<?php $_product = $this->getProduct() ?>
+<?php if ($_product->getId() == null) : ?>
+<ul class="messages" style="margin-top:3px">
+    <li class="notice-msg">
+        Termine können nur bei einem bestehenden Ticket-Produkt angelegt werden. Bitte speichern Sie zunächst das neue Ticket.<br />
+        Tipp: Klicken Sie auf "Speichern und weiter bearbeiten" um nach dem Speichern direkt mit dem Bearbeiten des Produkts fortzufahren.
+    </li>
+</ul>
+<?php else : ?>
+<div class="grid">
+    <div class="hor-scroll">
+        <table cellspacing="0" class="data border form-list">
+            <colgroup>
+                <col width="15%" />
+                <col width="20%" />
+                <col width="30%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="1" />
+                <col width="1" />
+
+            </colgroup>
+            <thead>
+            <tr class="headings">
+                <th><span class="nobr"><?php echo $this->__('Date')?> <span class="required">*</span></span></th>
+                <th><?php echo $this->__('Location')?> <span class="required">*</span></th>
+                <th><?php echo $this->__('Title and Description')?> <span class="required">*</span></th>
+                <th><?php echo $this->__('Normal price')?> <span class="required">*</span></th>
+                <th><?php echo $this->__('Special Price')?> <span class="required">*</span></th>
+                <th><span class="nobr"><?php echo $this->__('Availability')?></span></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="a-right">
+                        <?php echo $this->getAddEventButtonHtml() ?>
+                    </td>
+                </tr>
+            </tfoot>
+            <tbody id="bufu_tickets_events_body"> </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+    var translations = {};
+        translations.currency = '<?php echo Mage::app()->getStore($_product->getStoreId())->getBaseCurrencyCode() ?>';
+        translations.selectDate = '<?php echo $this->__('Select Date')?>';
+        translations.available = '<?php echo $this->__('Available')?>';
+        translations.someLeft = '<?php echo $this->__('Some left')?>';
+        translations.abendkasse = '<?php echo $this->__('Only Abendkasse')?>';
+        translations.soldOut = '<?php echo $this->__('Sold out')?>';
+        translations.deleteItem = '<?php echo $this->__('Delete')?>';
+        translations.useSpecialPrice = '<?php echo $this->__('Available')?>';
+
+    // main container is bufu_tickets_events_body
+    ticketEvents = new BufuTicketsEvents('bufu_tickets_events_body', translations, <?php echo $this->getEventItemDefaults()->toJson() ?>);
+
+    <?php foreach($this->getExistingEvents() as $event) :
+        $event->setPriceNormal(Mage::helper('bufu_tickets')->getFormattedPrice($event->getPriceNormal()));
+        $event->setPriceSpecial(Mage::helper('bufu_tickets')->getFormattedPrice($event->getPriceSpecial()));
+    ?>
+        ticketEvents.add(<?php echo $event->toJson()?>);
+    <?php endforeach; ?>
+
+    if($('bufu_tickets_events_btn_add')) {
+        Event.observe('bufu_tickets_events_btn_add', 'click', ticketEvents.add.bind(ticketEvents));
+    }
+
+//]]>
+</script>
+<?php endif; ?>
+<?php else : ?>
+    <p class="notice not-available"><?php echo $this->__("This section is only available with products of the attribute set 'Ticket'.") ?></p>
+<?php endif; ?>

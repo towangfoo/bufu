@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Bufu_Newsletter>
+            <version>0.1.0</version>
+        </Bufu_Newsletter>
+    </modules>
+    <global>
+        <blocks>
+            <newsletter>
+                <rewrite>
+                    <subscribe>Bufu_Newsletter_Block_Subscribe</subscribe>
+                </rewrite>
+            </newsletter>
+        </blocks>
+    </global>
+    <frontend>
+        <routers>
+            <bufu_newsletter>
+                <use>standard</use>
+                <args>
+                    <module>Bufu_Newsletter</module>
+                    <frontName>bufu_newsletter</frontName>
+                </args>
+            </bufu_newsletter>
+        </routers>
+    </frontend>
+</config>

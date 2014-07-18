@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category Symmetrics
+ * @package Symmetrics_LegitimateGerman
+ * @author symmetrics gmbh <info@symmetrics.de>, Eugen Gitin <eg@symmetrics.de>
+ * @copyright symmetrics gmbh
+ * @license http://opensource.org/licenses/osl-3.0.php  Open Software 
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>symmetrics/legitimategerman/legitimategerman.js</script></action>
+        </reference>
+    </default>
+    <checkout_cart_index>
+        <reference name="checkout.cart.methods">
+            <block type="core/template" name="cartlink" template="legitimategerman/cartinfo.phtml"/>
+        </reference>
+        <reference name="checkout.cart">
+            <block type="checkout/cart_shipping" name="checkout.cart.shipping" as="shipping" template="legitimategerman/shippinginfo.phtml"/>
+        </reference>
+    </checkout_cart_index>
+</layout>

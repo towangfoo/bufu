@@ -1,0 +1,53 @@
+<table>
+    <thead>
+        <tr>
+            <th>Transaktion fehlgeschlagen.</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <p>
+                    <b>Grund</b><br />
+                    {{var reason}}
+                </p>
+                <p>
+                    <b>Typ</b><br />
+                    {{var checkoutType}}
+                </p>
+                <p>
+                    <b>Kunde:</b><br />
+                    <a href="mailto:{{var customerEmail}}">{{var customer}}</a> &amp;lt;{{var customerEmail}}&amp;gt;
+                </p>
+                <p>
+                    <b>Artikel</b><br />
+                    {{var items}}
+                </p>
+                <p>
+                    <b>Summe:</b><br />
+                    {{var total}}
+                </p>
+                <p>
+                    <b>Rechnungsadresse:</b><br />
+                    {{var billingAddress.format(''html'')}}
+                </p>
+                <p>
+                    <b>Lieferadresse:</b><br />
+                    {{var shippingAddress.format(''html'')}}
+                </p>
+                <p>
+                    <b>Lieferung:</b><br />
+                    {{var shippingMethod}}
+                </p>
+                <p>
+                    <b>Zahlungsmethode:</b><br />
+                    {{var paymentMethod}}
+                </p>
+                <p>
+                    <b>Datum &amp; Zeit:</b><br />
+                    {{var dateAndTime}}
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>
