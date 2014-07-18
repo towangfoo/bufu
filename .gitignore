@@ -3,7 +3,7 @@ downloader/.cache
 downloader/cache.cfg
 downloader/connect.cfg
 var/cache
-var minifycache
+var/minifycache
 var/session
 var/locks
 var/package
