@@ -1,16 +1,3 @@
-###########################################
-## AUTHORISATION FOR DEVLEOPMENT PREVIEW
-
-#AuthName "konsum"
-#AuthType Basic
-#AuthUserFile /var/www/web1/html/.htpasswd
-#require valid-user
-
-############################################
-## Document to show for errors
-
-    ErrorDocument 503 /503/503.html
-
 ############################################
 ## uncomment these lines for CGI mode
 ## make sure to specify the correct cgi php binary file name
@@ -45,7 +32,7 @@
 ## adjust memory limit
 
 #    php_value memory_limit 64M
-    php_value memory_limit 128M
+    php_value memory_limit 256M
     php_value max_execution_time 18000
 
 ############################################
@@ -93,22 +80,22 @@
     # Insert filter on all content
     ###SetOutputFilter DEFLATE
     # Insert filter on selected content types only
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript text/js
+    #AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
 
     # Netscape 4.x has some problems...
-    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    #BrowserMatch ^Mozilla/4 gzip-only-text/html
 
     # Netscape 4.06-4.08 have some more problems
-    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    #BrowserMatch ^Mozilla/4\.0[678] no-gzip
 
     # MSIE masquerades as Netscape, but it is fine
-    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    #BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 
     # Don't compress images
-    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+    #SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
 
     # Make sure proxies don't deliver the wrong content
-    Header append Vary User-Agent env=!dont-vary
+    #Header append Vary User-Agent env=!dont-vary
 
 </IfModule>
 
@@ -133,16 +120,7 @@
 ## you can put here your magento root folder
 ## path relative to web root
 
-    RewriteBase /
-
-############################################
-## rewrite errors to 503 error document
-
-    RewriteRule ^report/.* 503.html [L,R=503]
-
-############################################
-## Compress, Combine and Cache Javascript/CSS
-RewriteRule ^(index.php/)?minify/([^/]+)(/.*.(js|css))$ lib/minify/m.php?f=$3&d=$2
+    #RewriteBase /magento/
 
 ############################################
 ## workaround for HTTP authorization
@@ -183,36 +161,7 @@ RewriteRule ^(index.php/)?minify/([^/]+)(/.*.(js|css))$ lib/minify/m.php?f=$3&d=
 ## Add default Expires header
 ## http://developer.yahoo.com/performance/rules.html#expires
 
-    #ExpiresDefault "access plus 1 year"
-
-              ExpiresActive On
-                ExpiresDefault A0
-
-                # Set up caching on media files for 1 year (forever?)
-                <FilesMatch "\.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav)$">
-                        ExpiresDefault A29030400
-                        Header append Cache-Control "public"
-                </FilesMatch>
-
-                # Set up caching on media files for 2 weeks
-                <FilesMatch "\.(gif|jpg|jpeg|png|swf)$">
-                        ExpiresDefault A1209600
-                        Header append Cache-Control "public"
-                </FilesMatch>
-
-                # Set up 1 week caching on commonly updated files
-                <FilesMatch "\.(xml|txt|html|js|css)$">
-                        ExpiresDefault A604800
-                        Header append Cache-Control "proxy-revalidate"
-                </FilesMatch>
-
-                # Force no caching for dynamic files
-                <FilesMatch "\.(php|cgi|pl|htm)$">
-                        ExpiresActive Off
-                        Header set Cache-Control "private, no-cache, no-store, proxy-revalidate, no-transform"
-                        Header set Pragma "no-cache"
-                </FilesMatch>
-
+    ExpiresDefault "access plus 1 year"
 
 </IfModule>
 
@@ -222,9 +171,16 @@ RewriteRule ^(index.php/)?minify/([^/]+)(/.*.(js|css))$ lib/minify/m.php?f=$3&d=
     Order allow,deny
     Allow from all
 
+###########################################
+## Deny access to release notes to prevent disclosure of the installed Magento version
+
+    <Files RELEASE_NOTES.txt>
+        order allow,deny
+        deny from all
+    </Files>
+
 ############################################
 ## If running in cluster environment, uncomment this
 ## http://developer.yahoo.com/performance/rules.html#etags
 
     #FileETag none
-
