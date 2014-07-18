@@ -25,13 +25,6 @@
  */
 
 /**
- * @NOTE: Dieser Controller enthält einen Hack für BuschFunk um
- * Künstlernamen im Page Title zeigen zu können! (ca. line 165)
- *
- * Der originale sowie eine Kopie dieser Version befinden sich unter
- * >> app/code/local/Mage/Catalog/controllers
- *
- *
  * Product controller
  *
  * @category   Mage
@@ -116,6 +109,7 @@ class Mage_Catalog_ProductController extends Mage_Core_Controller_Front_Action
 
         $this->loadLayoutUpdates();
 
+
         $update->addUpdate($product->getCustomLayoutUpdate());
 
         $this->generateLayoutXml()->generateLayoutBlocks();
@@ -133,7 +127,6 @@ class Mage_Catalog_ProductController extends Mage_Core_Controller_Front_Action
                     ->addBodyClass('category-'.$currentCategory->getUrlKey());
             }
         }
-
         return $this;
     }
 
@@ -157,26 +150,7 @@ class Mage_Catalog_ProductController extends Mage_Core_Controller_Front_Action
             $this->_initLayoutMessages('catalog/session');
             $this->_initLayoutMessages('tag/session');
             $this->_initLayoutMessages('checkout/session');
-
-            /**
-             * @BuFu
-             * Bufu-Hack: add Artist name to title if exists
-             */
-            try {
-                $artistName = $product->getBufuArtist();
-                if (!empty($artistName)) {
-                    $title = preg_replace('/'.Mage::getStoreConfig('design/head/title_suffix').'$/',
-                            "",
-                            $this->getLayout()->getBlock('head')->getTitle());
-                    $this->getLayout()->getBlock('head')->setTitle($artistName . ": ".$title);
-                }
-            } catch (Exception $e) {
-                // be quiet!
-            }
-            /**/
-
             $this->renderLayout();
-
         }
         else {
             if (isset($_GET['store'])  && !$this->getResponse()->isRedirect()) {

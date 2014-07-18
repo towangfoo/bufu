@@ -15,3 +15,6 @@ var/tmp
 media/catalog
 media/tmp
 media/useruploads
+/nbproject/private/
+project.xml
+project.properties

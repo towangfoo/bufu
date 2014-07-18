@@ -44,7 +44,7 @@
     {
         parent::__construct();
         $this->setTemplate('dashboard/grid.phtml');
-        $this->setDefaultLimit(10);
+        $this->setDefaultLimit(5);
     }
  }
 
