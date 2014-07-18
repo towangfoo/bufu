@@ -33,16 +33,6 @@
 <?php if ($_item = $this->getItem()): ?>
     <h5 class="title"><?php echo $_item->getName() ?></h5>
     <div><strong><?php echo $this->helper('sales')->__('SKU') ?>:</strong> <?php echo implode('<br />', Mage::helper('catalog')->splitSku($this->getSku())); ?></div>
-
-    <?php if (Mage::helper('bufu_tickets/admin')->hasTicketOptions($_item)):?>
-    <!-- ticket options -->
-        <div><strong>Titel:</strong> <?php echo Mage::helper('bufu_tickets/admin')->getTitleFromTicketProduct($_item) ?></div>
-        <div><strong>Datum, Beginn:</strong> <?php echo Mage::helper('bufu_tickets/admin')->getDateFromTicketProduct($_item) ?>, <?php echo Mage::helper('bufu_tickets/admin')->getTimeFromTicketProduct($_item) ?></div>
-        <div><strong>Ort:</strong> <?php echo Mage::helper('bufu_tickets/admin')->getLocationFromTicketProduct($_item) ?></div>
-        <div><strong>Kategorie:</strong> <?php echo Mage::helper('bufu_tickets/admin')->getTypeFromTicketProduct($_item) ?></div>
-    <!-- end ticket options -->
-    <?php endif ?>
-
     <?php if ($this->getOrderOptions()): ?>
         <dl class="item-options">
         <?php foreach ($this->getOrderOptions() as $_option): ?>

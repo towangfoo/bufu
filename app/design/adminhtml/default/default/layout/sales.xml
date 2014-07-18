@@ -28,10 +28,6 @@
 
 <layout>
     <adminhtml_sales_order_view>
-        <!-- @BuFu: Print css settings -->
-        <reference name="head">
-            <action method="addCss"><stylesheet>bufu_print.css</stylesheet><params>media="print"</params></action>
-        </reference>
         <reference name="content">
             <block type="adminhtml/sales_order_view" name="sales_order_edit"></block>
         </reference>
@@ -195,10 +191,6 @@
     </adminhtml_sales_order_invoice_addcomment>
 
     <adminhtml_sales_order_invoice_view>
-        <!-- @BuFu: Print css settings -->
-        <reference name="head">
-            <action method="addCss"><stylesheet>bufu_print.css</stylesheet><params>media="print"</params></action>
-        </reference>
         <reference name="content">
             <block type="adminhtml/sales_order_invoice_view" name="sales_invoice_view">
                 <block type="adminhtml/sales_order_invoice_view_form" name="form" template="sales/order/invoice/view/form.phtml">

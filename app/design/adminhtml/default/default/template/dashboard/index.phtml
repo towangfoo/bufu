@@ -76,15 +76,15 @@ function toggleCal(id) {
         <tr>
             <td><?php echo $this->getChildHtml('sales') ?>
                 <div class="entry-edit">
-                    <div class="entry-edit-head"><h4><?php echo $this->__('Last 10 Orders') ?></h4></div>
+                    <div class="entry-edit-head"><h4><?php echo $this->__('Last 5 Orders') ?></h4></div>
                     <fieldset class="np"><?php echo $this->getChildHtml('lastOrders'); ?></fieldset>
                 </div>
                 <div class="entry-edit">
-                    <div class="entry-edit-head"><h4><?php echo $this->__('Last 10 Search Terms') ?></h4></div>
+                    <div class="entry-edit-head"><h4><?php echo $this->__('Last 5 Search Terms') ?></h4></div>
                     <fieldset class="np"><?php echo $this->getChildHtml('lastSearches'); ?></fieldset>
                 </div>
                 <div class="entry-edit">
-                    <div class="entry-edit-head"><h4><?php echo $this->__('Top 10 Search Terms') ?></h4></div>
+                    <div class="entry-edit-head"><h4><?php echo $this->__('Top 5 Search Terms') ?></h4></div>
                     <fieldset class="np"><?php echo $this->getChildHtml('topSearches'); ?></fieldset>
                 </div>
             </td>
