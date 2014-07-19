@@ -95,12 +95,6 @@
 <script type="text/javascript">decorateTable('shopping-cart-table')</script>
 </form>
 
-<?php if (!$this->getIsVirtual()): ?>
-<div class="shopping-cart-collaterals">
-    <?php echo $this->getChildHtml('shipping'); ?>
-</div>
-<?php endif; ?>
-
 <?php echo $this->getChildHtml('checkoutNotice'); ?>
 
 <div class="shopping-cart-totals">
@@ -113,5 +107,11 @@
 </div>
 <div class="clear"></div>
 
+<?php if (!$this->getIsVirtual()): ?>
+<div class="shopping-cart-collaterals">
+    <?php echo $this->getChildHtml('shipping'); ?>
+</div>
+<div class="clear"></div>
+<?php endif; ?>
 
 <?php echo $this->getChildHtml('crosssell') ?>

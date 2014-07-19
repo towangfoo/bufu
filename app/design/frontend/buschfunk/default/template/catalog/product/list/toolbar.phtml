@@ -27,22 +27,7 @@ $_defaultSortOrders = array(
         <tr>
             <?php if($this->getLastPageNum()>1): ?>
             <td class="pages">
-                <strong><?php echo $this->__('Page:') ?></strong>
-                <ol>
-                <?php if (!$this->isFirstPage()): ?>
-                    <li class="prevNext"><a href="<?php echo $this->getPreviousPageUrl() ?>"><img src="<?php echo $this->getSkinUrl('images/pager_arrow_left.gif') ?>" alt="<?php echo $this->__('Previous') ?>" /></a></li>
-                <?php endif ?>
-                <?php foreach ($this->getPages() as $_page): ?>
-                    <?php if ($this->isPageCurrent($_page)): ?>
-                        <li class="on"><span><?php echo $_page ?></span></li>
-                    <?php else: ?>
-                        <li><a href="<?php echo $this->getPageUrl($_page) ?>"><?php echo $_page ?></a></li>
-                    <?php endif ?>
-                <?php endforeach;; ?>
-                <?php if (!$this->isLastPage()): ?>
-                    <li class="prevNext"><a href="<?php echo $this->getNextPageUrl() ?>"><img src="<?php echo $this->getSkinUrl('images/pager_arrow_right.gif') ?>" alt="<?php echo $this->__('Next') ?>" /></a></li>
-                <?php endif ?>
-                </ol>
+                <?php echo $this->getPagerHtml() ?>
             </td>
             <?php endif; ?>
             <td class="a-right">
@@ -60,11 +45,11 @@ $_defaultSortOrders = array(
     <table class="view-by" cellspacing="0">
         <tr>
             <td>
-                <?php if($this->getLastPageNum()>1): ?>
-                    <?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
-                <?php else: ?>
-                    <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
-                <?php endif; ?>
+				<?php if($this->getLastPageNum()>1): ?>
+					<?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
+				<?php else: ?>
+					<strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
+				<?php endif; ?>
             </td>
             <td class="sort-by">
                 <?php echo $this->__('Sort by') ?> <select onchange="setLocation(this.value)">

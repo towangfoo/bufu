@@ -93,7 +93,8 @@ Category default layout
                     <action method="addAttribute"><name>bufu_medium</name></action>
                     <!-- end update -->
                     <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
-                        <action method="setDefaultDirection"><dir>desc</dir></action> 
+						<block type="page/html_pager" name="product_list_toolbar_pager"/>
+                        <action method="setDefaultDirection"><dir>desc</dir></action>
                         <!-- The following code shows how to set your own pager increments -->
                         <!--
                             <action method="setDefaultListPerPage"><limit>4</limit></action>
@@ -127,7 +128,7 @@ Category layered navigation layout
                     <action method="setColumnCount"><columns>2</columns></action>
                     <!-- <action method="addReviewSummaryTemplate"><type>default</type><template>review/helper/su.phtml</template></action> -->
                     <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="catalog/product/list/toolbar.phtml">
-                        <action method="setDefaultDirection"><dir>desc</dir></action> 
+                        <action method="setDefaultDirection"><dir>desc</dir></action>
                         <!-- The following code shows how to set your own pager increments -->
                         <!--
                             <action method="setDefaultListPerPage"><limit>4</limit></action>
@@ -188,9 +189,9 @@ Product view
     <catalog_product_view>
         <!-- Mage_Catalog -->
         <reference name="head">
-            <!-- 
-                <action method="addJs"><script>bufu/product-customZoom.js</script></action>
-             -->
+            <action method="addItem"><type>skin_js</type><name>js/lightbox.js</name></action>
+			<action method="addCss"><stylesheet>css/lightbox.css</stylesheet></action>
+			
             <action method="addJs"><script>varien/product.js</script></action>
 
             <action method="addItem"><type>js_css</type><name>calendar/calendar-win2k-1.css</name><params/><!--<if/><condition>can_load_calendar_js</condition>--></action>
