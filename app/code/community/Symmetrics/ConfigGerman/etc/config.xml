@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_ConfigGerman
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eugen Gitin <eg@symmetrics.de>
+ * @author    Siegfried Schmitz <ss@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_ConfigGerman>
+            <version>0.2.14</version>
+        </Symmetrics_ConfigGerman>
+    </modules>
+    <global>
+        <resources>
+            <config_german_setup>
+                <setup>
+                    <module>Symmetrics_ConfigGerman</module>
+                    <class>Symmetrics_ConfigGerman_Model_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </config_german_setup>
+            <config_german_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </config_german_write>
+            <config_german_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </config_german_read>
+        </resources>
+    </global>
+    <default>
+        <config_german>
+            <default>
+                <shop_name><![CDATA[Shop-Name]]></shop_name>
+                <shop_phone><![CDATA[+49-511-123456]]></shop_phone>
+                <meta_description><![CDATA[Meta Description]]></meta_description>
+                <meta_keywords><![CDATA[Keyword1, Keyword2, Keyword3]]></meta_keywords>
+                <meta_robots><![CDATA[INDEX,FOLLOW]]></meta_robots>
+                <welcome_msg><![CDATA[Herzlich willkommen]]></welcome_msg>
+                <copyright><![CDATA[&copy; 2010 Musterfirma GmbH]]></copyright>
+                <contact_name><![CDATA[Musterfirma GmbH]]></contact_name>
+                <contact_email><![CDATA[mustermail@musterdomain.de]]></contact_email>
+                <contact_sales_name><![CDATA[Verkaufsabteilung]]></contact_sales_name>
+                <contact_sales_email><![CDATA[sales@musterdomain.de]]></contact_sales_email>
+                <contact_support_name><![CDATA[Kundenbetreuung]]></contact_support_name>
+                <contact_support_email><![CDATA[support@musterdomain.de]]></contact_support_email>
+                <contact_custom1_name><![CDATA[Zusätzliche E-Mail 1]]></contact_custom1_name>
+                <contact_custom1_email><![CDATA[custom1@musterdomain.de]]></contact_custom1_email>
+                <contact_custom2_name><![CDATA[Zusätzliche E-Mail 2]]></contact_custom2_name>
+                <contact_custom2_email><![CDATA[custom2@musterdomain.de]]></contact_custom2_email>
+                <contact_recipient><![CDATA[recipient@musterdomain.de]]></contact_recipient>
+                <email_domain><![CDATA[musterdomain.de]]></email_domain>
+                <prefix_options><![CDATA[Herr;Frau]]></prefix_options>
+                <invoice_address><![CDATA[Musterfirma GmbH
+Max Mustermann
+Musterstrasse 1a
+12345 Musterstadt
+Deutschland]]></invoice_address>
+                <zip><![CDATA[12345]]></zip>
+                <city><![CDATA[Musterstadt]]></city>
+            </default>
+        </config_german>
+    </default>
+</config>

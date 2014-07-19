@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Buyerprotect
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Torsten Walluhn <tw@symmetrics.de>
+ * @author    Ngoc Anh Doan <nd@symmetrics.de>
+ * @copyright 2010-2013 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>symmetrics/paymentmapping.js</script></action>
+            <block type="core/template" template="buyerprotect/system/config/paymentmapping.js.phtml" name="paymentmappingdata_js" />
+        </reference>
+        <!-- <reference name="js">
+        </reference> -->
+    </default>
+    <adminhtml_catalog_product_buyerprotect>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/buyerprotect.css</stylesheet></action>
+            <action method="addJs"><script>symmetrics/paymentmapping.js</script></action>
+        </reference>
+
+        <reference name="product_tabs">
+            <action method="removeTab"><value>inventory</value></action>
+            <action method="removeTab"><value>categories</value></action>
+            <action method="removeTab"><value>related</value></action>
+            <action method="removeTab"><value>upsell</value></action>
+            <action method="removeTab"><value>crosssell</value></action>
+            <action method="removeTab"><value>reviews</value></action>
+            <action method="removeTab"><value>tags</value></action>
+            <action method="removeTab"><value>customers_tags</value></action>
+            <action method="removeTab"><value>customer_options</value></action>
+            <action method="removeTab"><value>googleoptimizer</value></action>
+        </reference>
+
+        <reference name="js">
+            <block type="core/template" template="buyerprotect/adminhtml/catalog/product/buyerprotect.js.phtml" name="buyerprotect_js" />
+        </reference>
+    </adminhtml_catalog_product_buyerprotect>
+</layout>

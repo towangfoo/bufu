@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Buyerprotect
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Torsten Walluhn <tw@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Ngoc Anh Doan <ngoc-anh.doan@cgi.com>
+ * @copyright 2010-2013 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <sections>
+        <buyerprotection translate="label" module="buyerprotect">
+            <!-- <class>separator-top</class>  -->
+            <label>Trusted Shops quality seal</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <info translate="label">
+                    <label>Info</label>
+                    <frontend_type>text</frontend_type>
+                    <frontend_model>buyerprotect/adminhtml_system_config_info</frontend_model>
+                    <sort_order>-1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </info>
+                
+                <buyerprotect_documentation translate="label">
+                    <label>Documentation</label>
+                    <frontend_type>text</frontend_type>
+                    <frontend_model>buyerprotect/adminhtml_system_config_documentation</frontend_model>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </buyerprotect_documentation>
+                
+                <data translate="label">
+                    <label>Data</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Activate Trusted Shops Buyer Protection</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <trustedshops_id translate="label">
+                            <label>Trusted Shops ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trustedshops_id>
+                        <variation translate="label">
+                            <label>Buyer Protection variation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>buyerprotect/system_config_source_variation</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </variation>
+                        <trustedshops_user translate="label">
+                            <label>Trusted Shops Username</label>
+                            <comment>Only required for Buyer Protection Excellence.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trustedshops_user>
+                        <trustedshops_password translate="label">
+                            <label>Trusted Shops Password</label>
+                            <comment>Only required for Buyer Protection Excellence.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trustedshops_password>
+                        <trustedshops_url translate="label">
+                            <label>Buyer Protection mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>buyerprotect/system_config_source_wsdl</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trustedshops_url>
+                        <trustedshops_certificate_logo_active translate="label comment">
+                            <label>Activate Trusted Shops seal box</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trustedshops_certificate_logo_active>
+                        <trustedshops_certificate_logo_code translate="label comment">
+                            <label>Trusted Shops seal code</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Create the code using the Trusted Shops Seal Box <a onclick="window.open('http://www.trustedshops.de/shopbetreiber/siegelbox/index.php')">Generator</a>.<br />Path to image files are beeing adjusted automatically. <b>Do not change!</b>]]></comment>
+                        </trustedshops_certificate_logo_code>
+                        <ts_background_img translate="label comment">
+                            <label>Trusted Shops seal background image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>Mage_Adminhtml_Model_System_Config_Backend_Image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">trustedshops</upload_dir>
+                            <base_url type="media" scope_info="1">trustedshops</base_url>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Download the background image from the Trusted Shops Seal Box Generator.</comment>
+                        </ts_background_img>
+                        <ts_logo_img translate="label comment">
+                            <label>Trusted Shops seal image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>Mage_Adminhtml_Model_System_Config_Backend_Image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">trustedshops</upload_dir>
+                            <base_url type="media" scope_info="1">trustedshops</base_url>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Download the seal image from the Trusted Shops Seal Box Generator.</comment>
+                        </ts_logo_img>
+                    </fields>
+                </data>
+            </groups>
+        </buyerprotection>
+    </sections>
+</config>

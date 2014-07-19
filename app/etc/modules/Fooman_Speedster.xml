@@ -2,8 +2,13 @@
 <config>
     <modules>
         <Fooman_Speedster>
-            <active>false</active>
+            <active>true</active>
             <codePool>community</codePool>
+            <depends>
+                <Mage_Page/>
+                <Mage_Adminhtml/>
+                <Fooman_Common/>
+            </depends>
         </Fooman_Speedster>
     </modules>
 </config>

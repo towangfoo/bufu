@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Imprint
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Sergej Braznikov <sb@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_Imprint>
+            <version>0.2.26</version>
+        </Symmetrics_Imprint>
+    </modules>
+    <global>
+        <helpers>
+            <imprint>
+                <class>Symmetrics_Imprint_Helper</class>
+            </imprint>
+        </helpers>
+        <blocks>  
+            <imprint>  
+                <class>Symmetrics_Imprint_Block</class>  
+            </imprint>
+            <symmetrics_impressum>
+                <class>Symmetrics_Imprint_Block_Deprecated</class>
+            </symmetrics_impressum>
+        </blocks>
+        <resources>
+            <imprint_setup>
+                <setup>
+                    <module>Symmetrics_Imprint</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </imprint_setup>
+            <imprint_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </imprint_write>
+            <imprint_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </imprint_read>
+        </resources>
+    </global>
+    <frontend>
+        <translate>
+            <modules>
+                <Symmetrics_Imprint>
+                    <files>
+                        <default>Symmetrics_Imprint.csv</default>
+                    </files>
+                </Symmetrics_Imprint>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Symmetrics_Imprint>
+                    <files>
+                        <default>Symmetrics_Imprint.csv</default>
+                    </files>
+                </Symmetrics_Imprint>
+            </modules>
+        </translate>
+    </adminhtml>
+</config>

@@ -1,7 +1,7 @@
 <config>
     <modules>
         <Mage_BankPayment>
-            <active>true</active>
+            <active>false</active>
             <codePool>community</codePool>
             <depends>
                 <Mage_Payment />

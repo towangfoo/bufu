@@ -18,7 +18,7 @@
             </bufu_review_controller_product_post>
         </events>
     </global>
-    
+
     <default>
         <catalog>
             <review>
@@ -28,7 +28,7 @@
             </review>
         </catalog>
     </default>
-    
+
     <!-- change routing for review controller -->
     <frontend>
         <routers>

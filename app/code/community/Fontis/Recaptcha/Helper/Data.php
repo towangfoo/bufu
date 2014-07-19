@@ -13,7 +13,7 @@
  * to license@magentocommerce.com so we can send you a copy immediately.
  * 
  * This code has been adopted from the reCAPTCHA module available at:
- * 	http://recaptcha.net
+ * 	http://www.google.com/recaptcha
  * The original reCAPTCHA module was written by:
  * 	Mike Crawford
  * 	Ben Maurer
@@ -22,14 +22,14 @@
  * @package    Fontis_Recaptcha
  * @author     Denis Margetic
  * @author     Chris Norton
- * @copyright  Copyright (c) 2010 Fontis Pty. Ltd. (http://www.fontis.com.au)
+ * @copyright  Copyright (c) 2011 Fontis Pty. Ltd. (http://www.fontis.com.au)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class Fontis_Recaptcha_Helper_Data extends Mage_Core_Helper_Abstract 
 {
-    const RECAPTCHA_API_SERVER = "http://api.recaptcha.net";
-    const RECAPTCHA_API_SECURE_SERVER = "https://api-secure.recaptcha.net";
-    const RECAPTCHA_VERIFY_SERVER = "api-verify.recaptcha.net";
+    const RECAPTCHA_API_SERVER_HOST = "www.google.com";
+    const RECAPTCHA_API_SERVER_PATH = "/recaptcha/api";
+    const RECAPTCHA_API_SECURE_SERVER = "https://www.google.com/recaptcha/api";
 
     /**
      * Encodes the given data into a query string format
@@ -101,7 +101,7 @@ class Fontis_Recaptcha_Helper_Data extends Mage_Core_Helper_Abstract
 	    if ($use_ssl) {
             $server = self::RECAPTCHA_API_SECURE_SERVER;
         } else {
-            $server = self::RECAPTCHA_API_SERVER;
+            $server = 'http://' . self::RECAPTCHA_API_SERVER_HOST . self::RECAPTCHA_API_SERVER_PATH;
         }
 
         $errorpart = "";
@@ -141,11 +141,11 @@ class Fontis_Recaptcha_Helper_Data extends Mage_Core_Helper_Abstract
             return false;
         }
 
-        $response = $this->_recaptcha_http_post (self::RECAPTCHA_VERIFY_SERVER, "/verify", array (  'privatekey' => $privkey,
-                                                                                                    'remoteip' => $remoteip,
-                                                                                                    'challenge' => $challenge,
-                                                                                                    'response' => $response
-                                                                                                 ) + $extra_params
+        $response = $this->_recaptcha_http_post (self::RECAPTCHA_API_SERVER_HOST, self::RECAPTCHA_API_SERVER_PATH . "/verify", array (  'privatekey' => $privkey,
+                                                                                                                            'remoteip' => $remoteip,
+                                                                                                                            'challenge' => $challenge,
+                                                                                                                            'response' => $response
+                                                                                                                         ) + $extra_params
                                                 );
 
         $answers = explode ("\n", $response [1]);

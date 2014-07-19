@@ -17,52 +17,27 @@
  * @package    Fontis_Recaptcha
  * @author     Denis Margetic
  * @author     Chris Norton
- * @copyright  Copyright (c) 2010 Fontis Pty. Ltd. (http://www.fontis.com.au)
+ * @copyright  Copyright (c) 2011 Fontis Pty. Ltd. (http://www.fontis.com.au)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 -->
 <layout version="0.1.0">
     <sendfriend_product_send>
-        <reference name="sendfriend.send">
-            <block type="sendfriend/send" name="sendfriend.send" template="fontis/recaptcha/send.phtml">
-                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
+        <remove name="sendfriend.send"/>
+
+        <reference name="content">
+            <block type="sendfriend/send" name="recaptcha_sendfriend_send" template="fontis/recaptcha/send.phtml">
+                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml"/>
             </block>
         </reference>
     </sendfriend_product_send>
 
-    <fontis_recaptcha_contacts_index>
-        <reference name="root">
-        	<action method="setTemplate">
-                <template>page/2columns-right.phtml</template>
-            </action>
-
-            <action method="setHeaderTitle" translate="title" module="contacts">
-                <title>Contact Us</title>
-            </action>
-        </reference>
-
-        <reference name="content">
-            <block type="core/template" name="contactForm" template="fontis/recaptcha/contacts.phtml">
-                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
-            </block>
-        </reference>
-    </fontis_recaptcha_contacts_index>
-
     <contacts_contacts_index>
-        <reference name="root">
-        	<action method="setTemplate">
-                <template>page/2columns-right.phtml</template>
-            </action>
-         
-            <action method="setHeaderTitle" translate="title" module="contacts">
-                <title>Contact Us</title>
-            </action>
-        </reference>
+        <update handle="contacts_index_index" />
 
-        <reference name="content">
-            <block type="core/template" name="contactForm" template="fontis/recaptcha/contacts.phtml">
-                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
-            </block>
+        <reference name="contactForm">
+            <action method="setTemplate"><template>fontis/recaptcha/contacts.phtml</template></action>
+            <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml"/>
         </reference>
     </contacts_contacts_index>
 
@@ -71,14 +46,14 @@
 
         <reference name="content">
             <block type="customer/form_register" name="recaptcha_form_register" template="fontis/recaptcha/register.phtml">
-                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
+                <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml"/>
             </block>
         </reference>
     </customer_account_create>
 
     <review_product_list>
         <block name="product.review.form" >
-            <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
+            <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml"/>
         </block>
     </review_product_list>
 </layout>

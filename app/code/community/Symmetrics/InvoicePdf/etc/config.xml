@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_InvoicePdf
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eugen Gitin <eg@symmetrics.de>
+ * @author    Eric Reiche <er@symmetrics.de>
+ * @author    Ngoc Anh Doan <nd@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_InvoicePdf>
+            <version>0.3.46</version>
+        </Symmetrics_InvoicePdf>
+    </modules>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Mage_Sales>
+                    <files>
+                        <default>Mage_Sales.csv</default>
+                        <invoicepdf>Symmetrics_InvoicePdf.csv</invoicepdf>
+                    </files>
+                </Mage_Sales>
+                <Symmetrics_InvoicePdf>
+                    <files>
+                        <default>Symmetrics_InvoicePdf.csv</default>
+                    </files>
+                </Symmetrics_InvoicePdf>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+        <invoicepdf>
+            <invoice>
+                <default>invoicepdf/pdf_items_invoice_default</default>
+                <bundle>invoicepdf/pdf_items_bundle_invoice</bundle>
+            </invoice>
+            <totals>
+                <subtotal translate="title">
+                    <title>Subtotal</title>
+                    <source_field>subtotal</source_field>
+                    <model>tax/sales_pdf_subtotal</model>
+                    <font_size>8</font_size>
+                    <display_zero>1</display_zero>
+                    <sort_order>100</sort_order>
+                </subtotal>
+                <discount translate="title">
+                    <title>Discount</title>
+                    <source_field>discount_amount</source_field>
+                    <amount_prefix>-</amount_prefix>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>200</sort_order>
+                </discount>
+                <shipping translate="title">
+                    <title>Shipping &amp; Handling</title>
+                    <source_field>shipping_amount</source_field>
+                    <model>tax/sales_pdf_shipping</model>
+                    <font_size>8</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>300</sort_order>
+                </shipping>
+                <adjustment_positive translate="title">
+                    <title>Adjustment Refund</title>
+                    <source_field>adjustment_positive</source_field>
+                    <font_size>8</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>400</sort_order>
+                </adjustment_positive>
+                <adjustment_negative translate="title">
+                    <title>Adjustment Fee</title>
+                    <source_field>adjustment_negative</source_field>
+                    <font_size>8</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>600</sort_order>
+                </adjustment_negative>
+                <grand_total translate="title">
+                    <title>Grand Total</title>
+                    <source_field>grand_total</source_field>
+                    <model>tax/sales_pdf_grandtotal</model>
+                    <font_size>10</font_size>
+                    <display_zero>1</display_zero>
+                    <sort_order>700</sort_order>
+                </grand_total>
+                <tax translate="title">
+                    <title>Total Tax Amount</title>
+                    <source_field>tax_amount</source_field>
+                    <model>tax/sales_pdf_tax</model>
+                    <font_size>8</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>500</sort_order>
+                </tax>
+            </totals>
+        </invoicepdf>
+        <models>
+            <invoicepdf>
+                <class>Symmetrics_InvoicePdf_Model</class>
+            </invoicepdf>
+        </models>
+        <customer>
+            <address>
+                <formats>
+                    <pdf translate="title" module="customer">
+                        <title>PDF</title>
+                        <defaultFormat><![CDATA[{{depend prefix}}{{var prefix}} {{/depend}}{{var firstname}} {{depend middlename}}{{var middlename}} {{/depend}}{{var lastname}}{{depend suffix}} {{var suffix}}{{/depend}}|
+{{depend company}}{{var company}}|{{/depend}}
+{{if street1}}{{var street1}}
+{{/if}}
+{{depend street2}}{{var street2}}|{{/depend}}
+{{depend street3}}{{var street3}}|{{/depend}}
+{{depend street4}}{{var street4}}|{{/depend}}
+{{if postcode}}{{var postcode}}{{/if}} {{if city}}{{var city}}  {{/if}}|
+{{var country}}|
+{{depend fax}}<br/>F: {{var fax}}{{/depend}}|]]></defaultFormat>
+                    </pdf>
+                </formats>
+            </address>
+        </customer>
+        <helpers>
+            <invoicepdf>
+                <class>Symmetrics_InvoicePdf_Helper</class>
+            </invoicepdf>
+        </helpers>
+        <resources>
+            <invoicepdf_setup>
+                <setup>
+                    <module>Symmetrics_InvoicePdf</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </invoicepdf_setup>
+            <invoicepdf_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </invoicepdf_write>
+            <invoicepdf_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </invoicepdf_read>
+        </resources>
+    </global>
+    <admin>
+        <routers>
+            <invoicepdf>
+                <use>admin</use>
+                <args>
+                    <module>Symmetrics_InvoicePdf</module>
+                    <frontName>symmetrics</frontName>
+                </args>
+            </invoicepdf>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Symmetrics_InvoicePdf before="Mage_Adminhtml">Symmetrics_InvoicePdf_Adminhtml</Symmetrics_InvoicePdf>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <frontend>
+        <translate>
+            <modules>
+                <Mage_Sales>
+                    <files>
+                        <default>Mage_Sales.csv</default>
+                        <invoicepdf>Symmetrics_InvoicePdf.csv</invoicepdf>
+                    </files>
+                </Mage_Sales>
+                <Symmetrics_InvoicePdf>
+                    <files>
+                        <default>Symmetrics_InvoicePdf.csv</default>
+                    </files>
+                </Symmetrics_InvoicePdf>
+            </modules>
+        </translate>
+    </frontend>
+    <default>
+        <sales_pdf>
+            <invoice>
+                <showfooter>1</showfooter>
+                <displaymaturity>1</displaymaturity>
+                <displayinvoicedate>1</displayinvoicedate>
+                <displayfoldmarks>1</displayfoldmarks>
+            </invoice>
+        </sales_pdf>
+        <sales>
+            <identity>
+                <logoposition>left</logoposition>
+            </identity>
+        </sales>
+        <customer>
+            <address_templates>
+                <pdf translate="title" module="customer"><![CDATA[{{depend prefix}}{{var prefix}} {{/depend}}{{var firstname}} {{depend middlename}}{{var middlename}} {{/depend}}{{var lastname}}{{depend suffix}} {{var suffix}}{{/depend}}|
+{{depend company}}{{var company}}|{{/depend}}
+{{if street1}}{{var street1}}{{/if}}|
+{{depend street2}}{{var street2}}|{{/depend}}
+{{depend street3}}{{var street3}}|{{/depend}}
+{{depend street4}}{{var street4}}|{{/depend}}
+{{if postcode}}{{var postcode}}{{/if}} {{if city}}{{var city}}  {{/if}}|
+{{var country}}|
+{{depend fax}}F: {{var fax}}{{/depend}}|]]></pdf>
+            </address_templates>
+        </customer>
+    </default>
+</config>

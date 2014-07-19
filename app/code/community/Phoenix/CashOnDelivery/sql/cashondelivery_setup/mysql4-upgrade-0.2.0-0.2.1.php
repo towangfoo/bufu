@@ -14,7 +14,7 @@
  *
  * @category   Phoenix
  * @package    Phoenix_CashOnDelivery
- * @copyright  Copyright (c) 2010 Phoenix Medien GmbH & Co. KG (http://www.phoenix-medien.de)
+ * @copyright  Copyright (c) 2010 - 2013 PHOENIX MEDIA GmbH (http://www.phoenix-media.eu)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
@@ -33,17 +33,8 @@ $eav->addAttribute('order', 'base_cod_tax_amount', array('type' => 'decimal'));
 $eav->addAttribute('order', 'cod_tax_amount_invoiced', array('type' => 'decimal',));
 $eav->addAttribute('order', 'base_cod_tax_amount_invoiced', array('type' => 'decimal'));
 
-//$eav->addAttribute('order', 'cod_tax_amount_refunded', array('type' => 'decimal',));
-//$eav->addAttribute('order', 'base_cod_tax_amount_refunded', array('type' => 'decimal'));
-
-//$eav->addAttribute('order', 'cod_tax_amount_canceled', array('type' => 'decimal',));
-//$eav->addAttribute('order', 'base_cod_tax_amount_canceled', array('type' => 'decimal'));
-
 $eav->addAttribute('invoice', 'cod_tax_amount', array('type' => 'decimal',));
 $eav->addAttribute('invoice', 'base_cod_tax_amount', array('type' => 'decimal'));
-
-//$eav->addAttribute('creditmemo', 'cod_tax_amount', array('type' => 'decimal',));
-//$eav->addAttribute('creditmemo', 'base_cod_tax_amount', array('type' => 'decimal'));
 
 $this->endSetup();
 

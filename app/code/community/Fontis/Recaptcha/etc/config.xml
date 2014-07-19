@@ -17,14 +17,14 @@
  * @package    Fontis_Recaptcha
  * @author     Denis Margetic
  * @author     Chris Norton
- * @copyright  Copyright (c) 2010 Fontis Pty. Ltd. (http://www.fontis.com.au)
+ * @copyright  Copyright (c) 2011 Fontis Pty. Ltd. (http://www.fontis.com.au)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 -->
 <config>
     <modules>
         <Fontis_Recaptcha>
-            <version>2.1.0</version>
+            <version>2.4.0</version>
         </Fontis_Recaptcha>
     </modules>
     <global>
@@ -111,10 +111,17 @@
                 <customer>1</customer>
                 <review>1</review>
             </recaptcha>
-            <magento>
-                <text_captcha>Enter the words above:</text_captcha>
-                <audio_captcha>Enter the words you hear:</audio_captcha>
-            </magento>
+            <translation>
+                <enable_translation>disable</enable_translation>
+                <text_captcha>Type the two words:</text_captcha>
+                <audio_captcha>Type words you hear:</audio_captcha>
+                <play_again>Play Again?</play_again>
+                <cant_hear_this>Can't hear the audio? Click here</cant_hear_this>
+                <visual_challenge>Get a visual challenge</visual_challenge>
+                <audio_challenge>Get an audio challenge</audio_challenge>
+                <refresh_btn>Get a new challenge</refresh_btn>
+                <help_btn>Help</help_btn>
+            </translation>
         </fontis_recaptcha>
     </default>
     <adminhtml>

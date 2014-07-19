@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_CashTicket
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eugen Gitin <eg@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_CashTicket>
+            <version>0.1.14</version>
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </Symmetrics_CashTicket>
+    </modules>
+    <global>
+        <models>
+            <cashticket>
+                <class>Symmetrics_CashTicket_Model</class>
+                <resourceModel>cashticket_mysql4</resourceModel>
+            </cashticket>
+            <cashticket_mysql4>
+                <class>Symmetrics_CashTicket_Model_Mysql4</class>
+                <entities>
+                    <item>
+                        <table>symmetrics_cashticket</table>
+                    </item>
+                </entities>
+            </cashticket_mysql4>
+        </models>
+        <blocks>
+            <cashticket>
+                <class>Symmetrics_CashTicket_Block</class>
+            </cashticket>
+        </blocks>
+        <helpers>
+            <cashticket>
+                <class>Symmetrics_CashTicket_Helper</class>
+            </cashticket>
+        </helpers>
+        <resources>
+            <cashticket_setup>
+                <setup>
+                    <module>Symmetrics_CashTicket</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </cashticket_setup>
+            <cashticket_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </cashticket_write>
+            <cashticket_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </cashticket_read>
+        </resources>
+    </global>
+    <admin>
+        <routers>
+            <cashticket>
+                <use>admin</use>
+                <args>
+                    <module>Symmetrics_CashTicket</module>
+                    <frontName>cashticket</frontName>
+                </args>
+            </cashticket>
+        </routers>
+    </admin>
+    <frontend>
+        <routers>
+            <cashticket>
+                <use>standard</use>
+                <args>
+                    <module>Symmetrics_Cashticket</module>
+                    <frontName>cashticket</frontName>
+                </args>
+            </cashticket>
+        </routers>
+        <translate>
+            <modules>
+                <Symmetrics_CashTicket>
+                    <files>
+                        <cashticket>Symmetrics_Cashticket.csv</cashticket>
+                    </files>
+                </Symmetrics_CashTicket>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <cashticket>
+                    <file>cashticket.xml</file>
+                </cashticket>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Symmetrics_CashTicket>
+                    <files>
+                        <cashticket>Symmetrics_Cashticket.csv</cashticket>
+                    </files>
+                </Symmetrics_CashTicket>
+            </modules>
+        </translate>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <Symmetrics_CashTicket>
+                            <title>Cash-Ticket</title>
+                            <sort_order>10</sort_order>
+                            <action>cashticket/adminhtml_config</action>
+                        </Symmetrics_CashTicket>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <menu>
+            <sales>
+                <children>
+                    <cashticket translate="title" module="cashticket">
+                        <title>Cash-Ticket</title>
+                        <sort_order>20</sort_order>
+                        <action>cashticket/adminhtml_config</action>
+                    </cashticket>
+                </children>
+            </sales>
+        </menu>
+    </adminhtml>
+    <default>
+        <payment>
+            <cashticket>
+                <active>1</active>
+                <model>cashticket/cashticket</model>
+                <order_status>pending</order_status>
+                <title>Cash-Ticket</title>
+                <payment_action>authorize</payment_action>
+                <allowspecific>0</allowspecific>
+                <merchant_id>0000000000</merchant_id>
+                <business_type>I</business_type>
+                <reporting_criteria>3</reporting_criteria>
+                <locale>en_us</locale>
+                <url_live>https://shops.cc.at.paysafecard.com/pscmerchant/</url_live>
+                <url_test>https://shops.test.at.paysafecard.com/pscmerchant/</url_test>
+                <customer_url_live>https://customer.cc.at.cash-ticket.com/ctcustomer/</customer_url_live>
+                <customer_url_test>https://customer.test.at.cash-ticket.com/ctcustomer/</customer_url_test>
+                <sandbox>1</sandbox>
+                <currencies>CHF,DKK,SEK,PLN,GBP,EUR,USD,CZK</currencies>
+            </cashticket>
+         </payment>
+    </default>
+</config>

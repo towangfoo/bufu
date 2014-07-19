@@ -37,7 +37,7 @@
                     <frontName>checkoutNotice</frontName>
                 </args>
             </mage_checkoutNotice>
-        </routers> 
+        </routers>
         <translate>
             <modules>
                 <Mage_CheckoutNotice>

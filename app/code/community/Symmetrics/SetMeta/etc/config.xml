@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_SetMeta
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eric Reiche <er@symmetrics.de>
+ * @author    Torsten Walluhn <tw@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Toni Stache <ts@symmetrics.de>
+ * @author    Torsten Walluhn <tw@symmetrics.de>
+ * @copyright 2010-2012 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_SetMeta>
+            <version>0.2.25</version>
+        </Symmetrics_SetMeta>
+    </modules>
+    <global>
+        <models>
+            <setmeta>
+                <class>Symmetrics_SetMeta_Model</class>
+            </setmeta>
+        </models>
+        <helpers>
+            <setmeta>
+                <class>Symmetrics_SetMeta_Helper</class>
+            </setmeta>
+        </helpers>
+        <events>
+            <catalog_product_save_before>
+                <observers>
+                    <symmetrics_setmeta_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SetMeta_Model_Observer</class>
+                        <method>handleProductSaveBefore</method>
+                    </symmetrics_setmeta_model_observer>
+                </observers>
+            </catalog_product_save_before>
+            <!-- Event for mass editing products. Disabled, doesn't work since CE 1.5. -->
+            <!--
+             <controller_action_postdispatch_adminhtml_catalog_product_action_attribute_save>
+                <observers>
+                    <symmetrics_setmeta_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SetMeta_Model_Observer</class>
+                        <method>handleProductMassEdit</method>
+                    </symmetrics_setmeta_model_observer>
+                </observers>
+            </controller_action_postdispatch_adminhtml_catalog_product_action_attribute_save>
+            -->
+        </events>
+        <resources>
+            <setmeta_setup>
+                <setup>
+                    <module>Symmetrics_SetMeta</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </setmeta_setup>
+        </resources>
+    </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Symmetrics_SetMeta>
+                    <files>
+                        <default>Symmetrics_SetMeta.csv</default>
+                    </files>
+                </Symmetrics_SetMeta>
+            </modules>
+        </translate>
+    </adminhtml>
+</config>

@@ -1,13 +1,56 @@
-.stock_indicator {
-	position: relative;
-	top: 3px;
-	margin: 0 5px 0 3px;
-	width: 39px;
-	height: 11px;
- 	display: inline-block;
-	background: url(../../default/images/stockindicator/sprite.gif) repeat-x;
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_StockIndicator
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Ngoc Anh Doan <nd@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+ 
+/**
+ * StockIndicator styles
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_StockIndicator
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Ngoc Anh Doan <nd@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+.stock-indicator-wrapper { padding: 5px }
+
+.stock-indicator { margin: 0px }
+
+.stock-indicator.horizontal {
+    width: 33px;
+    height: 11px;
+    background: url(../../default/images/stockindicator/sprite_vertical.gif) repeat-x;
 }
 
-.red {}
-.yellow { background-position: 0 -11px; }
-.green { background-position: 0 -22px; }
+.stock-indicator.vertical {
+    width: 11px;
+    height: 33px;
+    background: url(../../default/images/stockindicator/sprite_horizontal.gif) repeat-y;
+}
+
+.yellow.horizontal { background-position: 0 -11px; }
+.green.horizontal { background-position: 0 -22px; }
+
+.yellow.vertical { background-position: -11px 0; }
+.green.vertical { background-position: -22px 0; }

@@ -29,12 +29,17 @@
     <tr>
         <td style="width:50%;"><h3 class="icon-head head-products"><?php echo $this->_headerText ?></h3></td>
         <td class="a-right">
+            <?php echo Mage::getBlockSingleton('enhancedgrid/widget_loyalty')->toHtml(); ?>
             <?php echo $this->getAddNewButtonHtml() ?>
         </td>
     </tr>
 </table>
 </div>
 <?php echo $this->getStoreSwitcherHtml() ?>
+<?php /* @nelkaake -a 16/11/10: for MAGE 1.3.2 and up */ ?>
+<?php if( !$this->isSingleStoreMode() ): ?>
+	<?php echo $this->getChildHtml('store_switcher');?>
+<?php endif;?>
 <div>
     <?php echo $this->getGridHtml() ?>
 </div>

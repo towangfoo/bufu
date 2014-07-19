@@ -35,6 +35,9 @@ class TBT_Enhancedgrid_Block_Widget_Grid_Column extends Mage_Adminhtml_Block_Wid
             case 'image':
                 $rendererClass = 'enhancedgrid/widget_grid_column_renderer_image';
                 break;
+            case 'category':
+                $rendererClass = 'enhancedgrid/widget_grid_column_renderer_category';
+                break;
             default:
                 $rendererClass = parent::_getRendererByType();
                 break;

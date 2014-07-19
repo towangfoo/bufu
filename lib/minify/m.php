@@ -1,4 +1,16 @@
 <?php
+// Minify Entry Point for Magento Extension Fooman Speedster
+define('DS', DIRECTORY_SEPARATOR);
+define('PS', PATH_SEPARATOR);
+//detect if run from a modman installation
+if(strpos(__FILE__,'.modman') !== false){
+    $baseDir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+} else {
+    $baseDir = dirname(dirname(dirname(__FILE__)));
+}
+
+require_once dirname(dirname(dirname(__FILE__))) . DS . 'lib' . DS . 'minify' . DS . 'Minify' . DS . 'Loader.php';
+Minify_Loader::register();
 
 /**
  * Leave an empty string to use PHP's $_SERVER['DOCUMENT_ROOT'].
@@ -17,85 +29,80 @@ $min_documentRoot = '';
 // try to disable output_compression (may not have an effect)
 ini_set('zlib.output_compression', '0');
 
-// Minify Entry Point for Magento Extension FOOMAN Speedster
-define('DS', DIRECTORY_SEPARATOR);
-define('PS', PATH_SEPARATOR);
-define('BP', dirname(dirname(dirname(__FILE__))));
+// Set $minifyCachePath to a PHP-writeable path to enable server-side caching
+$minifyCachePath = $baseDir.DS.'var'.DS.'minifycache';
 
+// The Files controller only "knows" CSS, and JS files.
+$serveExtensions = array('css', 'js');
 
 /**
  * Handle Multiple Stores - symlinked directories
  */
 
 // Figure out if we are run from a subdirectory
-$dir=explode("/lib/minify/m.php" , htmlentities($_SERVER['SCRIPT_NAME']));
-if (strlen($dir[0])==0){
+$rootdir = '';
+$dir = explode("/lib/minify/m.php", htmlentities($_SERVER['SCRIPT_NAME']));
+if (strlen($dir[0]) == 0) {
     // we are in webroot
-    $min_symlinks=array('//' => BP);
-}else{
+    $min_symlinks = array('//' => $baseDir);
+} else {
     // we are in a subdirectory adjust symlink
-    $rootdir= explode($dir[0] , BP);
-    $min_symlinks=array('//' => $rootdir[0]);
+    $rootdir = preg_replace('!' . $dir[0] . '$!', '', $baseDir);
+    $min_symlinks = array('//' => $rootdir);
+    //use this for ~user apache installs
+    //$min_symlinks=array( '/'.$dir[0]=>$rootdir);
 }
-
-// Prepends include_path. You could alternately do this via .htaccess or php.ini
-set_include_path( BP.DS.'lib'.DS.'minify'.DS.'lib'. PS . get_include_path());
-
-// Set $minifyCachePath to a PHP-writeable path to enable server-side caching
-$minifyCachePath = BP.DS.'var'.DS.'minifycache';
-
-// The Files controller only "knows" CSS, and JS files.
-$serveExtensions = array('css', 'js');
 
 // Serve
 if (isset($_GET['f'])) {
-    $filenames =  explode(",", $_GET['f']) ;
-    $filenamePattern = '/[^\'"\\/\\\\]+\\.(?:'
-        .implode('|', $serveExtensions).   ')$/';
-
-    require 'Minify.php';
+    $_GET['f'] = str_replace("\x00", '', (string)$_GET['f']);
+    $filenames = explode(",", $_GET['f']);
+    $filenamePattern = '/[^\'"\\/\\\\]+\\.(?:' . implode('|', $serveExtensions) . ')$/';
 
     if ($minifyCachePath) {
-        Minify::setCache($minifyCachePath);
+        SpeedsterMinify::setCache($minifyCachePath);
     }
 
     if ($min_documentRoot) {
         $_SERVER['DOCUMENT_ROOT'] = $min_documentRoot;
     } elseif (0 === stripos(PHP_OS, 'win')) {
-        Minify::setDocRoot(); // IIS may need help
+        SpeedsterMinify::setDocRoot(); // IIS may need help
     }
 
     //on some apache installs this is needed
-    if(array_key_exists('SUBDOMAIN_DOCUMENT_ROOT', $_SERVER)){
+    if (array_key_exists('SUBDOMAIN_DOCUMENT_ROOT', $_SERVER)) {
         $_SERVER['DOCUMENT_ROOT'] = $_SERVER['SUBDOMAIN_DOCUMENT_ROOT'];
     }
 
     //check if requested files exists and add to minify request
     $servefiles = array();
     foreach ($filenames as $filename) {
-            if (preg_match($filenamePattern, $filename)
-                && file_exists(BP .  $filename)) {
-                //Minify can't handle the regex for the email addresses - change to file with less demanding regex for email validation
-                $filename = str_replace("validation.js", "validation-4min.js", $filename);
-                $servefiles[]=BP . $filename;
-            }
+        if (preg_match($filenamePattern, $filename)
+            && file_exists($baseDir . $filename)
+        ) {
+            $servefiles[] = $baseDir . $filename;
+        }
     }
 
     //options for minify request
     $serveOptions = array(
-        'rewriteCssUris'=>true
-        ,'files' => $servefiles
-        ,'maxAge' => 31536000 // now + 1 yr
+        'quiet'            => false,
+        'rewriteCssUris'   => true,
+        'files'            => $servefiles,
+        'maxAge'           => 31536000, // now + 1 yr
+        'bubbleCssImports' => 'true'
     );
 
     //include option for symlinks and merge with $serveOptions
     $min_serveOptions['minifierOptions']['text/css']['symlinks'] = $min_symlinks;
-    $serveOptions=array_merge($serveOptions,$min_serveOptions);
+    if (!empty($rootdir)) {
+        $min_serveOptions['minifierOptions']['text/css']['prependRelativePath'] = $rootdir;
+    }
+    $serveOptions = array_merge($serveOptions, $min_serveOptions);
 
     //and SERVE
-    Minify::serve('Files', $serveOptions);
+    SpeedsterMinify::serve('Files', $serveOptions);
     exit();
-
 }
 
 header("HTTP/1.0 404 Not Found");

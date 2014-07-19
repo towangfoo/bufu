@@ -1,0 +1,126 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Buyerprotect
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Ngoc Anh Doan <ngoc-anh.doan@cgi.com>
+ * @copyright 2010-2013 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+?>
+<?php
+/**
+ * @see Symmetrics_Buyerprotect_Block_Adminhtml_System_Config_Info
+ */
+ $registrationUrl = $this->__('http://www.trustedshops.com/merchants/membership.html');
+ $registrationUrl .= '?shopsw=MAGENTO&partnerPackage=SYMMETRICS&et_cid=47&et_lid=3338';
+?>
+<script type="text/javascript">
+document.observe('dom:loaded', function() {
+    // Unfold MRG info Banner
+    var banner = $('buyerprotection_info-head');
+    if (banner) {
+        banner.onclick();
+    }
+});
+</script>
+<div style="font-family:Arial,sans-serif;background-color:white;color:#8f8f8f;font-size:13px;line-height:1.2em;">
+    <table border="0" cellpadding="0" cellspacing="0" style="width:640px;">
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:640px;padding:2px;margin:4px;">
+                    <tr>
+                        <td colspan="2">
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Seal of Approval and Buyer Protection'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('Trusted Shops is the well-known internet Seal of Approval for online shops which also offers customers a Buyer Protection. During the audit, your online shop is subjected to extensive and thorough tests. This audit, consisting of over 100 individual criteria, is based on the requirements of consumer protection, national and European laws.'); ?>
+                            </p>
+                        </td>
+                        <td>
+                            <img class="tsimg"
+                                src="<?php echo Mage::getDesign()->getSkinUrl('images/buyerprotect/ts_wortmarke.jpg'); ?>"
+                                alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td><img class="mrgimg" src="<?php echo Mage::getDesign()->getSkinUrl('images/buyerprotect/tophr.png'); ?>" /></td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:640px;padding:2px;margin:4px;">
+                    <tr>
+                        <td rowspan="5">
+                            <img style="margin: 10px 20px 0 2px;"
+                                class="tsimg"
+                                src="<?php echo Mage::helper('buyerprotect/adminhtml')->getTsSeal() ?>"
+                                alt="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('More trust leads to more sales!'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('The Trusted Shops seal of approval is the optimal way to increase the trust of your online customers. Trust increases customers\' willingness to buy from you.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Less abandoned purchases'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('Give your online customers a strong reason to buy proposing the Trusted Shops Buyer Protection. This additional security leads to less shopping basket abandonment'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Profitable and long-term customer relationship'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('For many online shoppers, the Trusted Shops Seal of Approval with Buyer Protection is an effective sign of quality for safe shopping on the internet. One-time buyers become regular customers.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button style=""
+                                onclick="window.open('<?php echo $registrationUrl ?>')" class="scalable" type="button">
+                                <span>
+                                    <?php echo $this->__('Apply now!'); ?>
+                                </span>
+                            </button>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</div>

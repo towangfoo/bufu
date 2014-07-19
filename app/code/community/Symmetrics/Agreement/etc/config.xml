@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Agreement
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eric Reiche <er@symmetrics.de>
+ * @author    Eugen Gitin <eg@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+	<modules>
+		<Symmetrics_Agreement>
+			<version>0.3.14</version>
+		</Symmetrics_Agreement>
+	</modules>
+	<global>
+		<models>
+			<checkout>
+				<rewrite>
+					<agreement>Symmetrics_Agreement_Model_Agreement</agreement>
+				</rewrite>
+			</checkout>
+		</models>
+        <resources>
+            <agreement_setup>
+                <setup>
+                    <module>Symmetrics_Agreement</module>
+                    <class>Symmetrics_Agreement_Model_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </agreement_setup>
+            <agreement_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </agreement_write>
+            <agreement_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </agreement_read>
+        </resources>
+    </global>
+</config>

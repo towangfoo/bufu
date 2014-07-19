@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_SecurePassword
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eric Reiche <er@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ *
+-->
+<config>
+    <modules>
+        <Symmetrics_SecurePassword>
+            <version>0.1.36</version>
+        </Symmetrics_SecurePassword>
+    </modules>
+    <global>
+        <models>
+            <securepassword>
+                <class>Symmetrics_SecurePassword_Model</class>
+            </securepassword>
+        </models>
+        <helpers>
+            <securepassword>
+                <class>Symmetrics_SecurePassword_Helper</class>
+            </securepassword>
+        </helpers>
+    	<events>
+            <customer_save_before>
+                <observers>
+                    <symmetrics_securepassword_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SecurePassword_Model_Observer</class>
+                        <method>customerSave</method>
+                    </symmetrics_securepassword_model_observer>
+                </observers>
+            </customer_save_before>
+            <controller_action_predispatch_customer_account_loginPost>
+                <observers>
+                    <symmetrics_securepassword_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SecurePassword_Model_Observer</class>
+                        <method>customerPreLogin</method>
+                    </symmetrics_securepassword_model_observer>
+                </observers>
+            </controller_action_predispatch_customer_account_loginPost>
+            <controller_action_postdispatch_customer_account_loginPost>
+                <observers>
+                    <symmetrics_securepassword_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SecurePassword_Model_Observer</class>
+                        <method>customerPostLogin</method>
+                    </symmetrics_securepassword_model_observer>
+                </observers>
+            </controller_action_postdispatch_customer_account_loginPost>
+            <controller_action_postdispatch_checkout_onepage_saveBilling>
+                <observers>
+                    <symmetrics_securepassword_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_SecurePassword_Model_Observer</class>
+                        <method>checkCustomerPassword</method>
+                    </symmetrics_securepassword_model_observer>
+                </observers>
+            </controller_action_postdispatch_checkout_onepage_saveBilling>
+         </events>        
+         <resources>
+            <securepassword_setup>
+                <setup>
+                    <module>Symmetrics_SecurePassword</module>
+                    <class>Symmetrics_SecurePassword_Model_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </securepassword_setup>
+            <securepassword_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </securepassword_write>
+            <securepassword_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </securepassword_read>
+        </resources>
+    </global>
+    <frontend>
+        <translate>
+            <modules>
+                <Symmetrics_SecurePassword>
+                    <files>
+                        <default>Symmetrics_SecurePassword.csv</default>
+                    </files>
+                </Symmetrics_SecurePassword>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <securepassword>
+                    <file>securepassword.xml</file>
+                </securepassword>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Mage_Customer>
+                    <files>
+                        <securepassword>Symmetrics_SecurePassword.csv</securepassword>
+                    </files>
+                </Mage_Customer>
+                <Symmetrics_SecurePassword>
+                    <files>
+                        <default>Symmetrics_SecurePassword.csv</default>
+                    </files>
+                </Symmetrics_SecurePassword>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <customer>
+            <password>
+                <loginAttempts>5</loginAttempts>
+                <attemptSpan>900</attemptSpan>
+                <lockTime>900</lockTime>
+            </password>
+        </customer>
+    </default>
+</config>

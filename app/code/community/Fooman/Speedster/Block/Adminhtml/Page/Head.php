@@ -14,12 +14,12 @@
  *
  * @category   Mage
  * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com) (original implementation)
- * @copyright  Copyright (c) 2008 FOOMAN (http://www.fooman.co.nz)
+ * @copyright  Copyright (c) 2008 Fooman (http://www.fooman.co.nz)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 class Fooman_Speedster_Block_Adminhtml_Page_Head extends Fooman_Speedster_Block_Page_Html_Head
-{ 
+{
     /**
      * Use Minify for the backend as well
      *
@@ -30,7 +30,7 @@ class Fooman_Speedster_Block_Adminhtml_Page_Head extends Fooman_Speedster_Block_
         return 'adminhtml/url';
     }
 
-     /**
+    /**
      * Retrieve Session Form Key
      *
      * @return string

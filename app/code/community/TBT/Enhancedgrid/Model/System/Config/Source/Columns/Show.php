@@ -29,19 +29,39 @@ class TBT_Enhancedgrid_Model_System_Config_Source_Columns_Show
 {
     public function toOptionArray()
     {
+        $collection = $this->_getAttrCol();
     
-        $collection = Mage::getResourceModel('eav/entity_attribute_collection')
-            ->setEntityTypeFilter( Mage::getModel('eav/entity')->setType('catalog_product')->getTypeId() )
-            ->addFilter("is_visible", 1);
         $cols = array();
         $cols[] = array('value' => 'id',   'label' => 'ID');
         $cols[] = array('value' => 'type_id',   'label' => 'Type (simple, bundle, etc)');
         $cols[] = array('value' => 'attribute_set_id',   'label' => 'Attribute Set');
         $cols[] = array('value' => 'qty',   'label' => 'Quantity');
         $cols[] = array('value' => 'websites',   'label' => 'Websites');
+        $cols[] = array('value' => 'categories',   'label' => 'Categories');
+        //@nelkaake Tuesday April 27, 2010 :
+        $cols[] = array('value' => 'created_at',   'label' => 'Date Created');
         foreach($collection->getItems() as $col) {
             $cols[] = array('value' => $col->getAttributeCode(),   'label' => $col->getFrontendLabel());
         }
         return $cols;
+    }
+
+    /**
+     * @return Mage_Eav_Model_Mysql4_Entity_Attribute_Collection
+     */
+    protected function _getAttrCol() {
+        
+        if ( Mage::helper( 'enhancedgrid/version' )->isBaseMageVersionAtLeast( '1.4' ) ) {
+            $collection = Mage::getResourceModel( 'catalog/product_attribute_collection' );
+            
+        } else {
+            $type_id = Mage::getModel( 'eav/entity' )->setType( 'catalog_product' )->getTypeId();
+            $collection = Mage::getResourceModel( 'eav/entity_attribute_collection' );
+            $collection->setEntityTypeFilter( $type_id );
+        }
+        
+        $collection->addFilter( "is_visible", 1 );
+        
+        return $collection;
     }
 }

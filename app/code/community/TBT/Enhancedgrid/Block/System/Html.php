@@ -36,9 +36,14 @@ class TBT_Enhancedgrid_Block_System_Html
     {
 		
 		$html = "";
-        $html .= "<div style=\" margin-bottom: 12px; width: 430px;\">".
-                 "This extension was provided by WDCA. <a href='http://wdca.ca/solutions_page_magento_ext.html' target='_blank'>Click here</a> for more from WDCA.</a><BR /> ".
-                 "<BR />Try our new <a href=\"http://www.GetSweetTooth.com\" target=\"_blank\">Sweet Tooth Points & Rewards</a> Magento Extension.</div>";
+        $html .= "
+        	<div style=\" margin-bottom: 12px; width: 430px;\">
+            Enhanced Grid v". Mage::getConfig()->getNode('modules/TBT_Enhancedgrid/version')  .". <a href='http://www.magentocommerce.com/magento-connect/WDCA/extension/748/enhanced-product-grid' target='_blank'>Click here for updates.</a><BR /> 
+		";
+		$html .= Mage::getBlockSingleton('enhancedgrid/widget_loyalty')->toHtml();
+		$html .= "
+            </div>
+        ";
         $html .= "";//$this->_getFooterHtml($element);
 
         return $html;
@@ -75,7 +80,7 @@ class TBT_Enhancedgrid_Block_System_Html
 		if($ver){
 			$field = $fieldset->addField($moduleName, 'label',
 				array(
-					'name'          => 'ssssss',
+					'name'          => 'unused',
 					'label'         => $moduleName,
 					'value'         => $ver
 				))->setRenderer($this->_getFieldRenderer());

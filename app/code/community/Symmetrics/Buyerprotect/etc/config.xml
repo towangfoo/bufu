@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_Buyerprotect
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Torsten Walluhn <tw@symmetrics.de>
+ * @author    Ngoc Anh Doan <ngoc-anh.doan@cgi.com>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Toni Stache <ts@symmetrics.de>
+ * @copyright 2010-2013 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_Buyerprotect>
+            <version>0.4.30</version>
+        </Symmetrics_Buyerprotect>
+    </modules>
+    <global>
+        <blocks>
+            <buyerprotect>
+                <class>Symmetrics_Buyerprotect_Block</class>
+            </buyerprotect>
+        </blocks>
+        <catalog>
+            <product>
+                <type>
+                    <buyerprotect translate="label" module="buyerprotect">
+                        <label>Trusted Shops - Buyerprotection</label>
+                        <model>buyerprotect/type_buyerprotect</model>
+                        <price_model>buyerprotect/type_buyerprotect_price</price_model>
+                        <index_priority>15</index_priority>
+                    </buyerprotect>
+                </type>
+            </product>
+        </catalog>
+        <helpers>
+            <buyerprotect>
+                <class>Symmetrics_Buyerprotect_Helper</class>
+            </buyerprotect>
+        </helpers>
+        <models>
+            <buyerprotect>
+                <class>Symmetrics_Buyerprotect_Model</class>
+            </buyerprotect>
+        </models>
+        <resources>
+            <buyerprotect_setup>
+                <setup>
+                    <module>Symmetrics_Buyerprotect</module>
+                    <class>Symmetrics_Buyerprotect_Model_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </buyerprotect_setup>
+        </resources>
+        <events>
+            <controller_action_predispatch_checkout_onepage_savePayment>
+                <observers>
+                    <buyerprotect>
+                        <type>singleton</type>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>addProductToCart</method>
+                    </buyerprotect>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_savePayment>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <buyerprotect>
+                        <type>singleton</type>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>registerTsSoapModel</method>
+                    </buyerprotect>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+            <checkout_onepage_controller_success_action>
+                <observers>
+                    <buyerprotect>
+                        <type>singleton</type>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>requestTsProtection</method>
+                    </buyerprotect>
+                </observers>
+            </checkout_onepage_controller_success_action>
+            <salesrule_validator_process>
+                <observers>
+                    <buyerprotect_catalogrule_before_apply>
+                        <type>singleton</type>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>quoteCalculateDiscountItem</method>
+                    </buyerprotect_catalogrule_before_apply>
+                </observers>
+            </salesrule_validator_process>
+            <cataloginventory_stock_item_save_after>
+                <observers>
+                    <inventory>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>hookIntoCataloginventoryStockItemSaveAfter</method>
+                    </inventory>
+                </observers>
+            </cataloginventory_stock_item_save_after>
+            <admin_system_config_changed_section_buyerprotection>
+                <observers>
+                    <buyerprotect>
+                        <type>singleton</type>
+                        <class>Symmetrics_Buyerprotect_Model_Observer</class>
+                        <method>checkCertificate</method>
+                    </buyerprotect>
+                </observers>
+            </admin_system_config_changed_section_buyerprotection>
+        </events>
+        <data>
+            <ts_products>
+                <item_0>
+                    <id>TS080501_500_30_EUR</id>
+                    <net>0.82</net>
+                </item_0>
+                <item_1>
+                    <id>TS080501_1500_30_EUR</id>
+                    <net>2.47</net>
+                </item_1>
+                <item_2>
+                    <id>TS080501_2500_30_EUR</id>
+                    <net>4.12</net>
+                </item_2>
+                <item_3>
+                    <id>TS080501_5000_30_EUR</id>
+                    <net>8.24</net>
+                </item_3>
+                <item_4>
+                    <id>TS080501_10000_30_EUR</id>
+                    <net>16.47</net>
+                </item_4>
+                <item_5>
+                    <id>TS080501_20000_30_EUR</id>
+                    <net>32.94</net>
+                </item_5>
+            </ts_products>
+        </data>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <buyerprotect>
+                    <file>buyerprotect.xml</file>
+                </buyerprotect>
+            </updates>
+        </layout>
+
+        <translate>
+            <modules>
+                <Symmetrics_Buyerprotect>
+                    <files>
+                        <default>Symmetrics_Buyerprotect.csv</default>
+                    </files>
+                </Symmetrics_Buyerprotect>
+            </modules>
+        </translate>
+    </frontend>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <buyerprotect>
+                    <file>buyerprotect.xml</file>
+                </buyerprotect>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Symmetrics_Buyerprotect>
+                    <files>
+                        <default>Symmetrics_Buyerprotect.csv</default>
+                    </files>
+                </Symmetrics_Buyerprotect>
+            </modules>
+        </translate>
+    </adminhtml>
+
+    <default>
+        <buyerprotection>
+            <data>
+                <trustedshops_erroremail_recipient><![CDATA[dev@trustedshops.de]]></trustedshops_erroremail_recipient>
+                <trustedshops_certificate_logo_active>0</trustedshops_certificate_logo_active>
+            </data>
+        </buyerprotection>
+        <trusted_shops_payment_codes>
+            <other>OTHER</other>
+            <ccsave>CREDIT_CARD</ccsave>
+            <checkmo>CHEQUE</checkmo>
+            <cashondelivery>CASH_ON_DELIVERY</cashondelivery>
+            <bankpayment>PREPAYMENT</bankpayment>
+            <debit>DIRECT_DEBIT</debit>
+            <sofortueberweisung>SOFORT_UEBERWEISUNG</sofortueberweisung>
+            <clickandbuy>CLICKANDBUY</clickandbuy>
+            <googlecheckout>GOOGLE_CHECKOUT</googlecheckout>
+            <paypal_standard>PAYPAL</paypal_standard>
+            <!-- Payone PayPal -->
+            <payone_wlt>PAYPAL</payone_wlt>
+        <!--
+            INVOICE
+            PREPAYMENT
+            PAYBOX
+            CASH_ON_PICKUP
+            FINANCING
+            LEASING
+            T_PAY
+            GIROPAY
+            SHOP_CARD
+        -->
+        </trusted_shops_payment_codes>
+    </default>
+</config>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TrustedRating
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Siegfried Schmitz <ss@symmetrics.de>
+ * @author    Ngoc Anh Doan <ngoc-anh.doan@cgi.com>
+ * @author    Eric Reiche <er@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Toni Stache <ts@symmetrics.de>
+ * @copyright 2009-2014 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      https://github.com/symmetrics/trustedshops_trustedrating/
+ * @link      http://www.symmetrics.de/
+ * @link      http://www.de.cgi.com/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_TrustedRating>
+            <version>0.2.5</version>
+        </Symmetrics_TrustedRating>
+    </modules>
+    <global>
+        <helpers>
+            <trustedrating>
+                <class>Symmetrics_TrustedRating_Helper</class>
+            </trustedrating>
+        </helpers>
+        <models>
+            <trustedrating>
+                <class>Symmetrics_TrustedRating_Model</class>
+            </trustedrating>
+        </models>
+        <blocks>
+            <trustedrating>
+                <class>Symmetrics_TrustedRating_Block</class>
+            </trustedrating>
+        </blocks>
+        <events>
+            <admin_system_config_changed_section_trustedrating>
+                <observers>
+                    <symmetrics_trustedrating_model_observer>
+                        <type>singleton</type>
+                        <class>Symmetrics_TrustedRating_Model_Observer</class>
+                        <method>changeTrustedRatingStatus</method>
+                    </symmetrics_trustedrating_model_observer>
+                </observers>
+            </admin_system_config_changed_section_trustedrating>
+        </events>
+        <resources>
+            <trustedrating_setup>
+                <setup>
+                    <module>Symmetrics_TrustedRating</module>
+                    <class>Symmetrics_TrustedRating_Model_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </trustedrating_setup>
+            <trustedrating_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </trustedrating_write>
+            <trustedrating_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </trustedrating_read>
+        </resources>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <trustedrating>
+                    <file>trustedrating.xml</file>
+                </trustedrating>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Symmetrics_TrustedRating>
+                    <files>
+                        <trustedrating>Symmetrics_TrustedRating.csv</trustedrating>
+                    </files>
+                </Symmetrics_TrustedRating>
+            </modules>
+        </translate>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Symmetrics_TrustedRating>
+                    <files>
+                        <default>Mage_Adminhtml.csv</default>
+                        <trustedrating>Symmetrics_TrustedRating.csv</trustedrating>
+                    </files>
+                </Symmetrics_TrustedRating>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <trustedrating>
+                    <file>trustedrating.xml</file>
+                </trustedrating>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <trustedrating>
+                <use>admin</use>
+                <args>
+                    <module>Symmetrics_TrustedRating</module>
+                    <frontName>trustedrating</frontName>
+                </args>
+            </trustedrating>
+        </routers>
+    </admin>
+    <default>
+        <overviewlanguagelink>
+            <de>https://www.trustedshops.com/bewertung/info</de>
+            <en>https://www.trustedshops.com/buyerrating/info</en>
+            <fr>https://www.trustedshops.com/evaluation/info</fr>
+            <es>https://www.trustedshops.com/evaluacion/info</es>
+            <pl>https://www.trustedshops.com/evaluacion/info</pl>
+        </overviewlanguagelink>
+        <ratinglanguagelink>
+            <de>https://www.trustedshops.com/bewertung/bewerten</de>
+            <en>https://www.trustedshops.com/buyerrating/rate</en>
+            <fr>https://www.trustedshops.com/evaluation/evaluer</fr>
+            <es>https://www.trustedshops.com/evaluacion/evaluar</es>
+            <pl>https://www.trustedshops.com/evaluacion/evaluar</pl>
+        </ratinglanguagelink>
+        <emailratingimage>
+            <de>bewerten_de.gif</de>
+            <en>bewerten_en.gif</en>
+            <fr>bewerten_fr.gif</fr>
+            <es>bewerten_es.gif</es>
+            <pl>bewerten_pl.gif</pl>
+        </emailratingimage>
+        <soapapi>
+            <wsuser>symmetricsOnTS</wsuser>
+            <wspassword>7aBUzece</wspassword>
+            <url>https://www.trustedshops.de/ts/services/TsRating?wsdl</url>
+            <partnerpackage>symmetrics</partnerpackage>
+        </soapapi>
+        <trustedrating>
+            <status>
+                <trustedrating_active>0</trustedrating_active>
+                <reminder_interval><![CDATA[5]]></reminder_interval>
+                <show_widget><![CDATA[1]]></show_widget>
+            </status>
+            <rate_now_url>
+                <de>https://www.trustedshops.com/bewertung/bewerten</de>
+                <en>https://www.trustedshops.com/buyerrating/rate</en>
+                <fr>https://www.trustedshops.com/evaluation/evaluer</fr>
+                <es>https://www.trustedshops.com/evaluacion/evaluar</es>
+                <pl>https://www.trustedshops.com/evaluacion/evaluar</pl>
+            </rate_now_url>
+            <rate_later_url>
+                <en><![CDATA[https://www.trustedshops.com/reviews/rateshoplater.php]]></en>
+            </rate_later_url>
+            <privacy_url>
+                <de><![CDATA[http://www.trustedshops.de/datenschutz.html]]></de>
+                <en><![CDATA[http://www.trustedshops.eu/legal-notice-privacy.html]]></en>
+                <fr><![CDATA[http://www.trustedshops.fr/mentions-legales.html]]></fr>
+                <es><![CDATA[http://www.trustedshops.es/aviso-legal.html]]></es>
+                <pl><![CDATA[http://www.trustedshops.pl/dane-firmy-ochrona-danych.html]]></pl>
+            </privacy_url>
+        </trustedrating>
+    </default>
+</config>

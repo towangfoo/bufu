@@ -38,6 +38,6 @@
                     <frontName>orderable</frontName>
                 </args>
             </bcatalog>
-        </routers> 
+        </routers>
     </frontend>
 </config>

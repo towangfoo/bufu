@@ -3,7 +3,7 @@
      <modules>
         <Dull_Uploader>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
         </Dull_Uploader>
      </modules>
 </config>

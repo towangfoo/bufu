@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TweaksGerman
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Siegfried Schmitz <ss@symmetrics.de>
+ * @author    Yauhen Yakimovich <yy@symmetrics.de>
+ * @author    Toni Stache <ts@symmetrics.de>
+ * @copyright 2009-2012 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<config>
+    <modules>
+        <Symmetrics_TweaksGerman>
+            <version>0.1.90</version>
+        </Symmetrics_TweaksGerman>
+    </modules>
+    <global>
+        <models>
+            <tweaksgerman>
+                <class>Symmetrics_TweaksGerman_Model</class>
+            </tweaksgerman>
+        </models>
+        <blocks>
+            <tweaksgerman>
+                <class>Symmetrics_TweaksGerman_Block</class>
+            </tweaksgerman>
+        </blocks>
+        <helpers>
+            <tweaksgerman>
+                <class>Symmetrics_TweaksGerman_Helper</class>
+            </tweaksgerman>
+        </helpers>
+        <resources>
+            <tweaksgerman_setup>
+                <setup>
+                    <module>Symmetrics_TweaksGerman</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </tweaksgerman_setup>
+            <tweaksgerman_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </tweaksgerman_write>
+            <tweaksgerman_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </tweaksgerman_read>
+        </resources>
+        <sales>
+            <quote>
+                <totals>
+                    <tax>
+                        <renderer>Symmetrics_TweaksGerman_Block_Tax_Render</renderer>
+                    </tax>
+                </totals>
+            </quote>
+        </sales>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <tweaksgerman>
+                    <file>tweaksgerman.xml</file>
+                </tweaksgerman>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Symmetrics_TweaksGerman>
+                    <files>
+                        <tweaksgerman>Symmetrics_TweaksGerman.csv</tweaksgerman>
+                    </files>
+                </Symmetrics_TweaksGerman>
+            </modules>
+        </translate>
+        <events>
+            <sales_order_place_after>
+                <observers>
+                    <tweaksgerman>
+                        <type>singleton</type>
+                        <class>Symmetrics_TweaksGerman_Model_Observer</class>
+                        <method>checkoutSubmit</method>
+                    </tweaksgerman>
+                </observers>
+            </sales_order_place_after>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <tweaksgerman>
+                        <type>singleton</type>
+                        <class>Symmetrics_TweaksGerman_Model_Observer</class>
+                        <method>toHtmlAfter</method>
+                    </tweaksgerman>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <sales_quote_config_get_product_attributes>
+                <observers>
+                    <tweaksgerman>
+                        <type>singleton</type>
+                        <class>Symmetrics_TweaksGerman_Model_Observer</class>
+                        <method>addAttributesToCart</method>
+                    </tweaksgerman>
+                </observers>
+            </sales_quote_config_get_product_attributes>
+        </events>
+        <routers>
+            <tweaksgerman>
+                <use>standard</use>
+                <args>
+                    <module>Symmetrics_TweaksGerman</module>
+                    <frontName>tweaksgerman</frontName>
+                </args>
+            </tweaksgerman>
+        </routers>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <tweaksgerman>
+                    <file>tweaksgerman.xml</file>
+                </tweaksgerman>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Symmetrics_TweaksGerman>
+                    <files>
+                        <tweaksgerman>Symmetrics_TweaksGerman.csv</tweaksgerman>
+                    </files>
+                </Symmetrics_TweaksGerman>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <customer>
+            <create_account>
+                <enable_emailnotice>0</enable_emailnotice>
+                <emailnotice><![CDATA[Wir senden Ihnen regelmäßig sorgfältig ausgesuchte Angebote zu ähnlichen Produkten aus unserem Sortiment per E-Mail zu. Ihre E-Mail-Adresse wird nicht an andere Unternehmen weitergegeben. Sie können der Nutzung Ihrer E-Mail-Adresse für Werbezwecke jederzeit durch formlose E-Mail widersprechen, ohne dass hierfür andere als die Übermittlungskosten nach den Basistarifen entstehen.]]></emailnotice>
+            </create_account>
+        </customer>
+        <catalog>
+            <frontend>
+                <enable_weight_info>0</enable_weight_info>
+                <enable_delivery_info>1</enable_delivery_info>
+                <display_shippingcosts>excl</display_shippingcosts>
+                <display_taxinfo>1</display_taxinfo>
+            </frontend>
+        </catalog>
+        <checkout>
+            <cart>
+                <product_attribute>short_description</product_attribute>
+                <additional_info><![CDATA[<div class="buttons-set">zusätzlich fallen noch Kosten oder Steuern an,<br /> die nicht über uns abgeführt bzw.<br /> von uns in Rechnung gestellt werden</p></div>]]></additional_info>
+            </cart>
+        </checkout>
+    </default>
+</config>
