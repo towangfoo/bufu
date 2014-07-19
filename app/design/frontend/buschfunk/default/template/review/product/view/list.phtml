@@ -1,0 +1,49 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Product > Review > List
+ */
+?>
+
+<?php $_items = $this->getReviewsCollection()->getItems();?>
+<?php if (count($_items)):?>
+<div class="collateral-box dedicated-review-box" id="customer-reviews">
+    <div class="head">
+        <h4><?php echo $this->__('Customer Reviews') ?></h4>
+    </div>
+
+    <?php echo $this->getChildHtml('toolbar') ?>
+
+    <ol id="customer-reviews-dedicated-list">
+        <?php foreach ($_items as $_review):?>
+            <li>
+                <div class="review-title-rating">
+                    <strong><?php echo $this->htmlEscape($_review->getTitle()) ?></strong>
+                    <?php if (count($_review->getRatingVotes()) > 0): ?>
+                    <table class="ratings-list" cellspacing="0">
+                        <tbody>
+                            <?php foreach ($_review->getRatingVotes() as $_vote): ?>
+                            <tr>
+                                <td class="label"><strong><?php echo $_vote->getRatingCode() ?></strong></td>
+                                <td>
+                                    <div class="rating-box">
+                                        <div class="rating" style="width: <?php echo $_vote->getPercent() ?>%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php endif; ?>
+                </div>
+                <p class="written-by"><i><?php echo $this->htmlEscape($_review->getNickname()) ?></i> schrieb am <i><?php echo $this->formatDate($_review->getCreatedAt()) ?></i></p>
+                <p><?php echo nl2br($this->htmlEscape($_review->getDetail())) ?></p>
+            </li>
+        <?php endforeach; ?>
+    </ol>
+    <script type="text/javascript">decorateList('customer-reviews-dedicated-list')</script>
+    <?php echo $this->getChildHtml('toolbar') ?>
+</div>
+<?php endif;?>
+
+<?php echo $this->getChildHtml('review_form') ?>

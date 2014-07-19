@@ -1,0 +1,17 @@
+<?php
+/**
+ * BuschFunk Templates
+ */
+?>
+<?php if (count($this->getChildHtmlList()) > 0) : ?>
+<div class="additional-product-data">
+    <div class="head">
+        <h4><?php echo $this->__('Additional Information') ?></h4>
+    </div>
+    <?php foreach ($this->getChildHtmlList() as $_html): ?>
+        <div class="collateral-box">
+            <?php echo $_html ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>

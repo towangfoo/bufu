@@ -1,0 +1,30 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Catalog > Product > View > Simple
+ */
+
+/**
+ * Simple product deatle template
+ *
+ * @see Mage_Catalog_Block_Product_View_Type_Simple
+ */
+?>
+<?php $_product = $this->getProduct() ?>
+
+<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+
+<span class="our-price">Unser Preis:</span>
+<?php echo $this->getPriceHtml($_product) ?>
+
+
+<div class="availability">
+<?php if($_product->isPreorderable()): ?>
+    <p class="preorder"><?php echo $this->__('Release on %s', $this->formatDate($_product->getBufuOrderableFrom())) ?></p>
+<?php elseif($_product->isSaleable()): ?>
+    <span><?php echo $this->__('Availability') ?>:</span>
+    <?php echo $this->__('In stock.') ?>
+<?php else: ?>
+    <div class="out-of-stock"><?php echo $this->__('Out of stock!') ?></div>
+<?php endif; ?>
+</div>

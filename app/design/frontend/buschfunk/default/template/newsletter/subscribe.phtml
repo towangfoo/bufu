@@ -1,0 +1,38 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Newsletter > Subscribe
+ */
+?>
+<div class="box mini-newsletter">
+    <div class="head">
+        <h4><?php echo $this->__('Newsletter') ?><a name="newsletter-box"></a></h4>
+    </div>
+    <form action="<?php echo $this->getSubscribeAction() ?>" method="post" id="newsletter-validate-detail">
+    <fieldset class="content">
+            <legend><?php echo $this->__('Newsletter') ?></legend>
+            <!--
+            <?php if( $message = $this->getErrorMessage() ): ?>
+                <p class="error"><?php echo $message ?></p>
+            <?php endif; ?>
+            <?php if( $message = $this->getSuccessMessage() ): ?>
+                <p class="success"><?php echo $message ?></p>
+            <?php endif; ?>
+            -->
+            <p class="other" style="margin-bottom:0.4em"><?php echo $this->__('Sign up for our newsletter:') ?></p>
+            <input name="email" type="text" id="newsletter" class="required-entry validate-email input-text" value="Ihre Email..." onfocus="if(this.value=='Ihre Email...') this.value='';" onblur="if(this.value=='') this.value='Ihre Email...';" />
+            <button type="submit" class="gfx-button-tick" title="<?php echo $this->__('Subscribe') ?>">
+                <span>OK</span>
+            </button>
+            <p class="other">
+                Oder wählen Sie andere Themen-Newsletter hier:<br />
+                <a href="http://www.buschfunk.com/site/kontakt">Verlagsseite Newsletter</a>
+            </p>
+    </fieldset>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail');
+//]]>
+</script>
+</div>

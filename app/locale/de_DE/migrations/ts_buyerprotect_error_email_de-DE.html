@@ -1,0 +1,34 @@
+<!-- Email template code: Trusted Shops Käuferschutz SOAP Fehler DE -->
+<!--@vars
+Note: tsSoapData is a Varien_Object
+Subject: "SOAP Übermittlungsfehler -- Kunden-Id: {{var tsSoapData.getTsId()}} -- Bestellungs-Id: {{var tsSoapData.getShopOrderId()}}"
+var tsSoapData.data contains following indexes:
+
+returnValue: return_value
+tsId: ts_id
+tsProductId: ts_product_id
+amount: amount
+currency: currency
+paymentType: payment_type
+buyerEmail: buyer_email
+shopCustomerID: shop_customer_id
+shopOrderID: shop_order_id
+orderDate: order_date
+shopSystemVersion: shop_system_version
+wsUser: ws_user
+wsPassword: ws_password
+@-->
+
+returnValue: {{var tsSoapData.getReturnValue()}}<br />
+tsId: {{var tsSoapData.getTsId()}}<br />
+tsProductId: {{var tsSoapData.getTsProductId()}}<br />
+amount: {{var tsSoapData.getAmount()}}<br />
+currency: {{var tsSoapData.getCurrency()}}<br />
+paymentType: {{var tsSoapData.getPaymentType()}}<br />
+buyerEmail: {{var tsSoapData.getBuyerEmail()}}<br />
+shopCustomerID: {{var tsSoapData.getShopCustomerId()}}<br />
+shopOrderID: {{var tsSoapData.getShopOrderId()}}<br />
+orderDate: {{var tsSoapData.getOrderDate()}}<br />
+shopSystemVersion: {{var tsSoapData.getShopSystemVersion()}}<br />
+wsUser: {{var tsSoapData.getWsUser()}}<br />
+wsPassword: {{var tsSoapData.getWsPassword()}}<br />

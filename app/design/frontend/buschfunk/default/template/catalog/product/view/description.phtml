@@ -1,0 +1,13 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Catalog > Product > Description
+ */
+
+/**
+ * Product description template
+ *
+ * @see Mage_Catalog_Block_Product_View_Description
+ */
+?>
+<?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), nl2br($this->getProduct()->getDescription()), 'description') ?>

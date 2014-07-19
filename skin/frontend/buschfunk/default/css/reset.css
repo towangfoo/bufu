@@ -26,21 +26,28 @@
 
 * { margin:0; padding:0; }
 
-body { background:#496778 url(../images/body_bg.gif) 50% 0 repeat-y; color:#2f2f2f; font:12px/1.55em arial, helvetica, sans-serif; text-align:center; }
+/*body { background:#fff; color:#222; font:12px/1.55em Helvetica, "HelveticaNeue", Arial, sans-serif; text-align:left; }*/
+body { background:#fff; color:#222; font:13px/1.50em Verdana, Arial, sans-serif; text-align:left; }
 
-a { color:#1e7ec8; text-decoration:underline; }
-a:hover { color:#1e7ec8; text-decoration:underline; }
+a { color:#ff9900; text-decoration:underline; }
+a:hover { color:#ff9900; text-decoration:underline; }
 a img { border:0;}
 :focus { outline:0; }
 
 /* Heading */
-h1, h2, h3, h4, h5, h6, .head { margin-bottom:.4em; line-height:1.3em; color:#0A263C; }
+h1, h2, h3, h4, h5, h6, .head {
+    margin-bottom:.4em;
+    line-height:1.3em;
+    color:#EBA00C;
+    font-weight:normal;
+    font-family:Georgia,Garamond,serif;
+}
 h1 { font-size:2em; line-height:1.17; }
 h2 { font-size:1.5em; }
 h3 { font-size:1.35em; }
-h4 { font-size:1.05em; }
-h5 { font-size:1.05em; }
-h6 { font-size:.95em; }
+h4 { font-size:1.05em; color:#222; font-weight:bold; }
+h5 { font-size:1.05em; color:#222; font-weight:bold; }
+h6 { font-size:.95em; color:#222; font-weight:bold; }
 
 /* Table */
 th { padding:0; text-align:left; vertical-align:top; }
@@ -49,7 +56,7 @@ td {padding:0;vertical-align:top;}
 /* Paragraph */
 p { margin-bottom:.8em; }
 address { margin-bottom:.4em; }
-address { font-style:normal; line-height:1.4em;}
+address { font-style:normal; line-height:1.3em;}
 cite { font-style:normal; font-size:10px;}
 q:before, q:after{content:'';}
 
@@ -71,3 +78,21 @@ big { font-size:1.1em; }
 hr { height:0; margin:8px 0; overflow:hidden; visibility:hidden; }
 .nowrap { white-space:nowrap; }
 .bold { font-weight:bold; }
+
+/* CLEARFIX */
+
+/* For modern browsers */
+.clearfix:before,
+.clearfix:after {
+    content:"";
+    display:table;
+}
+
+.clearfix:after {
+    clear:both;
+}
+
+/* For IE 6/7 (trigger hasLayout) */
+.clearfix {
+    zoom:1;
+}

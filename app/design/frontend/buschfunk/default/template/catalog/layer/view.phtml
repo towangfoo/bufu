@@ -1,0 +1,41 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Catalog > Layer > View
+ */
+?>
+<?php
+/**
+ * Category layered navigation
+ *
+ * @see Mage_Catalog_Block_Layer_View
+ */
+?>
+<?php if($this->canShowBlock()): ?>
+    <div class="box layered-nav">
+        <div class="head">
+            <h3><?php echo $this->__('Shop by') ?></h3>
+        </div>
+
+        <div class="border-creator">
+        <?php echo $this->getStateHtml() ?>
+        <?php if($this->canShowOptions()): ?>
+            <div class="narrow-by">
+            <dl id="narrow-by-list">
+                <?php $_filters = $this->getFilters() ?>
+                <?php foreach ($_filters as $_filter): ?>
+                <?php if($_filter->getItemsCount()): ?>
+                <dt><?php echo $this->__($_filter->getName()) ?></dt>
+                <dd>
+                <?php echo $_filter->getHtml() ?>
+                </dd>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </dl>
+            <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+<!-- [ends] .browse-by // -->

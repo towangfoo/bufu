@@ -23,7 +23,7 @@
 
 var Checkout = Class.create();
 Checkout.prototype = {
-    initialize: function(accordion, urls){
+    initialize: function(accordion, urls, useGuestCheckout){
         this.accordion = accordion;
         this.progressUrl = urls.progress;
         this.reviewUrl = urls.review;
@@ -31,7 +31,7 @@ Checkout.prototype = {
         this.failureUrl = urls.failure;
         this.billingForm = false;
         this.shippingForm= false;
-        this.syncBillingShipping = false;
+        this.syncBillingShipping = true;
         this.method = '';
         this.payment = '';
         this.loadWaiting = false;
@@ -39,6 +39,8 @@ Checkout.prototype = {
 
         //this.onSetMethod = this.nextStep.bindAsEventListener(this);
 
+        this.autoSetGuestCheckout = useGuestCheckout;
+        this.isSetGuestCheckout = false;
         this.accordion.disallowAccessToNextSections = true;
     },
 
@@ -47,7 +49,7 @@ Checkout.prototype = {
     },
 
     reloadProgressBlock: function(){
-        var updater = new Ajax.Updater($$('.col-right')[0], this.progressUrl, {method: 'get', onFailure: this.ajaxFailure.bind(this)});
+        var updater = new Ajax.Updater('one-page-checkout-progress-wrapper', this.progressUrl, {method: 'get', onFailure: this.ajaxFailure.bind(this)});
     },
 
     reloadReviewBlock: function(){
@@ -91,16 +93,29 @@ Checkout.prototype = {
         section.addClassName('allow');
         this.accordion.openSection(section);
     },
+    
+    fireAutoSetGuestCheckout: function(){
+        if (!this.isSetGuestCheckout) {
+            this.isSetGuestCheckout = true;
+            if (this.autoSetGuestCheckout) {
+                this.setMethodGuest();
+            }
+        }
+    },
+    
+    setMethodGuest: function() {
+        this.method = 'guest';
+        var request = new Ajax.Request(
+            this.saveMethodUrl,
+            {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'guest'}}
+        );
+        Element.hide('register-customer-password');
+        this.gotoSection('billing');
+    },
 
     setMethod: function(){
         if ($('login:guest') && $('login:guest').checked) {
-            this.method = 'guest';
-            var request = new Ajax.Request(
-                this.saveMethodUrl,
-                {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'guest'}}
-            );
-            Element.hide('register-customer-password');
-            this.gotoSection('billing');
+            this.setMethodGuest();
         }
         else if($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
             this.method = 'register';
@@ -791,4 +806,68 @@ Review.prototype = {
     },
 
     isSuccess: false
+}
+
+// checkoutNotice
+var CheckoutNotice = Class.create();
+CheckoutNotice.prototype = {
+    initialize: function(form, saveUrl){
+        this.form = form;
+        this.saveUrl = saveUrl;
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+        this.isLoadWaiting = false;
+    },
+
+    init : function () {
+        if ($(this.form)) {
+            $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+        }
+    },
+
+    save: function(){
+        if (this.isLoadWaiting!=false) return;
+        this.setLoadWaiting();
+        var validator = new Validation(this.form);
+        var request = new Ajax.Request(
+            this.saveUrl,
+            {
+                method:'post',
+                onComplete: this.onComplete,
+                onSuccess: this.onSave,
+                onFailure: checkout.ajaxFailure.bind(checkout),
+                parameters: Form.serialize(this.form)
+            }
+        );
+    },
+
+    setLoadWaiting: function(){
+        this.isLoadWaiting = true;
+        $('checkoutNotice-buttons-container').setStyle({opacity:.5});
+        $('checkoutNotice-loading').style.display = "block";
+    },
+    
+    resetLoadWaiting: function(){
+        $('checkoutNotice-buttons-container').setStyle({opacity:1});
+        $('checkoutNotice-loading').style.display = "none";
+        this.isLoadWaiting = false;
+    },
+
+    nextStep: function(transport){
+        if (transport && transport.responseText){
+            try{
+                response = eval('(' + transport.responseText + ')');
+            }
+            catch (e) {
+                response = {};
+            }
+        }
+
+        if (response.error) {
+            Validation.ajaxError($(response.field), response.error_message);
+            return;
+        }
+
+        this.resetLoadWaiting();
+    }
 }

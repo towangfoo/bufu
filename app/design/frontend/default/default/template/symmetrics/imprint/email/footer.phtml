@@ -1,0 +1,81 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default, Symmetrics_Imprint
+ * @author      symmetrics gmbh <info@symmetrics.de>
+ * @author      Sergej Braznikov <sb@symmetrics.de>
+ * @copyright   2010 symmetrics gmbh
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @link        http://www.symmetrics.de/
+ */
+?>
+
+<p><strong><?php echo $this->getShopName() ?></strong></p>
+
+<p>
+    <?php echo $this->getCompanyFirst() ?><br />
+    <?php if(strlen(trim($this->getCompanySecond())) > 0): ?>
+        <?php echo $this->getCompanySecond() ?><br />
+    <?php endif ?>
+    <?php echo $this->getStreet() ?><br />
+    <?php echo $this->getZip() ?> <?php echo $this->getCity() ?>
+</p>
+
+<p>
+    <?php echo $this->__('Telephone') ?>: <?php echo $this->getTelephone() ?><br />
+    <?php echo $this->__('Fax') ?>: <?php echo $this->getFax() ?><br />
+    <?php echo $this->__('Web') ?>: <a href="http://<?php echo $this->getWeb() ?>" title="<?php echo $this->getCompanyFirst() ?>"><?php echo $this->getWeb() ?></a><br />
+    <?php echo $this->__('E-Mail') ?>: <a href="mailto:<?php echo $this->getEmail() ?>" title="<?php echo $this->getCompanyFirst() ?>"><?php echo $this->getEmail() ?></a>
+</p>
+
+<p>
+    <?php echo $this->__('Financial office') ?>: <?php echo $this->getFinancialOffice() ?><br />
+    <?php if (strlen(trim($this->getTaxNumber())) > 0): ?>
+        <?php echo $this->__('Tax number') ?>: <?php echo $this->getTaxNumber() ?><br />
+    <?php endif ?>
+    <?php if (strlen(trim($this->getVatId())) > 0): ?>
+        <?php echo $this->__('VAT-ID') ?>: <?php echo $this->getVatId() ?>
+    <?php endif ?>
+</p>
+
+<p>
+    <?php echo $this->__('CEO') ?>: <?php echo $this->getCeo() ?><br />
+    <?php echo $this->__('Register court') ?>: <?php echo $this->getCourt() ?><br />
+    <?php if (strlen(trim($this->getRegisterNumber())) > 0): ?>
+        <?php echo $this->__('Register number') ?>: <?php echo $this->getRegisterNumber() ?><br />
+    <?php endif ?>
+    <?php if (strlen(trim($this->getBusinessRules())) > 0): ?>
+        <?php echo $this->__('Reference for business rules') ?>: <?php echo $this->getBusinessRules() ?>
+    <?php endif ?>
+</p>
+
+<p>
+    <?php echo $this->__('Account owner') ?>: <?php echo $this->getBankAccountOwner() ?><br />
+    <?php echo $this->__('Account') ?>: <?php echo $this->getBankAccount() ?><br />
+    <?php echo $this->__('Bank number') ?>: <?php echo $this->getBankCodeNumber() ?><br />
+    <?php echo $this->__('Bank name') ?>: <?php echo $this->getBankName() ?><br />
+    <?php if (strlen(trim($this->getSwift())) > 0): ?>
+        <?php echo $this->__('SWIFT') ?>: <?php echo $this->getSwift() ?><br />
+    <?php endif ?>
+    <?php if (strlen(trim($this->getIban())) > 0): ?>
+        <?php echo $this->__('IBAN') ?>: <?php echo $this->getIban() ?><br />
+    <?php endif ?>
+</p>

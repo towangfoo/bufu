@@ -21,6 +21,14 @@
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+.noscript.ie6Notice {
+    display:block !important;
+}
+
+.col-2-left-layout .col-main {
+    margin-right:12px;
+}
+
 h1#logo { display:inline; }
 .one-page-checkout { position:relative; }
 .group-select .legend { position:relative; zoom:1; }
@@ -42,8 +50,20 @@ h1#logo { display:inline; }
 .product-img-box .more-views li { display:inline; }
 
 /* Menu Show */
-#nav li.over ul.shown-sub { left:0; }
-#nav li.over li ul.shown-sub { left:100px; }
+#nav { overflow:visible; position:relative; }
+#nav li.over ul.shown-sub { left:184px;  z-index:10000; }
+#nav li.over li ul.shown-sub { left:284px; }
 
 /* Hover fix */
 iframe.hover-fix { position:absolute; left:-1px; top:-1px; z-index:-1; background:transparent; filter:progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0); }
+
+.product-shop-essentials .item,
+.product-shop-essentials .item span {
+    position:relative;
+    left:0px;
+}
+
+.gfx-button span {
+    float:left;
+    padding-right:-10px;
+}

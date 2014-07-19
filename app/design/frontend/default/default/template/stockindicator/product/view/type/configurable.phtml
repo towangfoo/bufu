@@ -1,0 +1,67 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_StockIndicator
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Yauhen Yakimovich <yy@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+
+/**
+ * Block template shown in the view page of a configurable product. We use this block
+ * to generate product quantity JS structure required by stock indicator to operate
+ * properly.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_StockIndicator
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Yauhen Yakimovich <yy@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+if (Mage::helper('stockindicator')->isIndicatorEnabled()): ?>
+<script type="text/javascript">
+    //<![CDATA[
+    Event.observe(window, 'load', function() {
+        var productQuantities = <?php echo $this->getJsonProductQuantities() ?>;
+        var redConfig = {
+            quantity: '<?php echo $this->getRedConfigQuantity() ?>',
+            title: '<?php echo $this->__('Currently out of stock!') ?>'
+        };
+        var yellowConfig = {
+            quantity: '<?php echo $this->getYellowConfigQuantity() ?>',
+            title: '<?php echo $this->__('Only a few available!') ?>'
+        }
+        var greenConfig = {
+            quantity: '<?php echo $this->getGreenConfigQuantity() ?>',
+            title: '<?php echo $this->__('In stock') ?>'
+        }        
+        <?php if ($this->isProductInStock()):?>
+        var isProductInStock = true;
+        <?php else: ?>
+        var isProductInStock = false;
+        <?php endif ?>
+        var stockindicator = new Symmetrics.Product.StockIndicatorConfig(
+            isProductInStock, window.spConfig, productQuantities,
+            redConfig, yellowConfig, greenConfig
+        );
+        window.stockindicator = stockindicator;
+    });
+    //]]>
+</script>
+<?php endif ?>

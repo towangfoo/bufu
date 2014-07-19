@@ -91,3 +91,42 @@ input.checkbox { width:13px; height:13px; }
 
 /* Clearer */
 .clear { clear:both; font-size:0; line-height:0; height:0; visibility:hidden; overflow:hidden; }
+
+
+/*** CMS CORRECTIONS ***/
+
+#welcome-msg .w80p {
+    width:320px;
+}
+
+/** BUFU CORRECTIONS **/
+.mini-search .input-text-wrapper .input-text {
+    position:relative;
+    top:-2px;
+}
+.mini-newsletter input.input-text {
+    margin-left:0;
+    margin-right:-15px;
+    position:relative;
+    left:-20px;
+    width:110px;
+}
+.mini-newsletter .content .gfx-button-tick {
+    margin-right:-15px;
+    position:relative;
+    left:0px;
+}
+.mini-newsletter .content .other {
+    font-size:0.85em !important;
+}
+.shopping-cart-totals td {
+    padding:0 8px;
+}
+
+table.pager .pages strong, table.pager .pages ol, table.pager .pages li {
+    display:block;
+    float:left;
+}
+table.pager .pages strong, table.pager .pages li {
+    margin-right:3px;
+}

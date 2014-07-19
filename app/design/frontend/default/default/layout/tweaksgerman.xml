@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TweaksGerman
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Siegfried Schmitz <ss@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @copyright 2009-2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+-->
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/symmetrics/tweaksgerman.css</stylesheet></action>
+            <block type="tweaksgerman/version" name="tweaksgerman.version" template="tweaksgerman/version.phtml" />
+        </reference>
+    </default>
+    <checkout_cart_index>
+        <reference name="checkout.cart.methods">
+            <block type="core/template" name="cartlink" template="tweaksgerman/cartinfo.phtml"/>
+        </reference>
+    </checkout_cart_index>
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addJs"><script>symmetrics/tweaksgerman/checkout.js</script></action>
+        </reference>
+        <reference name="head">
+            <action method="addJs"><script>symmetrics/tweaksgerman/province.js</script></action>
+            <!-- <action method="addJs"><script>symmetrics/tweaksgerman/startprovince.js</script></action> -->
+            <block type="core/template" name="switchaddress" template="tweaksgerman/address/cart.phtml"/>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="emailnotice" template="tweaksgerman/emailnotice.phtml"/>
+        </reference>
+    </checkout_onepage_index>
+    <catalog_product_view>
+        <reference name="footer">
+            <block type="tweaksgerman/weight" name="weight" template="tweaksgerman/weight.phtml"/>
+        </reference>
+    </catalog_product_view>
+    <customer_account_create>
+        <reference name="head">
+            <block type="core/template" name="emailnotice" template="tweaksgerman/emailnotice.phtml"/>
+        </reference>
+    </customer_account_create>
+    <customer_address_form>
+        <reference name="head">
+            <action method="addJs"><script>symmetrics/tweaksgerman/province.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="switchaddress" template="tweaksgerman/address.phtml"/>
+        </reference>
+    </customer_address_form>
+    <checkout_onepage_review>
+        <block type="core/text_list" name="additional.product.info">
+            <block type="tweaksgerman/checkout_item_renderer" name="additional.product.info.tweaksgerman" />
+        </block>
+        <reference name="root">
+            <action method="unsetChild"><name>agreements</name></action>
+        </reference>
+        <reference name="checkout.onepage.review.info.items.before">
+            <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="tweaksgerman/checkout/onepage/agreements.phtml"/>
+        </reference>
+        <reference name="checkout.onepage.review.info.items.after">
+            <block type="tweaksgerman/checkout_additional" name="checkout.onepage.additional" />
+        </reference>
+    </checkout_onepage_review>
+    <checkout_multishipping_overview>
+        <reference name="checkout_overview">
+            <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="setTemplate"><name>tweaksgerman/checkout/multishipping/overview.phtml</name></action>
+            <action method="unsetChild"><name>agreements</name></action>
+            <block type="checkout/agreements" name="checkout.multishipping.agreements" as="agreements" template="tweaksgerman/checkout/onepage/agreements.phtml" />
+            <block type="core/text_list" name="additional.product.info">
+                <block type="tweaksgerman/checkout_item_renderer" name="additional.product.info.tweaksgerman" />
+            </block>
+            <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+            <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>tweaksgerman/checkout/multishipping/item/default.phtml</template></action>
+        </reference>
+        <reference name="checkout.multishipping.overview.items.after">
+            <block type="tweaksgerman/checkout_additional" name="checkout.multishipping.additional" as="additional" />
+        </reference>
+    </checkout_multishipping_overview>
+    <checkout_cart_index>
+        <reference name="additional.product.info">
+            <block type="tweaksgerman/checkout_item_renderer" name="additional.product.info.tweaksgerman"/>
+        </reference>
+    </checkout_cart_index>
+    <tweaksgerman_agreement_view>
+        <reference name="root">
+            <action method="setTemplate"><template>page/popup.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="core/text" name="agreement" />
+        </reference>
+    </tweaksgerman_agreement_view>
+</layout>

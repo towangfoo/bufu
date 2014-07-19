@@ -1,0 +1,36 @@
+<?php
+/**
+ * BuschFunk Template
+ * Checkout > Review CheckoutNotice
+ *
+ * @see Bufu_CheckoutNotice_Block_Show
+ */
+?>
+<script type="text/javascript">
+    var checkoutNotice = new CheckoutNotice(
+        'co-checkoutNoticeForm',
+        '<?php echo $this->getSaveJsonAction() ?>'
+    );
+</script>
+<div class="checkoutNotice">
+    <div class="inner">
+    <form name="co-checkoutNoticeForm" id="co-checkoutNoticeForm" action="<?php echo $this->getSaveAction() ?>" method="post">
+        <label for="<?php echo $this->getFormKey() ?>"><?php echo $this->__("Add your message") ?></label>
+        <textarea id="<?php echo $this->getFormKey() ?>" name="<?php echo $this->getFormKey() ?>" onblur="checkoutNotice.save()"><?php echo $this->getNotice() ?></textarea>
+        <div class="right">
+            <div id="checkoutNotice-buttons-container">
+                <a title="<?php echo $this->__('Submit your message') ?>" href="#" onclick="checkoutNotice.save();return false;" class="gfx-button">
+                    <span>
+                        <span class="comment-add"><?php echo $this->__('Save') ?></span>
+                    </span>
+                </a>
+            </div>
+            <div id="checkoutNotice-loading" class="opc-please-wait" style="display:none">
+                <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" class="v-middle" alt="" /> &nbsp;
+                <?php echo $this->__('Saving ...') ?>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </form>
+    </div>
+</div>

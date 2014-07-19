@@ -1,0 +1,22 @@
+<?php
+/**
+ * BuschFunk Template
+ * CheckoutNotice > Show
+ *
+ * @see Bufu_CheckoutNotice_Block_Show
+ */
+?>
+<div class="shopping-cart-totals checkoutNotice">
+    <div class="inner">
+    <form name="checkoutNotice" action="<?php echo $this->getSaveAction() ?>" method="post">
+        <label for="<?php echo $this->getFormKey() ?>"><?php echo $this->__("Add your message") ?></label>
+        <textarea id="<?php echo $this->getFormKey() ?>" name="<?php echo $this->getFormKey() ?>"><?php echo $this->getNotice() ?></textarea>
+        <a title="<?php echo $this->__('Submit your message') ?>" href="#" onclick="checkoutNotice.submit();return false;" class="gfx-button right">
+            <span>
+                <span class="comment-add"><?php echo $this->__('Save') ?></span>
+            </span>
+        </a>
+        <div class="clear"></div>
+    </form>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Catalog > Product > View > End wrapper for individual Options
+ */
+?>
+
+<?php
+$helper = Mage::helper('bufu_tickets');
+if (!$helper->isATicket($this->getProduct())) :
+?>
+
+<div class="product-options-bottom">
+    <?php echo $this->getChildHtml('', true, true);?>
+</div>
+
+<?php else : ?>
+<script type="text/javascript">
+// <![CDATA[
+
+document.observe("dom:loaded", function() {
+    bufu_add_custom_options_price_update();
+});
+
+//]]>
+</script>
+<?php endif; ?>

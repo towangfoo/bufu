@@ -1,0 +1,44 @@
+<?php
+/**
+ * BuschFunk Template
+ */
+
+/**
+ * Product additional attributes template
+ *
+ * @see Mage_Catalog_Block_Product_View_Attributes
+ */
+?>
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct();
+
+    $excludedAttributesCodes = array(
+        'bufu_tracklist'
+    );
+?>
+<?php
+    $_additional = $this->getAdditionalData();
+    $cnt = count($_additional);
+    foreach ($_additional as $_data) {
+        if (in_array($_data['code'], $excludedAttributesCodes)) {
+            $cnt--;
+        }
+    }
+
+    if ($cnt > 0) :
+?>
+<div class="product-attribute-specs">
+    <table cellspacing="0" class="data-table" id="product-attribute-specs-table">
+    <?php foreach ($_additional as $_data):
+    if (!in_array($_data['code'], $excludedAttributesCodes)):
+    ?>
+    <tr>
+        <td class="label"><?php echo $this->htmlEscape($this->__($_data['label'])) ?></td>
+        <td class="data"><?php echo $_helper->productAttribute($_product, $_data['value'], $_data['code']) ?></td>
+    </tr>
+    <?php endif; endforeach; ?>
+    </table>
+    <script type="text/javascript">decorateTable('product-attribute-specs-table')</script>
+</div>
+<?php endif;?>

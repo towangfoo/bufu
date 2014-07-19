@@ -1,0 +1,26 @@
+<?php
+/**
+ * BuschFunk Templates
+ * Review > Summary
+ */
+?>
+
+<?php if ($this->getReviewsCount()): ?>
+
+    <div class="ratings">
+        <?php if ($this->getRatingSummary()):?>
+            <div class="rating-box">
+                <div class="rating" style="width:<?php echo $this->getRatingSummary() ?>%"></div>
+            </div>
+        <?php endif;?>
+        <a href="<?php echo $this->getReviewsUrl() ?>"><?php echo $this->__('%d Review(s)', $this->getReviewsCount()) ?></a><br />
+        <?php if ($this->getDisplayIfEmpty()): ?>
+            <a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Add Your Review') ?></a>
+        <?php endif; ?>
+    </div>
+
+<?php elseif ($this->getDisplayIfEmpty()): ?>
+
+    <p><a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Be the first to review this product') ?></a></p>
+
+<?php endif; ?>
