@@ -100,10 +100,16 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
                 <td><strong><?php echo $_order->getRemoteIp() ?></strong></td>
             </tr>
             <?php endif; ?>
-                      
-            	<tr>
-                <td class="label"><label>Bemerkungen</label></td>
-                <td><strong><?php echo $_order->getCheckoutNotice() ?></strong></td>
+            <?php if ($_order->getData('checkoutNotice')) : ?>
+			<tr>
+				<td class="label"><label>Bestellkommentar</label></td>
+				<td>
+					<div style="border:1px solid #d9d9d9;background-color:#fff;padding:5px">
+						<?php echo $this->htmlEscape($_order->getData('checkoutNotice')); ?>
+					</div>
+				</td>
+			</tr>
+			<?php endif; ?>
             </tr>
 
             <?php if($_order->getGlobalCurrencyCode() != $_order->getBaseCurrencyCode()): ?>
@@ -165,16 +171,6 @@ $orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate(), 'medium', 
                     <td><strong><?php echo $this->htmlEscape($_taxvat)?></strong></td>
                 </tr>
                 <?php endif;?>
-                <?php if ($_order->getData('checkoutNotice')) : ?>
-                <tr>
-                    <td class="label"><label><?php echo Mage::helper('sales')->__('Checkout Notice') ?></label></td>
-                    <td>
-                        <div style="border:1px solid #D6D6D6;background-color:#fff;padding:0 3px">
-                            <?php echo $this->htmlEscape($_order->getData('checkoutNotice')); ?>
-                        </div>
-                    </td>
-                </tr>
-                <?php endif; ?>
                 <?php if ($_order->getBillingAddress()->getData('suffix')) : ?>
                     <tr>
                         <td class="label"><label><?php echo Mage::helper('sales')->__('BuschFunk Customer #') ?></label></td>
