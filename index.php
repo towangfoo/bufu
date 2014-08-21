@@ -61,7 +61,8 @@ if (!file_exists($mageFilename)) {
     exit;
 }
 
-if (file_exists($maintenanceFile)) {
+// allow CLI to bypass maintenance mode
+if (file_exists($maintenanceFile) && isset($_SERVER["SERVER_NAME"])) {
     include_once dirname(__FILE__) . '/errors/503.php';
     exit;
 }
