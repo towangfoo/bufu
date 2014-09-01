@@ -47,8 +47,8 @@
         </div>
         <?php endif ?>
     </td>
-    <td class="a-center"><?php echo $_item->getStatus() ?></td>
-    <td class="a-right"><?php echo $this->displayPriceAttribute('original_price') ?></td>
+    <td class="a-center noprint"><?php echo $_item->getStatus() ?></td>
+    <td class="a-right noprint"><?php echo $this->displayPriceAttribute('original_price') ?></td>
     <td class="a-right">
         <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceExclTax()): ?>
             <span class="price-excl-tax">
