@@ -20,14 +20,12 @@ foreach($this->getItems() as $item) {
 $_totals = $this->getTotals();
 
 // get versandkosten incl Tax
-$_versand_incl = null;
+$_versand_incl = 0;
 if (isset($_totals['shipping'])) {
-    $_versand_excl = $_totals['shipping']->getValue();
-    $_versand_incl = $_versand_excl * 1.19;
+    $_versand_incl = $_totals['shipping']->getValue();
 }
 
 // tax information
-$tax_overall_amount = $_totals['tax']->getValue();
 $tax_parts = $_totals['tax']->getFullInfo();
 
 ?>
@@ -40,17 +38,21 @@ $tax_parts = $_totals['tax']->getFullInfo();
             <td class="a-right"><?php echo $this->__('Subtotal (incl. Tax)') ?></td>
             <td><?php echo $this->helper('checkout')->formatPrice($_zwischenSumme) ?></td>
         </tr>
-        <?php if (!is_null($_versand_incl)) : ?>
-        <tr class="bufu-total">
-            <td><?php echo $this->__('Shipping &amp; Processing') ?></td>
-            <td><?php echo $this->helper('checkout')->formatPrice($this->helper('tax')->getShippingPrice($_versand_incl, true)) ?></td>
-        </tr>
-        <?php endif; ?>
         <?php $first = true; foreach($tax_parts as $tax) :?>
         <tr class="bufu-tax <?php if($first) { echo "first"; $first = false; } ?>">
             <td>enthaltene MwSt. <?php echo $tax['rates'][0]['percent'] ?>%</td>
             <td><?php echo $this->helper('checkout')->formatPrice($tax['amount']) ?></td>
         </tr>
         <?php endforeach ?>
+		<?php if (0 !== $_versand_incl) : ?>
+        <tr class="bufu-total">
+            <td>zzgl. <?php echo $this->__('Shipping &amp; Processing') ?></td>
+            <td><?php echo $this->helper('checkout')->formatPrice($this->helper('tax')->getShippingPrice($_versand_incl, true)) ?></td>
+        </tr>
+        <?php endif; ?>
+		<tr class="bufu-total">
+		<td class="a-right"><strong><?php echo $this->__('Grand Total') ?></strong></td>
+		<td class="a-right"><strong><?php echo $this->helper('checkout')->formatPrice($_zwischenSumme + $_versand_incl) ?></strong></td>
+	</tr>
     </tbody>
 </table>
