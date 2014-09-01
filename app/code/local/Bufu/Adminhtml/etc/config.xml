@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <modules>
-        <Bufu_Adminhtml>
-            <version>0.1.1</version>
-        </Bufu_Adminhtml>
-    </modules>
-    <stores>
-        <admin>
-            <design>
-                <package>
-                    <name>default</name>
-                </package>
-                <theme>
-                    <default>buschfunk</default>
-                </theme>
-            </design>
-        </admin>
-    </stores>
+	<modules>
+		<Bufu_Adminhtml>
+			<version>0.1.1</version>
+		</Bufu_Adminhtml>
+	</modules>
+	<stores>
+		<admin>
+			<design>
+				<package>
+					<name>default</name>
+				</package>
+				<theme>
+					<default>buschfunk</default>
+				</theme>
+			</design>
+		</admin>
+	</stores>
+	<adminhtml>
+		<layout>
+			<updates>
+				<bufu_adminhtml>
+					<file>bufu_adminhtml.xml</file>
+				</bufu_adminhtml>
+			</updates>
+		</layout>
+	</adminhtml>
 </config>

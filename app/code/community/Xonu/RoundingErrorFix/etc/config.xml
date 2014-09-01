@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+ @copyright (c) 2013, Pawel Kazakow <support@xonu.de>
+ @license http://xonu.de/license/ xonu.de EULA
+-->
+<config>
+    <modules>
+        <Xonu_RoundingErrorFix>
+            <version>1.0.5</version>
+        </Xonu_RoundingErrorFix>
+    </modules>
+    <global>
+
+        <models>
+            <core>
+                <rewrite>
+                    <store>Xonu_RoundingErrorFix_Model_Store</store>
+                </rewrite>
+            </core>
+            <paypal>
+                <rewrite>
+                    <api_standard>Xonu_RoundingErrorFix_Model_Api_Standard</api_standard>
+                </rewrite>
+            </paypal>
+            <sales>
+                <rewrite>
+                    <order_payment>Xonu_RoundingErrorFix_Model_Sales_Order_Payment</order_payment>
+                </rewrite>
+            </sales>
+        </models>
+
+    </global>
+</config>

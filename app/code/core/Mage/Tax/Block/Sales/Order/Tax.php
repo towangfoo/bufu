@@ -259,8 +259,8 @@ class Mage_Tax_Block_Sales_Order_Tax extends Mage_Core_Block_Template
         if ($this->_config->displaySalesTaxWithGrandTotal($store)) {
             $grandtotal         = $this->_source->getGrandTotal();
             $baseGrandtotal     = $this->_source->getBaseGrandTotal();
-            $grandtotalExcl     = $grandtotal - $this->_source->getTaxAmount();
-            $baseGrandtotalExcl = $baseGrandtotal - $this->_source->getBaseTaxAmount();
+            $grandtotalExcl     = $grandtotal - round($this->_source->getTaxAmount(), 2);
+            $baseGrandtotalExcl = $baseGrandtotal - round($this->_source->getBaseTaxAmount(), 2);
             $grandtotalExcl     = max($grandtotalExcl, 0);
             $baseGrandtotalExcl = max($baseGrandtotalExcl, 0);
             $totalExcl = new Varien_Object(array(

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+@copyright (c) 2013, Pawel Kazakow <support@xonu.de>
+@license http://xonu.de/license/ xonu.de EULA
+-->
+<config>
+    <modules>
+        <Xonu_RoundingErrorFix>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Paypal/>
+                <Mage_Sales/>
+            </depends>
+        </Xonu_RoundingErrorFix>
+    </modules>
+</config>

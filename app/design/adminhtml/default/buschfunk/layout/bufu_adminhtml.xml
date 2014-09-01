@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Layout updates for Ticket products.
+ *
+ * TODO: License
+ *
+ * @category   Bufu
+ * @package    Fufu_Adminhtml
+ * @author     Steffen Mücke <mail@quellkunst.de>
+ */
+-->
+<layout>
+	<adminhtml_sales_order_view>
+		<!-- @BuFu: Print css settings -->
+		<reference name="head">
+			<action method="addCss"><stylesheet>bufu_print.css</stylesheet><params>media="print"</params></action>
+		</reference>
+	</adminhtml_sales_order_view>
+</layout>
