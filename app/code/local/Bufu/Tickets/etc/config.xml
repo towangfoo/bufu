@@ -102,6 +102,16 @@
                 </Bufu_Tickets>
             </modules>
         </translate>
+		<events>
+            <checkout_cart_product_add_after>
+                <observers>
+                    <bufu_tickets_observer>
+                        <class>bufu_tickets/observer</class>
+                        <method>checkout_cart_product_add_after</method>
+                    </bufu_tickets_observer>
+                </observers>
+            </checkout_cart_product_add_after>
+        </events>
         <routers>
             <bufu_tickets>
                 <use>standard</use>
