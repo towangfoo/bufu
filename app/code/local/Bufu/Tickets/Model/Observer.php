@@ -42,6 +42,9 @@ class Bufu_Tickets_Model_Observer
 		$request = Mage::app()->getRequest();
 		$ticketParams = $request->getParam("bufu_tickets");
 
+		if(!$ticketParams)
+			return $this;
+
 		// load event
 		$event = Mage::getModel('bufu_tickets/event')->load($ticketParams['event_id']);
 		if(!$event) {
