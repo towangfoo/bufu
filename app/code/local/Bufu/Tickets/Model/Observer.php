@@ -82,11 +82,6 @@ class Bufu_Tickets_Model_Observer
 			'value' => $price
 		));
 
-//		// add bufu_ticket options
-//		$product->addCustomOption(Bufu_Tickets_Helper_Data::OPTION_TYPE, $type);
-//		$product->addCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID, $event->getId());
-//		$product->addCustomOption(Bufu_Tickets_Helper_Data::OPTION_PRICE, $price);
-
 		return $this;
 	}
 }
