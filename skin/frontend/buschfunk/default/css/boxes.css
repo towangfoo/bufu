@@ -399,7 +399,7 @@ table.pager, table.view-by {
     border:1px solid #CBC6CC;
 }
 table.pager {
-    background:#d8e7f3 url(../images/defaults/bg_base_head_grey.jpg) left top repeat-x;
+    background:#e7e7e7 url(../images/defaults/bg_base_head_grey.jpg) left top repeat-x;
     border-bottom:0;
 }
 table.view-by {
@@ -407,8 +407,7 @@ table.view-by {
 }
 table.pager td {
     width:32%;
-    border-top:1px solid #eee;
-    padding:4px 8px;
+    padding:4px 8px 4px 0;
     vertical-align:middle;
     }
 table.pager td.pages { padding:4px 8px; white-space:nowrap; }
@@ -431,12 +430,11 @@ table.view-by td {
     }
 
 /* Pager */
-.pager { font-size:11px; background:#fff url(../images/bkg_toolbar.gif) 0 100% repeat-x; padding:4px 8px; border-top:1px solid #e2e2e2; text-align:center; min-height:22px; }
+.pager { font-size:11px; background:#fff url(../images/bkg_toolbar.gif) 0 100% repeat-x; padding:4px 8px 4px 0; border-top:1px solid #e2e2e2; text-align:left; min-height:22px; }
 .pager .amount { float:left; margin:0; }
 .pager .limiter { float:right; }
 .pager .limiter label { vertical-align:middle; }
 .pager .limiter select { padding:0; margin:0 0 1px; vertical-align:middle; }
-.pager .pages { margin:0 140px; }
 .pager .pages ol { display:inline; }
 .pager .pages li { display:inline; margin:0 2px; }
 .pager .pages .current {}
