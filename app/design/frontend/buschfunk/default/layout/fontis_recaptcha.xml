@@ -54,7 +54,7 @@
         	<action method="setTemplate">
                 <template>page/2columns-right.phtml</template>
             </action>
-         
+
             <action method="setHeaderTitle" translate="title" module="contacts">
                 <title>Contact Us</title>
             </action>
@@ -79,8 +79,8 @@
     -->
 
     <review_product_list>
-        <block name="product.review.form" >
+        <reference name="product.review.form" >
             <block type="core/template" name="recaptcha.box" as="recaptcha_box" template="fontis/recaptcha/recaptcha.phtml" />
-        </block>
+        </reference>
     </review_product_list>
 </layout>
