@@ -26,6 +26,11 @@
                     <query>Bufu_CatalogSearch_Model_Query</query>
                 </rewrite>
             </catalogSearch>
+			<catalogsearch_resource>
+				<rewrite>
+					<fulltext>Bufu_CatalogSearch_Model_Resource_Fulltext</fulltext>
+				</rewrite>
+			</catalogsearch_resource>
         </models>
     </global>
 </config>
