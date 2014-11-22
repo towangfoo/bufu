@@ -111,19 +111,21 @@ class Symmetrics_TweaksGerman_Model_System_Config_Backend_Region
         $regionTable = $resource->getTableName('directory/country_region');
         $writeAdapter = $resource->getConnection('directory_write');
 
-        foreach ($countries as $country) {
-            if ($collection->getItemByColumnValue('country_id', $country)) {
-                continue;
-            }
-            $writeAdapter->insert(
-                $regionTable,
-                array(
-                    'country_id' => $country,
-                    'code' => $country,
-                    'default_name' => self::DEFAULT_CONTRY_NAME,
-                )
-            );
-        }
+		if(is_array($countries)) {
+			foreach ($countries as $country) {
+				if ($collection->getItemByColumnValue('country_id', $country)) {
+					continue;
+				}
+				$writeAdapter->insert(
+					$regionTable,
+					array(
+						'country_id' => $country,
+						'code' => $country,
+						'default_name' => self::DEFAULT_CONTRY_NAME,
+					)
+				);
+			}
+		}
 
         return $this;
     }
