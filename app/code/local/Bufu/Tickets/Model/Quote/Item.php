@@ -19,9 +19,8 @@ class Bufu_Tickets_Model_Quote_Item extends Mage_Sales_Model_Quote_Item
      */
     public function calcRowTotal() {
         $product = $this->getProduct();
-        $optionEventId = $product->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID);
         // update prices for tickets - take finalPrice as setting
-        if ($optionEventId !== null) {
+        if ($this->isATicket()) {
             // set prices to the price given in backend
             $price = (float) $product->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_PRICE)->getValue();
             // custom options price add here
@@ -32,4 +31,16 @@ class Bufu_Tickets_Model_Quote_Item extends Mage_Sales_Model_Quote_Item
         // always do this!!!
         parent::calcRowTotal();
     }
+
+	/**
+	 * Return whether a quote item is a ticket
+	 *
+	 * @return boolean
+	 */
+	public function isATicket()
+	{
+		$product = $this->getProduct();
+		$optionEventId = $product->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID);
+		return ($optionEventId !== null);
+	}
 }

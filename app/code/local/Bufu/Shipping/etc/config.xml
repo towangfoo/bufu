@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Bufu_Shipping>
+			<version>0.1.0</version>
+		</Bufu_Shipping>
+	</modules>
+	<global>
+		<models>
+			<shipping>
+				<rewrite>
+					<carrier_tablerate>Bufu_Shipping_Model_Carrier_Tablerate</carrier_tablerate>
+				</rewrite>
+			</shipping>
+		</models>
+	</global>
+	<default>
+		<carriers>
+			<tablerate>
+				<bufu_tickets_price>3.90</bufu_tickets_price>
+			</tablerate>
+		</carriers>
+	</default>
+</config>

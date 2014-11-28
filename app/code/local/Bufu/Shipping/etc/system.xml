@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+	<sections>
+		<carriers>
+			<groups>
+				<tablerate>
+					<fields>
+						<bufu_tickets_price translate="label">
+							<label>Minimum shipping price for tickets in DE</label>
+							<frontend_type>text</frontend_type>
+							<validate>validate-number validate-zero-or-greater</validate>
+							<sort_order>70</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</bufu_tickets_price>
+					</fields>
+				</tablerate>
+			</groups>
+		</carriers>
+	</sections>
+</config>
