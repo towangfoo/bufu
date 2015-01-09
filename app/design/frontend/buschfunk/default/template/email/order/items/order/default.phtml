@@ -23,12 +23,28 @@
  * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
+/* @var $_item Mage_Sales_Model_Order_Item */
+$_item = $this->getItem();
+
+$_order = $_item->getOrder();
+$_product = Mage::getModel('catalog/product')->load($_item->getProduct()->getId());
 ?>
-<?php $_item = $this->getItem() ?>
-<?php $_order = $this->getItem()->getOrder() ?>
 <tr>
     <td align="left" valign="top" style="padding:3px 9px">
         <strong><?php echo $this->htmlEscape($_item->getName()) ?></strong>
+        <p class="artist-name"><?php echo $this->htmlEscape($_product->getBufuArtist()) ?></p>
+        <?php if ($_product->isPreorderable()) : ?>
+            <p class="preorder"><?php echo $this->__('Release on %s', $this->formatDate($_product->getBufuOrderableFrom())) ?></p>
+        <?php endif; ?>
+        <?php if (Mage::helper('bufu_tickets/admin')->hasTicketOptions($_item)):?>
+        <!-- ticket options -->
+            <p><strong><?php echo Mage::helper('bufu_tickets/admin')->getTitleFromTicketProduct($_item) ?></strong></p>
+            <p><?php echo Mage::helper('bufu_tickets/admin')->getDateFromTicketProduct($_item) ?>, <?php echo Mage::helper('bufu_tickets/admin')->getLocationFromTicketProduct($_item) ?></p>
+            <p><?php echo Mage::helper('bufu_tickets/admin')->getTypeFromTicketProduct($_item) ?></p>
+        <!-- end ticket options -->
+        <?php endif ?>
+        <!-- item custom options -->
         <?php if ($this->getItemOptions()): ?>
         <dl style="margin:0; padding:0;">
             <?php foreach ($this->getItemOptions() as $option): ?>
@@ -57,8 +73,8 @@
             <?php else: ?>
                 <?php echo $_order->formatPrice($_item->getRowTotal()) ?>
             <?php endif; ?>
-    
-    
+
+
             <?php if (Mage::helper('weee')->getApplied($_item)): ?>
                 <br />
                 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'email', $_order->getStore())): ?>
@@ -78,15 +94,15 @@
                     <?php endforeach; ?>
                     </small>
                 <?php endif; ?>
-    
+
                 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'email', $_order->getStore())): ?>
                     <br />
                     <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br /> <?php echo $_order->formatPrice($_item->getCalculationPrice()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?></span>
                 <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
-    
-    
+
+
         <?php if ($this->helper('tax')->displayCartPriceInclTax($_order->getStore()) || $this->helper('tax')->displayCartBothPrices($_order->getStore())): ?>
             <?php if ($this->helper('tax')->displayCartBothPrices($_order->getStore())): ?>
                 <br /><span class="label"><?php echo Mage::helper('tax')->__('Incl. Tax'); ?>:</span>
@@ -116,7 +132,7 @@
                     <?php endforeach; ?>
                     </small>
                 <?php endif; ?>
-    
+
                 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'email', $_order->getStore())): ?>
                     <span class="nobr"><?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:<br /> <?php echo $_order->formatPrice($_incl+$_item->getWeeeTaxAppliedRowAmount()); ?></span>
                 <?php endif; ?>
