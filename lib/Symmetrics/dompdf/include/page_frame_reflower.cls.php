@@ -49,11 +49,11 @@ class Page_Frame_Reflower extends Frame_Reflower {
 
   /**
    * Cache of the callbacks array
-   * 
+   *
    * @var array
    */
   private $_callbacks;
-  
+
   /**
    * Cache of the canvas
    *
@@ -62,12 +62,12 @@ class Page_Frame_Reflower extends Frame_Reflower {
   private $_canvas;
 
   function __construct(Page_Frame_Decorator $frame) { parent::__construct($frame); }
-  
+
   //........................................................................
 
   function reflow() {
     $style = $this->_frame->get_style();
-    
+
     // Paged layout:
     // http://www.w3.org/TR/CSS21/page.html
 
@@ -77,7 +77,7 @@ class Page_Frame_Reflower extends Frame_Reflower {
     $right = $style->length_in_pt($style->margin_right, $cb["w"]);
     $top = $style->length_in_pt($style->margin_top, $cb["w"]);
     $bottom = $style->length_in_pt($style->margin_bottom, $cb["w"]);
-    
+
     $content_x = $cb["x"] + $left;
     $content_y = $cb["y"] + $top;
     $content_width = $cb["w"] - $left - $right;
@@ -89,22 +89,22 @@ class Page_Frame_Reflower extends Frame_Reflower {
     while ($child) {
 
       $child->set_containing_block($content_x, $content_y, $content_width, $content_height);
-      
+
       // Check for begin reflow callback
       $this->_check_callbacks("begin_page_reflow", $child);
-      
+
       $child->reflow();
       $next_child = $child->get_next_sibling();
-      
+
       // Check for begin render callback
       $this->_check_callbacks("begin_page_render", $child);
-      
+
       // Render the page
       $this->_frame->get_renderer()->render($child);
-      
+
       // Check for end render callback
       $this->_check_callbacks("end_page_render", $child);
-      
+
       if ( $next_child )
       {
         $this->_frame->next_page();
@@ -125,10 +125,10 @@ class Page_Frame_Reflower extends Frame_Reflower {
     {
       $prev_child->dispose(true);
     }
-  }  
-  
+  }
+
   //........................................................................
-  
+
   /**
    * Check for callbacks that need to be performed when a given event
    * gets triggered on a page
@@ -142,7 +142,7 @@ class Page_Frame_Reflower extends Frame_Reflower {
       $this->_callbacks = $dompdf->get_callbacks();
       $this->_canvas = $dompdf->get_canvas();
     }
-    
+
     if (is_array($this->_callbacks) && isset($this->_callbacks[$event])) {
       $info = array(0 => $this->_canvas, "canvas" => $this->_canvas,
                     1 => $frame, "frame" => $frame);
@@ -150,12 +150,12 @@ class Page_Frame_Reflower extends Frame_Reflower {
       foreach ($fs as $f) {
         if (is_callable($f)) {
           if (is_array($f)) {
-            $f[0]->$f[1]($info);
+            $f[0]->{$f[1]}($info);
           } else {
             $f($info);
           }
         }
       }
     }
-  }  
+  }
 }

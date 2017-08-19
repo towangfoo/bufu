@@ -56,17 +56,17 @@ class Renderer extends Abstract_Renderer {
    * @var array
    */
   protected $_renderers;
-    
+
   /**
    * Cache of the callbacks array
-   * 
+   *
    * @var array
    */
   private $_callbacks;
-    
+
   /**
    * Advance the canvas to the next page
-   */  
+   */
   function new_page() {
     $this->_canvas->new_page();
   }
@@ -76,7 +76,7 @@ class Renderer extends Abstract_Renderer {
    *
    * @param Frame $frame the frame to render
    */
-  function render(Frame $frame) {    
+  function render(Frame $frame) {
     global $_dompdf_debug;
 
     if ( $_dompdf_debug ) {
@@ -85,9 +85,9 @@ class Renderer extends Abstract_Renderer {
     }
 
     $display = $frame->get_style()->display;
-    
+
     switch ($display) {
-      
+
     case "block":
     case "list-item":
     case "inline-block":
@@ -117,17 +117,17 @@ class Renderer extends Abstract_Renderer {
     case "-dompdf-image":
       $this->_render_frame("image", $frame);
       break;
-      
+
     case "none":
       $node = $frame->get_node();
-          
+
       if ( $node->nodeName === "script" ) {
         if ( $node->getAttribute("type") === "text/php" ||
              $node->getAttribute("language") === "php" ) {
           // Evaluate embedded php scripts
           $this->_render_frame("php", $frame);
         }
-        
+
         elseif ( $node->getAttribute("type") === "text/javascript" ||
              $node->getAttribute("language") === "javascript" ) {
           // Insert JavaScript
@@ -137,7 +137,7 @@ class Renderer extends Abstract_Renderer {
 
       // Don't render children, so skip to next iter
       return;
-      
+
     default:
       break;
 
@@ -145,15 +145,15 @@ class Renderer extends Abstract_Renderer {
 
     // Check for begin frame callback
     $this->_check_callbacks("begin_frame", $frame);
-    
+
     foreach ($frame->get_children() as $child)
       $this->render($child);
 
     // Check for end frame callback
     $this->_check_callbacks("end_frame", $frame);
-    
+
   }
-  
+
   /**
    * Check for callbacks that need to be performed when a given event
    * gets triggered on a frame
@@ -165,7 +165,7 @@ class Renderer extends Abstract_Renderer {
     if (!isset($this->_callbacks)) {
       $this->_callbacks = $this->_dompdf->get_callbacks();
     }
-    
+
     if (is_array($this->_callbacks) && isset($this->_callbacks[$event])) {
       $info = array(0 => $this->_canvas, "canvas" => $this->_canvas,
                     1 => $frame, "frame" => $frame);
@@ -173,7 +173,7 @@ class Renderer extends Abstract_Renderer {
       foreach ($fs as $f) {
         if (is_callable($f)) {
           if (is_array($f)) {
-            $f[0]->$f[1]($info);
+            $f[0]->{$f[1]}($info);
           } else {
             $f($info);
           }
@@ -193,7 +193,7 @@ class Renderer extends Abstract_Renderer {
   protected function _render_frame($type, $frame) {
 
     if ( !isset($this->_renderers[$type]) ) {
-      
+
       switch ($type) {
       case "block":
         $this->_renderers["block"] = new Block_Renderer($this->_dompdf);
@@ -210,7 +210,7 @@ class Renderer extends Abstract_Renderer {
       case "image":
         $this->_renderers["image"] = new Image_Renderer($this->_dompdf);
         break;
-      
+
       case "table-cell":
         $this->_renderers["table-cell"] = new Table_Cell_Renderer($this->_dompdf);
         break;
@@ -226,10 +226,10 @@ class Renderer extends Abstract_Renderer {
       case "javascript":
         $this->_renderers["javascript"] = new Javascript_Embedder($this->_dompdf);
         break;
-        
+
       }
     }
-    
+
     $this->_renderers[$type]->render($frame);
 
   }

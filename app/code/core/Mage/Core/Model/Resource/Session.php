@@ -206,7 +206,7 @@ class Mage_Core_Model_Resource_Session implements Zend_Session_SaveHandler_Inter
 
         $data = $this->_read->fetchOne($select, $bind);
 
-        return $data;
+        return (string) $data;
     }
 
     /**
