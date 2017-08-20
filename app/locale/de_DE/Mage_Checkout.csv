@@ -326,10 +326,11 @@
 "You will receive an order confirmation email with details of your order and a link to track its progress.","Sie erhalten eine Bestellbestätigung per eMail mit weiteren Informationen und einem Link, um die Bestellung weiterverfolgen zu können."
 "Your Checkout Progress","Ihr Bestellfortschritt"
 "Your billing agreement # is: %s.","Ihre Zahlungsvereinbarungsnummer lautet: %s."
-"Your order # is: %s.","Ihre Bestellnummer lautet: %s."
+"Your order # is: %s","Ihre Bestellnummer lautet: %s"
+"Your order # is: <a href=""%s"">%s</a>","Ihre Bestellnummer lautet: <a href=""%s"">%s</a>",
 "Your order cannot be completed at this time as there is no payment methods available for it.","Ihre Bestellung kann momentan nicht abgeschlossen werden, da keine Bezahlmethoden dafür verfügbar sind."
 "Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.","Ihre Bestellung kann momentan nicht abgeschlossen werden, da keine Versandarten dafür verfügbar sind."
-"Your order has been received.","Wir haben Ihre Bestellung erhalten."
+"Your order has been received","Wir haben Ihre Bestellung erhalten."
 "Your order number is ","Ihre Bestellnummer lautet "
 "Your recurring payment profiles:","Ihre wiederkehrenden Zahlungen:"
 "Zip/Postal Code","PLZ"

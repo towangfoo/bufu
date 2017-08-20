@@ -81,4 +81,5 @@
     <button class="form-button" type="submit" onclick="$('can_continue_flag').value=1" <?php if ($this->isContinueDisabled()):?>disabled="disabled" style="border-color:#999; background-color:#ccc;"<?php endif ?>><span><?php echo $this->__('Continue to Shipping Information') ?></span></button>
 </div>
 </fieldset>
+<?php echo $this->getBlockHtml('formkey') ?>
 </form>

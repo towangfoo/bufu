@@ -107,6 +107,7 @@
             <p class="no-display"><input type="hidden" name="billing[use_for_shipping]" value="1" /></p>
         <?php endif; ?>
     </fieldset>
+    <?php echo $this->getBlockHtml('formkey') ?>
 </form>
 <div class="button-set">
     <p class="required"><?php echo $this->__('* Required Fields') ?></p>

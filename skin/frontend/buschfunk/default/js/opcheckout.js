@@ -93,7 +93,7 @@ Checkout.prototype = {
         section.addClassName('allow');
         this.accordion.openSection(section);
     },
-    
+
     fireAutoSetGuestCheckout: function(){
         if (!this.isSetGuestCheckout) {
             this.isSetGuestCheckout = true;
@@ -102,7 +102,7 @@ Checkout.prototype = {
             }
         }
     },
-    
+
     setMethodGuest: function() {
         this.method = 'guest';
         var request = new Ajax.Request(
@@ -846,7 +846,7 @@ CheckoutNotice.prototype = {
         $('checkoutNotice-buttons-container').setStyle({opacity:.5});
         $('checkoutNotice-loading').style.display = "block";
     },
-    
+
     resetLoadWaiting: function(){
         $('checkoutNotice-buttons-container').setStyle({opacity:1});
         $('checkoutNotice-loading').style.display = "none";

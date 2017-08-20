@@ -21,6 +21,7 @@ var payment = new Payment('co-payment-form', '<?php echo $this->getUrl('checkout
         <img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>" alt="<?php echo $this->__('Card Verification Number Visual Reference') ?>" />
         </div>
     </div>
+    <?php echo $this->getBlockHtml('formkey') ?>
 </form>
 <div class="button-set">
     <p class="required"><?php echo $this->__('* Required Fields') ?></p>
