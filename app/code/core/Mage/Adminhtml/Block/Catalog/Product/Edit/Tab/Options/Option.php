@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -232,7 +232,7 @@ class Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Options_Option extends Mage_
                 $value['id'] = $option->getOptionId();
                 $value['item_count'] = $this->getItemCount();
                 $value['option_id'] = $option->getOptionId();
-                $value['title'] = $this->htmlEscape($option->getTitle());
+                $value['title'] = $this->escapeHtml($option->getTitle());
                 $value['type'] = $option->getType();
                 $value['is_require'] = $option->getIsRequire();
                 $value['sort_order'] = $option->getSortOrder();
@@ -256,11 +256,11 @@ class Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Options_Option extends Mage_
                             'item_count' => max($itemCount, $_value->getOptionTypeId()),
                             'option_id' => $_value->getOptionId(),
                             'option_type_id' => $_value->getOptionTypeId(),
-                            'title' => $this->htmlEscape($_value->getTitle()),
+                            'title' => $this->escapeHtml($_value->getTitle()),
                             'price' => ($showPrice)
                                 ? $this->getPriceValue($_value->getPrice(), $_value->getPriceType()) : '',
                             'price_type' => ($showPrice) ? $_value->getPriceType() : 0,
-                            'sku' => $this->htmlEscape($_value->getSku()),
+                            'sku' => $this->escapeHtml($_value->getSku()),
                             'sort_order' => $_value->getSortOrder(),
                         );
 
@@ -284,7 +284,7 @@ class Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Options_Option extends Mage_
                     $value['price'] = ($showPrice)
                         ? $this->getPriceValue($option->getPrice(), $option->getPriceType()) : '';
                     $value['price_type'] = $option->getPriceType();
-                    $value['sku'] = $this->htmlEscape($option->getSku());
+                    $value['sku'] = $this->escapeHtml($option->getSku());
                     $value['max_characters'] = $option->getMaxCharacters();
                     $value['file_extension'] = $option->getFileExtension();
                     $value['image_size_x'] = $option->getImageSizeX();

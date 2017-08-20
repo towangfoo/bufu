@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Varien
  * @package     Varien_Db
- * @copyright   Copyright (c) 2009 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -219,6 +219,7 @@ class Varien_Db_Ddl_Table
      * Set comment for table
      *
      * @param string $comment
+     * @return Varien_Db_Ddl_Table
      */
     public function setComment($comment)
     {
@@ -341,8 +342,9 @@ class Varien_Db_Ddl_Table
             case self::TYPE_DECIMAL:
             case self::TYPE_NUMERIC:
                 $match      = array();
-                $scale      = 10;
-                $precision  = 0;
+                //For decimal(M,D), M must be >= D
+                $precision  = 10;
+                $scale      = 0;
                 // parse size value
                 if (is_array($size)) {
                     if (count($size) == 2) {

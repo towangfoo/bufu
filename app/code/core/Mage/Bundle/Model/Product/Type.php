@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Bundle
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -648,13 +648,7 @@ class Mage_Bundle_Model_Product_Type extends Mage_Catalog_Model_Product_Type_Abs
 
                 $product->addCustomOption('selection_qty_' . $selection->getSelectionId(), $qty, $selection);
                 $selection->addCustomOption('selection_id', $selection->getSelectionId());
-
-                $beforeQty = 0;
-                $customOption = $product->getCustomOption('product_qty_' . $selection->getId());
-                if ($customOption) {
-                    $beforeQty = (float)$customOption->getValue();
-                }
-                $product->addCustomOption('product_qty_' . $selection->getId(), $qty + $beforeQty, $selection);
+                $product->addCustomOption('product_qty_' . $selection->getId(), $qty, $selection);
 
                 /*
                  * Create extra attributes that will be converted to product options in order item
@@ -733,6 +727,7 @@ class Mage_Bundle_Model_Product_Type extends Mage_Catalog_Model_Product_Type_Abs
             $usedSelections = Mage::getResourceModel('bundle/selection_collection')
                 ->addAttributeToSelect('*')
                 ->setFlag('require_stock_items', true)
+                ->setFlag('product_children', true)
                 ->addStoreFilter($this->getStoreFilter($product))
                 ->setStoreId($storeId)
                 ->setPositionOrder()
@@ -936,12 +931,12 @@ class Mage_Bundle_Model_Product_Type extends Mage_Catalog_Model_Product_Type_Abs
         $productOptionIds   = $this->getOptionsIds($product);
         $productSelections  = $this->getSelectionsCollection($productOptionIds, $product);
         $selectionIds       = $product->getCustomOption('bundle_selection_ids');
-        $selectionIds       = unserialize($selectionIds->getValue());
+        $selectionIds       = (array) unserialize($selectionIds->getValue());
         $buyRequest         = $product->getCustomOption('info_buyRequest');
         $buyRequest         = new Varien_Object(unserialize($buyRequest->getValue()));
         $bundleOption       = $buyRequest->getBundleOption();
 
-        if (empty($bundleOption)) {
+        if (empty($bundleOption) && empty($selectionIds)) {
             Mage::throwException($this->getSpecifyOptionMessage());
         }
 
@@ -959,7 +954,7 @@ class Mage_Bundle_Model_Product_Type extends Mage_Catalog_Model_Product_Type_Abs
         $product->getTypeInstance(true)->setStoreFilter($product->getStoreId(), $product);
         $optionsCollection = $this->getOptionsCollection($product);
         foreach ($optionsCollection->getItems() as $option) {
-            if ($option->getRequired() && empty($bundleOption[$option->getId()])) {
+            if ($option->getRequired() && empty($selectionIds) && empty($bundleOption[$option->getId()])) {
                 Mage::throwException(
                     Mage::helper('bundle')->__('Required options are not selected.')
                 );

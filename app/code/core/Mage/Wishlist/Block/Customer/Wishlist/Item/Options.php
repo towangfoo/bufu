@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Wishlist
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -84,34 +84,56 @@ class Mage_Wishlist_Block_Customer_Wishlist_Item_Options extends Mage_Wishlist_B
     }
 
     /**
+     * Retrieve product configured options
+     *
+     * @return array
+     */
+    public function getConfiguredOptions()
+    {
+        $item = $this->getItem();
+        $data = $this->getOptionsRenderCfg($item->getProduct()->getTypeId());
+        if (empty($data['helper'])
+            || !$this->helper($data['helper']) instanceof Mage_Catalog_Helper_Product_Configuration_Interface
+        ) {
+            Mage::throwException($this->__("Helper for wishlist options rendering doesn't implement required interface."));
+        }
+
+        return $this->helper($data['helper'])->getOptions($item);
+    }
+
+    /**
+     * Retrieve block template
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        $template = parent::getTemplate();
+        if ($template) {
+            return $template;
+        }
+
+        $item = $this->getItem();
+
+        if ($item instanceof Mage_Wishlist_Model_Item) {
+            $data = $this->getOptionsRenderCfg($item->getProduct()->getTypeId());
+            if (empty($data['template'])) {
+                $data = $this->getOptionsRenderCfg('default');
+            }
+        }
+
+        return empty($data['template']) ? '' : $data['template'];
+    }
+
+    /**
      * Render block html
      *
      * @return string
      */
     protected function _toHtml()
     {
-        $cfg = $this->getOptionsRenderCfg($this->getItem()->getProduct()->getTypeId());
-        if (!$cfg) {
-            return '';
-        }
+        $this->setOptionList($this->getConfiguredOptions());
 
-        $helper = Mage::helper($cfg['helper']);
-        if (!($helper instanceof Mage_Catalog_Helper_Product_Configuration_Interface)) {
-            Mage::throwException($this->__("Helper for wishlist options rendering doesn't implement required interface."));
-        }
-
-        if ($cfg['template']) {
-            $template = $cfg['template'];
-        } else {
-            $cfgDefault = $this->getOptionsRenderCfg('default');
-            if (!$cfgDefault) {
-                return '';
-            }
-            $template = $cfgDefault['template'];
-        }
-
-        $this->setTemplate($template)
-            ->setOptionList($helper->getOptions($this->getItem()));
         return parent::_toHtml();
     }
 }

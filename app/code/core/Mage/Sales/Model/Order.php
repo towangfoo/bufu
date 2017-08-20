@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -229,10 +229,10 @@
  * @method Mage_Sales_Model_Order setCustomerEmail(string $value)
  * @method string getCustomerFirstname()
  * @method Mage_Sales_Model_Order setCustomerFirstname(string $value)
- * @method string getCustomerLastname()
- * @method Mage_Sales_Model_Order setCustomerLastname(string $value)
  * @method string getCustomerMiddlename()
  * @method Mage_Sales_Model_Order setCustomerMiddlename(string $value)
+ * @method string getCustomerLastname()
+ * @method Mage_Sales_Model_Order setCustomerLastname(string $value)
  * @method string getCustomerPrefix()
  * @method Mage_Sales_Model_Order setCustomerPrefix(string $value)
  * @method string getCustomerSuffix()
@@ -265,7 +265,6 @@
  * @method Mage_Sales_Model_Order setRelationParentRealId(string $value)
  * @method string getRemoteIp()
  * @method Mage_Sales_Model_Order setRemoteIp(string $value)
- * @method string getShippingMethod()
  * @method Mage_Sales_Model_Order setShippingMethod(string $value)
  * @method string getStoreCurrencyCode()
  * @method Mage_Sales_Model_Order setStoreCurrencyCode(string $value)
@@ -310,7 +309,17 @@
  */
 class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
 {
+    /**
+     * Identifier for history item
+     */
     const ENTITY                                = 'order';
+
+    /**
+     * Event type names for order emails
+     */
+    const EMAIL_EVENT_NAME_NEW_ORDER    = 'new_order';
+    const EMAIL_EVENT_NAME_UPDATE_ORDER = 'update_order';
+
     /**
      * XML configuration paths
      */
@@ -348,15 +357,16 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
     /**
      * Order flags
      */
-    const ACTION_FLAG_CANCEL    = 'cancel';
-    const ACTION_FLAG_HOLD      = 'hold';
-    const ACTION_FLAG_UNHOLD    = 'unhold';
-    const ACTION_FLAG_EDIT      = 'edit';
-    const ACTION_FLAG_CREDITMEMO= 'creditmemo';
-    const ACTION_FLAG_INVOICE   = 'invoice';
-    const ACTION_FLAG_REORDER   = 'reorder';
-    const ACTION_FLAG_SHIP      = 'ship';
-    const ACTION_FLAG_COMMENT   = 'comment';
+    const ACTION_FLAG_CANCEL                    = 'cancel';
+    const ACTION_FLAG_HOLD                      = 'hold';
+    const ACTION_FLAG_UNHOLD                    = 'unhold';
+    const ACTION_FLAG_EDIT                      = 'edit';
+    const ACTION_FLAG_CREDITMEMO                = 'creditmemo';
+    const ACTION_FLAG_INVOICE                   = 'invoice';
+    const ACTION_FLAG_REORDER                   = 'reorder';
+    const ACTION_FLAG_SHIP                      = 'ship';
+    const ACTION_FLAG_COMMENT                   = 'comment';
+    const ACTION_FLAG_PRODUCTS_PERMISSION_DENIED= 'product_permission_denied';
 
     /**
      * Report date types
@@ -534,6 +544,9 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function canCancel()
     {
+        if (!$this->_canVoidOrder()) {
+            return false;
+        }
         if ($this->canUnhold()) {  // $this->isPaymentReview()
             return false;
         }
@@ -557,7 +570,6 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         if ($this->getActionFlag(self::ACTION_FLAG_CANCEL) === false) {
             return false;
         }
-
         /**
          * Use only state for availability detect
          */
@@ -572,18 +584,25 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
 
     /**
      * Getter whether the payment can be voided
+     *
      * @return bool
      */
     public function canVoidPayment()
     {
+        return $this->_canVoidOrder() ? $this->getPayment()->canVoid($this->getPayment()) : false;
+    }
+
+    /**
+     * Check whether order could be canceled by states and flags
+     *
+     * @return bool
+     */
+    protected function _canVoidOrder()
+    {
         if ($this->canUnhold() || $this->isPaymentReview()) {
             return false;
         }
-        $state = $this->getState();
-        if ($this->isCanceled() || $state === self::STATE_COMPLETE || $state === self::STATE_CLOSED) {
-            return false;
-        }
-        return $this->getPayment()->canVoid(new Varien_Object);
+        return true;
     }
 
     /**
@@ -781,6 +800,10 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
             return false;
         }
 
+        if ($this->getActionFlag(self::ACTION_FLAG_REORDER) === false) {
+            return false;
+        }
+
         $products = array();
         foreach ($this->getItemsCollection() as $item) {
             $products[] = $item->getProductId();
@@ -808,18 +831,14 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
             */
 
             foreach ($products as $productId) {
-                $product = Mage::getModel('catalog/product')
-                    ->setStoreId($this->getStoreId())
-                    ->load($productId);
+                    $product = Mage::getModel('catalog/product')
+                        ->setStoreId($this->getStoreId())
+                        ->load($productId);
+                }
                 if (!$product->getId() || (!$ignoreSalable && !$product->isSalable())) {
                     return false;
                 }
             }
-        }
-
-        if ($this->getActionFlag(self::ACTION_FLAG_REORDER) === false) {
-            return false;
-        }
 
         return true;
     }
@@ -1053,7 +1072,7 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      *
      * @param string $comment
      * @param string $status
-     * @return Mage_Sales_Order_Status_History
+     * @return Mage_Sales_Model_Order_Status_History
      */
     public function addStatusHistoryComment($comment, $status = false)
     {
@@ -1151,7 +1170,7 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function registerCancellation($comment = '', $graceful = true)
     {
-        if ($this->canCancel()) {
+        if ($this->canCancel() || $this->isPaymentReview()) {
             $cancelState = self::STATE_CANCELED;
             foreach ($this->getAllItems() as $item) {
                 if ($cancelState != self::STATE_PROCESSING && $item->getQtyToRefund()) {
@@ -1236,7 +1255,11 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         if (!$asObject) {
             return $shippingMethod;
         } else {
-            list($carrierCode, $method) = explode('_', $shippingMethod, 2);
+            $segments = explode('_', $shippingMethod, 2);
+            if (!isset($segments[1])) {
+                $segments[1] = $segments[0];
+            }
+            list($carrierCode, $method) = $segments;
             return new Varien_Object(array(
                 'carrier_code' => $carrierCode,
                 'method'       => $method
@@ -1245,22 +1268,27 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
     }
 
     /**
-     * Send email with order data
+     * Queue email with new order data
+     *
+     * @param bool $forceMode if true then email will be sent regardless of the fact that it was already sent previously
      *
      * @return Mage_Sales_Model_Order
+     * @throws Exception
      */
-    public function sendNewOrderEmail()
+    public function queueNewOrderEmail($forceMode = false)
     {
         $storeId = $this->getStore()->getId();
 
         if (!Mage::helper('sales')->canSendNewOrderEmail($storeId)) {
             return $this;
         }
+
         // Get the destination email addresses to send copies to
         $copyTo = $this->_getEmails(self::XML_PATH_EMAIL_COPY_TO);
         $copyMethod = Mage::getStoreConfig(self::XML_PATH_EMAIL_COPY_METHOD, $storeId);
 
         // Start store emulation process
+        /** @var $appEmulation Mage_Core_Model_App_Emulation */
         $appEmulation = Mage::getSingleton('core/app_emulation');
         $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
 
@@ -1288,7 +1316,9 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
             $customerName = $this->getCustomerName();
         }
 
+        /** @var $mailer Mage_Core_Model_Email_Template_Mailer */
         $mailer = Mage::getModel('core/email_template_mailer');
+        /** @var $emailInfo Mage_Core_Model_Email_Info */
         $emailInfo = Mage::getModel('core/email_info');
         $emailInfo->addTo($this->getCustomerEmail(), $customerName);
         if ($copyTo && $copyMethod == 'bcc') {
@@ -1313,12 +1343,19 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         $mailer->setStoreId($storeId);
         $mailer->setTemplateId($templateId);
         $mailer->setTemplateParams(array(
-                'order'        => $this,
-                'billing'      => $this->getBillingAddress(),
-                'payment_html' => $paymentBlockHtml
-            )
-        );
-        $mailer->send();
+            'order'        => $this,
+            'billing'      => $this->getBillingAddress(),
+            'payment_html' => $paymentBlockHtml
+        ));
+
+        /** @var $emailQueue Mage_Core_Model_Email_Queue */
+        $emailQueue = Mage::getModel('core/email_queue');
+        $emailQueue->setEntityId($this->getId())
+            ->setEntityType(self::ENTITY)
+            ->setEventType(self::EMAIL_EVENT_NAME_NEW_ORDER)
+            ->setIsForceCheck(!$forceMode);
+
+        $mailer->setQueue($emailQueue)->send();
 
         $this->setEmailSent(true);
         $this->_getResource()->saveAttribute($this, 'email_sent');
@@ -1327,13 +1364,26 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
     }
 
     /**
-     * Send email with order update information
+     * Send email with order data
+     *
+     * @return Mage_Sales_Model_Order
+     */
+    public function sendNewOrderEmail()
+    {
+        $this->queueNewOrderEmail(true);
+        return $this;
+    }
+
+    /**
+     * Queue email with order update information
      *
      * @param boolean $notifyCustomer
      * @param string $comment
+     * @param bool $forceMode if true then email will be sent regardless of the fact that it was already sent previously
+     *
      * @return Mage_Sales_Model_Order
      */
-    public function sendOrderUpdateEmail($notifyCustomer = true, $comment = '')
+    public function queueOrderUpdateEmail($notifyCustomer = true, $comment = '', $forceMode = false)
     {
         $storeId = $this->getStore()->getId();
 
@@ -1343,7 +1393,7 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         // Get the destination email addresses to send copies to
         $copyTo = $this->_getEmails(self::XML_PATH_UPDATE_EMAIL_COPY_TO);
         $copyMethod = Mage::getStoreConfig(self::XML_PATH_UPDATE_EMAIL_COPY_METHOD, $storeId);
-        // Check if at least one recepient is found
+        // Check if at least one recipient is found
         if (!$notifyCustomer && !$copyTo) {
             return $this;
         }
@@ -1357,8 +1407,10 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
             $customerName = $this->getCustomerName();
         }
 
+        /** @var $mailer Mage_Core_Model_Email_Template_Mailer */
         $mailer = Mage::getModel('core/email_template_mailer');
         if ($notifyCustomer) {
+            /** @var $emailInfo Mage_Core_Model_Email_Info */
             $emailInfo = Mage::getModel('core/email_info');
             $emailInfo->addTo($this->getCustomerEmail(), $customerName);
             if ($copyTo && $copyMethod == 'bcc') {
@@ -1390,10 +1442,31 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
                 'billing' => $this->getBillingAddress()
             )
         );
-        $mailer->send();
+
+        /** @var $emailQueue Mage_Core_Model_Email_Queue */
+        $emailQueue = Mage::getModel('core/email_queue');
+        $emailQueue->setEntityId($this->getId())
+            ->setEntityType(self::ENTITY)
+            ->setEventType(self::EMAIL_EVENT_NAME_UPDATE_ORDER)
+            ->setIsForceCheck(!$forceMode);
+        $mailer->setQueue($emailQueue)->send();
 
         return $this;
     }
+
+    /**
+     * Send email with order update information
+     *
+     * @param bool $notifyCustomer
+     * @param string $comment
+     *
+     * @return Mage_Sales_Model_Order
+     */
+    public function sendOrderUpdateEmail($notifyCustomer = true, $comment = '')
+    {
+        $this->queueOrderUpdateEmail($notifyCustomer, $comment, true);
+         return $this;
+     }
 
     protected function _getEmails($configPath)
     {
@@ -1952,7 +2025,12 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function hasShipments()
     {
-        return $this->getShipmentsCollection()->count();
+        $result = false;
+        $shipmentsCollection = $this->getShipmentsCollection();
+        if ($shipmentsCollection) {
+            $result = (bool)$shipmentsCollection->count();
+        }
+        return $result;
     }
 
     /**
@@ -1962,7 +2040,12 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
      */
     public function hasCreditmemos()
     {
-        return $this->getCreditmemosCollection()->count();
+        $result = false;
+        $creditmemosCollection = $this->getCreditmemosCollection();
+        if ($creditmemosCollection) {
+            $result = (bool)$creditmemosCollection->count();
+        }
+        return $result;
     }
 
 
@@ -1978,12 +2061,16 @@ class Mage_Sales_Model_Order extends Mage_Sales_Model_Abstract
         return $this->_relatedObjects;
     }
 
+    /**
+     * Retrieve customer name
+     *
+     * @return string
+     */
     public function getCustomerName()
     {
         if ($this->getCustomerFirstname()) {
-            $customerName = $this->getCustomerFirstname() . ' ' . $this->getCustomerLastname();
-        }
-        else {
+            $customerName = Mage::helper('customer')->getFullCustomerName($this);
+        } else {
             $customerName = Mage::helper('sales')->__('Guest');
         }
         return $customerName;

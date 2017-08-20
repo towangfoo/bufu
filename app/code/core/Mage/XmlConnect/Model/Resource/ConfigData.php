@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -69,12 +69,12 @@ class Mage_XmlConnect_Model_Resource_ConfigData extends Mage_Core_Model_Mysql4_A
      * Delete config value
      *
      * @param int $applicationId
-     * @param bool $category
-     * @param bool $path
+     * @param string $category
+     * @param string $path
      * @param bool $pathLike
      * @return Mage_XmlConnect_Model_Mysql4_ConfigData
      */
-    public function deleteConfig($applicationId, $category = false, $path = false, $pathLike = true)
+    public function deleteConfig($applicationId, $category = '', $path = '', $pathLike = true)
     {
         try {
             $this->_getWriteAdapter()->beginTransaction();

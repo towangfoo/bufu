@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -127,7 +127,12 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
 
         // processing WHERE part
         $wherePart = $select->getPart(Zend_Db_Select::WHERE);
+        $excludedWherePart = Mage_Catalog_Model_Resource_Product_Collection::MAIN_TABLE_ALIAS . '.status';
         foreach ($wherePart as $key => $wherePartItem) {
+            if (strpos($wherePartItem, $excludedWherePart) !== false) {
+                $wherePart[$key] = new Zend_Db_Expr('1=1');
+                continue;
+            }
             $wherePart[$key] = $this->_replaceTableAlias($wherePartItem);
         }
         $select->setPart(Zend_Db_Select::WHERE, $wherePart);
@@ -225,9 +230,11 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
     {
         $currencyRate = $filter->getLayer()->getProductCollection()->getCurrencyRate();
         if ($decrease) {
-            return ($price - (self::MIN_POSSIBLE_PRICE / 2)) / $currencyRate;
+            $result = ($price - (self::MIN_POSSIBLE_PRICE / 2)) / $currencyRate;
+        } else {
+            $result = ($price + (self::MIN_POSSIBLE_PRICE / 2)) / $currencyRate;
         }
-        return ($price + (self::MIN_POSSIBLE_PRICE / 2)) / $currencyRate;
+        return sprintf('%F', $result);
     }
 
     /**
@@ -264,12 +271,13 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
         }
         $countExpr = new Zend_Db_Expr('COUNT(*)');
         $rangeExpr = new Zend_Db_Expr("FLOOR(({$priceExpression}) / {$range}) + 1");
+        $rangeOrderExpr = new Zend_Db_Expr("FLOOR(({$priceExpression}) / {$range}) + 1 ASC");
 
         $select->columns(array(
             'range' => $rangeExpr,
             'count' => $countExpr
         ));
-        $select->group($rangeExpr)->order("$rangeExpr ASC");
+        $select->group($rangeExpr)->order($rangeOrderExpr);
 
         return $this->_getReadAdapter()->fetchPairs($select);
     }
@@ -309,7 +317,9 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
     {
         $select = $this->_getSelect($filter);
         $priceExpression = $this->_getPriceExpression($filter, $select);
-        $select->columns(array($this->_getFullPriceExpression($filter, $select)));
+        $select->columns(array(
+            'min_price_expr' => $this->_getFullPriceExpression($filter, $select)
+        ));
         if (!is_null($lowerPrice)) {
             $select->where("$priceExpression >= " . $this->_getComparingValue($lowerPrice, $filter));
         }
@@ -371,7 +381,9 @@ class Mage_Catalog_Model_Resource_Layer_Filter_Price extends Mage_Core_Model_Res
         }
 
         $pricesSelect
-            ->columns(array($this->_getFullPriceExpression($filter, $pricesSelect)))
+            ->columns(array(
+                'min_price_expr' => $this->_getFullPriceExpression($filter, $pricesSelect)
+            ))
             ->where("$priceExpression >= " . $this->_getComparingValue($price, $filter));
         if (!is_null($upperPrice)) {
             $pricesSelect->where("$priceExpression < " . $this->_getComparingValue($upperPrice, $filter));

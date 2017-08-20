@@ -1,5 +1,0 @@
-a:9:{s:7:"attribs";a:2:{s:5:"xmlns";s:36:"http://pear.php.net/dtd/rest.package";s:18:"xsi:schemaLocation";s:80:"http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd";}s:1:"n";s:16:"Mxperts_SkuRoute";s:1:"c";s:37:"connect.magentocommerce.com/community";s:2:"ca";a:2:{s:7:"attribs";a:1:{s:10:"xlink:href";s:34:"/Chiara_PEAR_Server_REST/c/Default";}s:8:"_content";s:7:"Default";}s:1:"l";s:27:"Academic Free License (AFL)";s:2:"lu";s:47:"http://www.opensource.org/licenses/academic.php";s:1:"s";s:92:"Routing of [URL]/SKU to the products page - Umleiten von [URL/SKU] zur Produkt-Detailansicht";s:1:"d";s:409:"SKURoute handles all 404 page calls by checking the URL for a valid SKU. If a product is found, there will be a redirect call to the product page.
-
-------------------------------------------------------------------------
-
-SKURoute beareitet alle 404 Aufrufe, und überprüft die URL auf Übergabe eine gültigen SKU. Wenn ein Produkt gefunden wird, erfolght eine Weiterleitung zur Detailsansicht des Produkts.";s:1:"r";a:1:{s:7:"attribs";a:1:{s:10:"xlink:href";s:43:"/Chiara_PEAR_Server_REST/r/Mxperts_SkuRoute";}}}

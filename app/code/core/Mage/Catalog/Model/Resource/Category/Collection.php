@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -75,6 +75,32 @@ class Mage_Catalog_Model_Resource_Category_Collection extends Mage_Catalog_Model
      * @var boolean
      */
     protected $_loadWithProductCount     = false;
+
+    /**
+     * Catalog factory instance
+     *
+     * @var Mage_Catalog_Model_Factory
+     */
+    protected $_factory;
+
+    /**
+     * Disable flat flag
+     *
+     * @var bool
+     */
+    protected $_disableFlat = false;
+
+    /**
+     * Initialize factory
+     *
+     * @param Mage_Core_Model_Resource_Abstract $resource
+     * @param array $args
+     */
+    public function __construct($resource = null, array $args = array())
+    {
+        parent::__construct($resource);
+        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('catalog/factory');
+    }
 
     /**
      * Init collection and determine table names
@@ -320,18 +346,20 @@ class Mage_Catalog_Model_Resource_Category_Collection extends Mage_Catalog_Model
      */
     public function joinUrlRewrite()
     {
-        $storeId = Mage::app()->getStore()->getId();
-        $this->joinTable(
-            'core/url_rewrite',
-            'category_id=entity_id',
-            array('request_path'),
-            "{{table}}.is_system=1"
-                . " AND {{table}}.product_id IS NULL"
-                . " AND {{table}}.store_id='{$storeId}'"
-                . " AND id_path LIKE 'category/%'",
-            'left'
-        );
+        $this->_factory->getCategoryUrlRewriteHelper()
+            ->joinTableToEavCollection($this, $this->_getCurrentStoreId());
+
         return $this;
+    }
+
+    /**
+     * Retrieves store_id from current store
+     *
+     * @return int
+     */
+    protected function _getCurrentStoreId()
+    {
+        return (int)Mage::app()->getStore()->getId();
     }
 
     /**
@@ -425,5 +453,37 @@ class Mage_Catalog_Model_Resource_Category_Collection extends Mage_Catalog_Model
     {
         $this->setOrder($field, self::SORT_ORDER_ASC);
         return $this;
+    }
+
+    /**
+     * Set disable flat flag
+     *
+     * @param bool $flag
+     * @return Mage_Catalog_Model_Resource_Category_Collection
+     */
+    public function setDisableFlat($flag)
+    {
+        $this->_disableFlat = (bool) $flag;
+        return $this;
+    }
+
+    /**
+     * Retrieve disable flat flag value
+     *
+     * @return bool
+     */
+    public function getDisableFlat()
+    {
+        return $this->_disableFlat;
+    }
+
+    /**
+     * Retrieve collection empty item
+     *
+     * @return Mage_Catalog_Model_Category
+     */
+    public function getNewEmptyItem()
+    {
+        return new $this->_itemObjectClass(array('disable_flat' => $this->getDisableFlat()));
     }
 }

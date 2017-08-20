@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -303,9 +303,9 @@ if(!window.Flex) {
             this.files.each(function(file){
                 if (file.size > maxUploadFileSizeInBytes) {
                     hasTooBigFiles = true;
-                    this.uploader.removeFile(file.id)
+                    this.uploader.removeFile(file.id);
                 } else {
-                    newFiles.push(file)
+                    newFiles.push(file);
                 }
             }.bind(this));
             this.files = newFiles;
@@ -363,10 +363,10 @@ if(!window.Flex) {
         checkAllComplete: function() {
             if (this.files) {
                 return !this.files.any(function(file) {
-                    return (file.status !== 'full_complete')
+                    return (file.status !== 'full_complete');
                 });
             }
             return true;
         }
-    }
+    };
 }

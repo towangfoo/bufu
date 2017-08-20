@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -64,11 +64,19 @@ class Mage_Sales_Model_Order_Invoice_Total_Discount extends Mage_Sales_Model_Ord
             $orderItemQty       = $orderItem->getQtyOrdered();
 
             if ($orderItemDiscount && $orderItemQty) {
+
                 /**
                  * Resolve rounding problems
+                 *
+                 * We dont want to include the weee discount amount as the right amount
+                 * is added when calculating the taxes.
+                 *
+                 * Also the subtotal is without weee
                  */
+
                 $discount = $orderItemDiscount - $orderItem->getDiscountInvoiced();
                 $baseDiscount = $baseOrderItemDiscount - $orderItem->getBaseDiscountInvoiced();
+
                 if (!$item->isLast()) {
                     $activeQty = $orderItemQty - $orderItem->getQtyInvoiced();
                     $discount = $invoice->roundPrice($discount / $activeQty * $item->getQty(), 'regular', true);
@@ -83,9 +91,8 @@ class Mage_Sales_Model_Order_Invoice_Total_Discount extends Mage_Sales_Model_Ord
             }
         }
 
-
-        $invoice->setDiscountAmount($totalDiscountAmount);
-        $invoice->setBaseDiscountAmount($baseTotalDiscountAmount);
+        $invoice->setDiscountAmount(-$totalDiscountAmount);
+        $invoice->setBaseDiscountAmount(-$baseTotalDiscountAmount);
 
         $invoice->setGrandTotal($invoice->getGrandTotal() - $totalDiscountAmount);
         $invoice->setBaseGrandTotal($invoice->getBaseGrandTotal() - $baseTotalDiscountAmount);

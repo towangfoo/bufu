@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -75,29 +75,29 @@ class Mage_XmlConnect_Block_Checkout_Payment_Method_Paypal_Payflow extends Mage_
         $formXmlObj->addAttribute('name', 'payment_form_' . $method->getCode());
         $formXmlObj->addAttribute('method', 'post');
 
-        $_ccType = $this->getInfoData('cc_type');
+        $ccType = $this->getInfoData('cc_type');
         $ccTypes = '';
 
-        foreach ($this->getCcAvailableTypes() as $_typeCode => $_typeName) {
-            if (!$_typeCode) {
+        foreach ($this->getCcAvailableTypes() as $typeCode => $_typeName) {
+            if (!$typeCode) {
                 continue;
             }
             $ccTypes .= '
-            <item' . ($_typeCode == $_ccType ? ' selected="1"' : '') . '>
+            <item' . ($typeCode == $ccType ? ' selected="1"' : '') . '>
                 <label>' . $_typeName . '</label>
-                <value>' . $_typeCode . '</value>
+                <value>' . $typeCode . '</value>
             </item>';
         }
 
         $ccMonthes = '';
 
-        $_ccExpMonth = $this->getInfoData('cc_exp_month');
+        $ccExpMonth = $this->getInfoData('cc_exp_month');
         foreach ($this->getCcMonths() as $k => $v) {
             if (!$k) {
                 continue;
             }
             $ccMonthes .= '
-            <item' . ($k == $_ccExpMonth ? ' selected="1"' : '') . '>
+            <item' . ($k == $ccExpMonth ? ' selected="1"' : '') . '>
                 <label>' . $v . '</label>
                 <value>' . ($k ? $k : '') . '</value>
             </item>';
@@ -105,13 +105,13 @@ class Mage_XmlConnect_Block_Checkout_Payment_Method_Paypal_Payflow extends Mage_
 
         $ccYears = '';
 
-        $_ccExpYear = $this->getInfoData('cc_exp_year');
+        $ccExpYear = $this->getInfoData('cc_exp_year');
         foreach ($this->getCcYears() as $k => $v) {
             if (!$k) {
                 continue;
             }
             $ccYears .= '
-            <item' . ($k == $_ccExpYear ? ' selected="1"' : '') . '>
+            <item' . ($k == $ccExpYear ? ' selected="1"' : '') . '>
                 <label>' . $v . '</label>
                 <value>' . ($k ? $k : '') . '</value>
             </item>';

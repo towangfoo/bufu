@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Install
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -38,6 +38,12 @@ class Mage_Install_Model_Config extends Varien_Simplexml_Config
     const XML_PATH_WIZARD_STEPS     = 'wizard/steps';
     const XML_PATH_CHECK_WRITEABLE  = 'check/filesystem/writeable';
     const XML_PATH_CHECK_EXTENSIONS = 'check/php/extensions';
+
+    protected $_optionsMapping = array(self::XML_PATH_CHECK_WRITEABLE => array(
+        'app_etc' => 'etc_dir',
+        'var'     => 'var_dir',
+        'media'   => 'media_dir',
+    ));
 
     public function __construct()
     {
@@ -76,6 +82,8 @@ class Mage_Install_Model_Config extends Varien_Simplexml_Config
      *      )
      * )
      *
+     * @deprecated since 1.7.1.0
+     *
      * @return array
      */
     public function getPathForCheck()
@@ -89,6 +97,29 @@ class Mage_Install_Model_Config extends Varien_Simplexml_Config
         }
 
         return $res;
+    }
+
+    /**
+     * Retrieve writable full paths for checking
+     *
+     * @return array
+     */
+    public function getWritableFullPathsForCheck()
+    {
+        $paths = array();
+        $items = (array) $this->getNode(self::XML_PATH_CHECK_WRITEABLE);
+        foreach ($items as $nodeKey => $item) {
+            $value = (array)$item;
+            if (isset($this->_optionsMapping[self::XML_PATH_CHECK_WRITEABLE][$nodeKey])) {
+                $configKey = $this->_optionsMapping[self::XML_PATH_CHECK_WRITEABLE][$nodeKey];
+                $value['path'] = Mage::app()->getConfig()->getOptions()->getData($configKey);
+            } else {
+                $value['path'] = dirname(Mage::getRoot()) . $value['path'];
+            }
+            $paths[$nodeKey] = $value;
+        }
+
+        return $paths;
     }
 
     /**

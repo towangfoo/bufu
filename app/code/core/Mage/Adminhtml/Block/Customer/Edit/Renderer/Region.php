@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -34,6 +34,23 @@ class Mage_Adminhtml_Block_Customer_Edit_Renderer_Region
     implements Varien_Data_Form_Element_Renderer_Interface
 {
     /**
+     * Factory instance
+     *
+     * @var Mage_Core_Model_Abstract
+     */
+    protected $_factory;
+
+    /**
+     * Constructor for Mage_Adminhtml_Block_Customer_Edit_Renderer_Region class
+     *
+     * @param array $args
+     */
+    public function __construct(array $args = array())
+    {
+        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('core/factory');
+    }
+
+    /**
      * Output the region element and javasctipt that makes it dependent from country element
      *
      * @param Varien_Data_Form_Element_Abstract $element
@@ -41,14 +58,15 @@ class Mage_Adminhtml_Block_Customer_Edit_Renderer_Region
      */
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
-        if ($country = $element->getForm()->getElement('country_id')) {
+        $country = $element->getForm()->getElement('country_id');
+        if (!is_null($country)) {
             $countryId = $country->getValue();
-        }
-        else {
+        } else {
             return $element->getDefaultHtml();
         }
 
         $regionId = $element->getForm()->getElement('region_id')->getValue();
+        $quoteStoreId = $element->getEntityAttribute()->getStoreId();
 
         $html = '<tr>';
         $element->setClass('input-text');
@@ -60,13 +78,13 @@ class Mage_Adminhtml_Block_Customer_Edit_Renderer_Region
         $selectId = $element->getHtmlId() . '_id';
         $html .= '<select id="' . $selectId . '" name="' . $selectName
             . '" class="select required-entry" style="display:none">';
-        $html .= '<option value="">' . Mage::helper('customer')->__('Please select') . '</option>';
+        $html .= '<option value="">' . $this->_factory->getHelper('customer')->__('Please select') . '</option>';
         $html .= '</select>';
 
         $html .= '<script type="text/javascript">' . "\n";
         $html .= '$("' . $selectId . '").setAttribute("defaultValue", "' . $regionId.'");' . "\n";
-        $html .= 'new regionUpdater("' . $country->getHtmlId() . '", "' . $element->getHtmlId()
-            . '", "' . $selectId . '", ' . $this->helper('directory')->getRegionJson() . ');' . "\n";
+        $html .= 'new regionUpdater("' . $country->getHtmlId() . '", "' . $element->getHtmlId() . '", "' .
+            $selectId . '", ' . $this->helper('directory')->getRegionJsonByStore($quoteStoreId).');' . "\n";
         $html .= '</script>' . "\n";
 
         $html .= '</td></tr>' . "\n";

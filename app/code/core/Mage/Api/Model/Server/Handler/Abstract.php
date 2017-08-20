@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Api
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -287,14 +287,16 @@ abstract class Mage_Api_Model_Server_Handler_Abstract
                 throw new Mage_Api_Exception('resource_path_not_callable');
             }
 
-            if (is_callable(array(&$model, $method))) {
+            if (method_exists($model, $method)) {
+                $result = array();
                 if (isset($methodInfo->arguments) && ((string)$methodInfo->arguments) == 'array') {
-                    return $model->$method((is_array($args) ? $args : array($args)));
+                    $result = $model->$method((is_array($args) ? $args : array($args)));
                 } elseif (!is_array($args)) {
-                    return $model->$method($args);
+                    $result = $model->$method($args);
                 } else {
-                    return call_user_func_array(array(&$model, $method), $args);
+                    $result = call_user_func_array(array(&$model, $method), $args);
                 }
+                return $this->processingMethodResult($result);
             } else {
                 throw new Mage_Api_Exception('resource_path_not_callable');
             }
@@ -400,14 +402,16 @@ abstract class Mage_Api_Model_Server_Handler_Abstract
                     throw new Mage_Api_Exception('resource_path_not_callable');
                 }
 
-                if (is_callable(array(&$model, $method))) {
+                if (method_exists($model, $method)) {
+                    $callResult = array();
                     if (isset($methodInfo->arguments) && ((string)$methodInfo->arguments) == 'array') {
-                        $result[] = $model->$method((is_array($args) ? $args : array($args)));
+                        $callResult = $model->$method((is_array($args) ? $args : array($args)));
                     } elseif (!is_array($args)) {
-                        $result[] = $model->$method($args);
+                        $callResult = $model->$method($args);
                     } else {
-                        $result[] = call_user_func_array(array(&$model, $method), $args);
+                        $callResult = call_user_func_array(array(&$model, $method), $args);
                     }
+                    $result[] = $this->processingMethodResult($callResult);
                 } else {
                     throw new Mage_Api_Exception('resource_path_not_callable');
                 }
@@ -542,5 +546,47 @@ abstract class Mage_Api_Model_Server_Handler_Abstract
     {
         $this->_startSession($sessionId);
         return array_values($this->_getConfig()->getFaults());
+    }
+
+    /**
+     * Prepare Api data for XML exporting
+     * See allowed characters in XML:
+     * @link http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+     *
+     * @param mixed $result
+     * @return mixed
+     */
+    public function processingMethodResult($result)
+    {
+        if (is_null($result) || is_bool($result) || is_numeric($result) || is_object($result)) {
+            return $result;
+        } elseif (is_array($result)) {
+            foreach ($result as $key => $value) {
+                $result[$key] = $this->processingMethodResult($value);
+            }
+        } else {
+            $result = $this->processingRow($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Prepare Api row data for XML exporting
+     * Convert not allowed symbol to numeric character reference
+     *
+     * @param $row
+     * @return mixed
+     */
+    public function processingRow($row)
+    {
+        $row = preg_replace_callback(
+            '/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u',
+            function ($matches) {
+                return '&#' . Mage::helper('core/string')->uniOrd($matches[0]) . ';';
+            },
+            $row
+        );
+        return $row;
     }
 } // Class Mage_Api_Model_Server_Handler_Abstract End

@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 var Packaging = Class.create();
@@ -132,14 +132,14 @@ Packaging.prototype = {
             var weight, length, width, height = null;
             var packagesParams = [];
             this.packagesContent.childElements().each(function(pack) {
-                var packageId = pack.id.match(/\d$/)[0];
+                var packageId = pack.id.match(/\d+$/)[0];
                 weight = parseFloat(pack.select('input[name="container_weight"]')[0].value);
                 length = parseFloat(pack.select('input[name="container_length"]')[0].value);
                 width = parseFloat(pack.select('input[name="container_width"]')[0].value);
                 height = parseFloat(pack.select('input[name="container_height"]')[0].value);
                 packagesParams[packageId] = {
                     container:                  pack.select('select[name="package_container"]')[0].value,
-                    customs_value:              parseInt(pack.select('input[name="package_customs_value"]')[0].value, 10),
+                    customs_value:              parseFloat(pack.select('input[name="package_customs_value"]')[0].value, 10),
                     weight:                     isNaN(weight) ? '' : weight,
                     length:                     isNaN(length) ? '' : length,
                     width:                      isNaN(width) ? '' : width,
@@ -170,7 +170,7 @@ Packaging.prototype = {
                 }
                 var deliveryConfirmation = pack.select('select[name="delivery_confirmation_types"]');
                 if (deliveryConfirmation.length) {
-                     packagesParams[packageId]['delivery_confirmation'] =  deliveryConfirmation[0].value
+                     packagesParams[packageId]['delivery_confirmation'] =  deliveryConfirmation[0].value;
                 }
             }.bind(this));
             for (var packageId in this.packages) {
@@ -260,7 +260,7 @@ Packaging.prototype = {
         dimensionElements.each(callback);
 
         return result = $$('[id^="package_block_"] input').collect(function (element) {
-            return this.validateElement(element)
+            return this.validateElement(element);
         }, this).all();
     },
 
@@ -345,7 +345,7 @@ Packaging.prototype = {
         item.remove();
         this.messages.hide().update();
         this._recalcContainerWeightAndCustomsValue(packItems);
-        this._setAllItemsPackedState()
+        this._setAllItemsPackedState();
     },
 
     recalcContainerWeightAndCustomsValue: function(obj) {
@@ -394,7 +394,7 @@ Packaging.prototype = {
                          if (items[packedItemId]) {
                              items[packedItemId] += this.packages[packageId]['items'][packedItemId]['qty'];
                          } else {
-                             items[packedItemId] = this.packages[packageId]['items'][packedItemId]['qty']
+                             items[packedItemId] = this.packages[packageId]['items'][packedItemId]['qty'];
                          }
                      }
                  }
@@ -506,7 +506,7 @@ Packaging.prototype = {
         packagePrepare.hide();
         packageBlock.select('.AddSelectedBtn')[0].hide();
         packageBlock.select('.AddItemsBtn')[0].show();
-        this._setAllItemsPackedState()
+        this._setAllItemsPackedState();
     },
 
     validateItemQty: function (itemId, qty) {
@@ -627,13 +627,13 @@ Packaging.prototype = {
                 Form.Element.disable(inputElement);
                 inputElement.addClassName('disabled');
                 if (inputElement.nodeName == 'INPUT') {
-                    $(inputElement).value = ''
+                    $(inputElement).value = '';
                 }
             } else {
                 Form.Element.enable(inputElement);
                 inputElement.removeClassName('disabled');
             }
-        })
+        });
     },
 
     changeContentTypes: function(obj) {
@@ -759,7 +759,7 @@ Packaging.prototype = {
         packagePrapare.select('tbody input[type="checkbox"]').each(function(item){
             $(item).observe('change', this._observeQty);
             this._observeQty.call(item);
-        }.bind(this))
+        }.bind(this));
     },
 
     _observeQty: function() {

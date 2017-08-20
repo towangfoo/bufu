@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Paypal
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -166,8 +166,8 @@ class Mage_Paypal_Model_Cart
 
         // cut down totals to one total if they are invalid
         if (!$this->_areTotalsValid) {
-            $totals = array(self::TOTAL_SUBTOTAL =>
-                $this->_totals[self::TOTAL_SUBTOTAL] + $this->_totals[self::TOTAL_TAX]
+            $totals = array(
+                self::TOTAL_SUBTOTAL => $this->_totals[self::TOTAL_SUBTOTAL] + $this->_totals[self::TOTAL_TAX]
             );
             if (!$this->_isShippingAsItem) {
                 $totals[self::TOTAL_SUBTOTAL] += $this->_totals[self::TOTAL_SHIPPING];
@@ -380,7 +380,7 @@ class Mage_Paypal_Model_Cart
      */
     protected function _validate()
     {
-        $this->_areItemsValid = false;
+        $this->_areItemsValid = true;
         $this->_areTotalsValid = false;
 
         $referenceAmount = $this->_salesEntity->getBaseGrandTotal();
@@ -401,8 +401,9 @@ class Mage_Paypal_Model_Cart
          * see http://php.net/float
          */
         // match sum of all the items and totals to the reference amount
-        if (sprintf('%.4F', $sum) == sprintf('%.4F', $referenceAmount)) {
-            $this->_areItemsValid = true;
+        if (sprintf('%.4F', $sum) != sprintf('%.4F', $referenceAmount)) {
+            $adjustment = $sum - $referenceAmount;
+            $this->_totals[self::TOTAL_SUBTOTAL] = $this->_totals[self::TOTAL_SUBTOTAL] - $adjustment;
         }
 
         // PayPal requires to have discount less than items subtotal
@@ -413,6 +414,16 @@ class Mage_Paypal_Model_Cart
         }
 
         $this->_areItemsValid = $this->_areItemsValid && $this->_areTotalsValid;
+    }
+
+    /**
+     * Check whether items are valid
+     *
+     * @return bool
+     */
+    public function areItemsValid()
+    {
+        return $this->_areItemsValid;
     }
 
     /**
@@ -494,5 +505,20 @@ class Mage_Paypal_Model_Cart
     {
         $this->_totals[self::TOTAL_TAX] += (float)$salesEntity->getBaseHiddenTaxAmount();
         $this->_totals[self::TOTAL_TAX] += (float)$salesEntity->getBaseShippingHiddenTaxAmount();
+    }
+
+    /**
+     * Check whether any item has negative amount
+     *
+     * @return bool
+     */
+    public function hasNegativeItemAmount()
+    {
+        foreach ($this->_items as $item) {
+            if ($item->getAmount() < 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

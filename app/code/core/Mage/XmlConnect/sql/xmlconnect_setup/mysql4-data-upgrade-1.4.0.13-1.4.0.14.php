@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -37,25 +37,17 @@ $installer = $this;
 
 $appTableName = $installer->getTable('xmlconnect/application');
 
-$configField = $installer
-    ->getConnection()
+$configField = $installer->getConnection()
     ->tableColumnExists($appTableName, 'configuration');
 
 if ($configField) {
     /** @var $appModel Mage_XmlConnect_Model_Application */
     $appModel = Mage::getModel('xmlconnect/application');
-    $select = $appModel->getResource()
-        ->getReadConnection()
-        ->select()
-        ->from(
-            $appTableName,
-            array('application_id', 'configuration')
+    $select = $appModel->getResource()->getReadConnection()->select()->from(
+        $appTableName, array('application_id', 'configuration')
     );
 
-    $result = $appModel
-        ->getResource()
-        ->getReadConnection()
-        ->fetchAll($select);
+    $result = $appModel->getResource()->getReadConnection()->fetchAll($select);
 
     foreach ($result as $rows) {
         if (empty($rows['configuration'])) {
@@ -69,10 +61,7 @@ if ($configField) {
         );
     }
 
-    $installer
-        ->getConnection()
-        ->dropColumn(
-            $installer->getTable('xmlconnect/application'),
-            'configuration'
+    $installer->getConnection()->dropColumn(
+        $installer->getTable('xmlconnect/application'), 'configuration'
     );
 }

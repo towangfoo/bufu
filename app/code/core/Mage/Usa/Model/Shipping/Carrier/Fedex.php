@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Usa
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -133,8 +133,8 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
     {
         $client = new SoapClient($wsdl, array('trace' => $trace));
         $client->__setLocation($this->getConfigFlag('sandbox_mode')
-            ? 'https://wsbeta.fedex.com:443/web-services/rate'
-            : 'https://ws.fedex.com:443/web-services/rate'
+            ? 'https://wsbeta.fedex.com:443/web-services '
+            : 'https://ws.fedex.com:443/web-services'
         );
 
         return $client;
@@ -368,7 +368,7 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                     '0' => array(
                         'Weight' => array(
                             'Value' => (float)$r->getWeight(),
-                            'Units' => 'LB'
+                            'Units' => $this->getConfigData('unit_of_measure')
                         ),
                         'GroupPackageCount' => 1,
                     )
@@ -430,21 +430,47 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
     protected function _getQuotes()
     {
         $this->_result = Mage::getModel('shipping/rate_result');
-        // make separate request for Smart Post method
         $allowedMethods = explode(',', $this->getConfigData('allowed_methods'));
         if (in_array(self::RATE_REQUEST_SMARTPOST, $allowedMethods)) {
             $response = $this->_doRatesRequest(self::RATE_REQUEST_SMARTPOST);
             $preparedSmartpost = $this->_prepareRateResponse($response);
-            if (!$preparedSmartpost->getError()) {
-                $this->_result->append($preparedSmartpost);
-            }
+            $this->_result->append($preparedSmartpost);
         }
-        // make general request for all methods
         $response = $this->_doRatesRequest(self::RATE_REQUEST_GENERAL);
         $preparedGeneral = $this->_prepareRateResponse($response);
-        if (!$preparedGeneral->getError() || ($this->_result->getError() && $preparedGeneral->getError())) {
-            $this->_result->append($preparedGeneral);
+        if ($this->_result->getError() && $preparedGeneral->getError()) {
+            return $this->_result->getError();
         }
+        $this->_result->append($preparedGeneral);
+        $this->_removeErrorsIfRateExist();
+
+        return $this->_result;
+    }
+
+    /**
+     * Remove Errors in Case When Rate Exist
+     *
+     * @return Mage_Shipping_Model_Rate_Result
+     */
+    protected function _removeErrorsIfRateExist()
+    {
+        $rateResultExist = false;
+        $rates           = array();
+        foreach ($this->_result->getAllRates() as $rate) {
+            if (!($rate instanceof Mage_Shipping_Model_Rate_Result_Error)) {
+                $rateResultExist = true;
+                $rates[] = $rate;
+            }
+        }
+
+        if ($rateResultExist) {
+            $this->_result->reset();
+            $this->_result->setError(false);
+            foreach ($rates as $rate) {
+                $this->_result->append($rate);
+            }
+        }
+
         return $this->_result;
     }
 
@@ -462,7 +488,12 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
 
         if (is_object($response)) {
             if ($response->HighestSeverity == 'FAILURE' || $response->HighestSeverity == 'ERROR') {
-                $errorTitle = (string)$response->Notifications->Message;
+                if (is_array($response->Notifications)) {
+                    $notification = array_pop($response->Notifications);
+                    $errorTitle = (string)$notification->Message;
+                } else {
+                    $errorTitle = (string)$response->Notifications->Message;
+                }
             } elseif (isset($response->RateReplyDetails)) {
                 $allowedMethods = explode(",", $this->getConfigData('allowed_methods'));
 
@@ -531,7 +562,17 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
             }
 
             // Order is important
-            foreach (array('RATED_ACCOUNT_SHIPMENT', 'RATED_LIST_SHIPMENT', 'RATED_LIST_PACKAGE') as $rateType) {
+            $ratesOrder = array(
+                'RATED_ACCOUNT_PACKAGE',
+                'PAYOR_ACCOUNT_PACKAGE',
+                'RATED_ACCOUNT_SHIPMENT',
+                'PAYOR_ACCOUNT_SHIPMENT',
+                'RATED_LIST_PACKAGE',
+                'PAYOR_LIST_PACKAGE',
+                'RATED_LIST_SHIPMENT',
+                'PAYOR_LIST_SHIPMENT'
+            );
+            foreach ($ratesOrder as $rateType) {
                 if (!empty($rateTypeAmounts[$rateType])) {
                     $amount = $rateTypeAmounts[$rateType];
                     break;
@@ -563,6 +604,7 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
     /**
      * Get xml quotes
      *
+     * @deprecated
      * @return Mage_Shipping_Model_Rate_Result
      */
     protected function _getXmlQuotes()
@@ -622,8 +664,8 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
                 $responseBody = curl_exec($ch);
                 curl_close ($ch);
@@ -876,6 +918,11 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                 'ADULT'                 => Mage::helper('usa')->__('Adult'),
                 'DIRECT'                => Mage::helper('usa')->__('Direct'),
                 'INDIRECT'              => Mage::helper('usa')->__('Indirect'),
+            ),
+
+            'unit_of_measure'=>array(
+                'LB'   =>  Mage::helper('usa')->__('Pounds'),
+                'KG'   =>  Mage::helper('usa')->__('Kilograms'),
             ),
         );
 
@@ -1340,7 +1387,10 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                         'PhoneNumber' => $request->getShipperContactPhoneNumber()
                     ),
                     'Address' => array(
-                        'StreetLines' => array($request->getShipperAddressStreet()),
+                        'StreetLines' => array(
+                            $request->getShipperAddressStreet1(),
+                            $request->getShipperAddressStreet2()
+                        ),
                         'City' => $request->getShipperAddressCity(),
                         'StateOrProvinceCode' => $request->getShipperAddressStateOrProvinceCode(),
                         'PostalCode' => $request->getShipperAddressPostalCode(),
@@ -1354,7 +1404,10 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                         'PhoneNumber' => $request->getRecipientContactPhoneNumber()
                     ),
                     'Address' => array(
-                        'StreetLines' => array($request->getRecipientAddressStreet()),
+                        'StreetLines' => array(
+                            $request->getRecipientAddressStreet1(),
+                            $request->getRecipientAddressStreet2()
+                        ),
                         'City' => $request->getRecipientAddressCity(),
                         'StateOrProvinceCode' => $request->getRecipientAddressStateOrProvinceCode(),
                         'PostalCode' => $request->getRecipientAddressPostalCode(),

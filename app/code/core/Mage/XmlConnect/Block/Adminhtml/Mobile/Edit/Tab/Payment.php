@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -80,7 +80,6 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Payment
 
         $deviceType = Mage::helper('xmlconnect')->getDeviceType();
         switch ($deviceType) {
-            case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_IPHONE:
             case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_IPAD:
                 /**
                  * PayPal MEP management
@@ -192,13 +191,13 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Payment
                     )
                 );
                 break;
+            case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_IPHONE:
             case Mage_XmlConnect_Helper_Data::DEVICE_TYPE_ANDROID:
                 /**
                  * PayPal MECL management
                  */
                 if (Mage::app()->isSingleStoreMode() || Mage::helper('xmlconnect')->getApplication()->getId()) {
-                    $paypalMeclIsAvailable = Mage::getModel('xmlconnect/payment_method_paypal_mecl')
-                        ->isAvailable();
+                    $paypalMeclIsAvailable = Mage::getModel('xmlconnect/payment_method_paypal_mecl')->isAvailable();
                     $activateMeclMethodNote = $this->__('You need to enable PayPal Express Checkout first from the Payment configuration before enabling PayPal MECL.');
                 } else {
                     $paypalMeclIsAvailable = false;
@@ -223,17 +222,6 @@ class Mage_XmlConnect_Block_Adminhtml_Mobile_Edit_Tab_Payment
                     'values'    => $yesNoValues,
                     'value'     => $paypalMeclActive,
                     'disabled'  => !$paypalMeclIsAvailable
-                ));
-
-                /**
-                 * PayPal MEP management
-                 */
-                $fieldsetPaypal = $form->addFieldset('paypal_mep_checkout', array(
-                    'legend' => $this->__('PayPal Mobile Embedded Payment (MEP)')
-                ));
-                $fieldsetPaypal->addField('paypal_note', 'note', array(
-                    'label' => $this->__('Notice'),
-                    'text'  => $this->__('Currently, PayPal MEP is not available for the Android application')
                 ));
                 break;
             default:

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -141,7 +141,7 @@ class Mage_Adminhtml_Block_Page_Menu extends Mage_Adminhtml_Block_Template
             }
 
             $aclResource = 'admin/' . ($child->resource ? (string)$child->resource : $path . $childName);
-            if (!$this->_checkAcl($aclResource)) {
+            if (!$this->_checkAcl($aclResource) || !$this->_isEnabledModuleOutput($child)) {
                 continue;
             }
 
@@ -306,5 +306,22 @@ class Mage_Adminhtml_Block_Page_Menu extends Mage_Adminhtml_Block_Template
         $html .= '</ul>' . PHP_EOL;
 
         return $html;
+    }
+
+    /**
+     * Check is module output enabled
+     *
+     * @param Varien_Simplexml_Element $child
+     * @return bool
+     */
+    protected function _isEnabledModuleOutput(Varien_Simplexml_Element $child)
+    {
+        $helperName      = 'adminhtml';
+        $childAttributes = $child->attributes();
+        if (isset($childAttributes['module'])) {
+            $helperName  = (string)$childAttributes['module'];
+        }
+
+        return Mage::helper($helperName)->isModuleOutputEnabled();
     }
 }

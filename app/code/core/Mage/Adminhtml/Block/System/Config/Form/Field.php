@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -71,11 +71,11 @@ class Mage_Adminhtml_Block_System_Config_Form_Field
         $addInheritCheckbox = false;
         if ($element->getCanUseWebsiteValue()) {
             $addInheritCheckbox = true;
-            $checkboxLabel = Mage::helper('adminhtml')->__('Use Website');
+            $checkboxLabel = $this->__('Use Website');
         }
         elseif ($element->getCanUseDefaultValue()) {
             $addInheritCheckbox = true;
-            $checkboxLabel = Mage::helper('adminhtml')->__('Use Default');
+            $checkboxLabel = $this->__('Use Default');
         }
 
         if ($addInheritCheckbox) {
@@ -109,20 +109,27 @@ class Mage_Adminhtml_Block_System_Config_Form_Field
                             $defTextArr[] = $v['label'];
                         }
                     } elseif (isset($v['value'])) {
-						if ($v['value']==$defText) {
-							$defTextArr[] = $v['label'];
-							break;
-						}
-					}
+                        if ($v['value'] == $defText) {
+                            $defTextArr[] = $v['label'];
+                            break;
+                        }
+                    } elseif (!is_array($v)) {
+                        if ($k == $defText) {
+                            $defTextArr[] = $v;
+                            break;
+                        }
+                    }
                 }
                 $defText = join(', ', $defTextArr);
             }
 
             // default value
             $html.= '<td class="use-default">';
-            //$html.= '<input id="'.$id.'_inherit" name="'.$namePrefix.'[inherit]" type="checkbox" value="1" class="input-checkbox config-inherit" '.$inherit.' onclick="$(\''.$id.'\').disabled = this.checked">';
-            $html.= '<input id="'.$id.'_inherit" name="'.$namePrefix.'[inherit]" type="checkbox" value="1" class="checkbox config-inherit" '.$inherit.' onclick="toggleValueElements(this, Element.previous(this.parentNode))" /> ';
-            $html.= '<label for="'.$id.'_inherit" class="inherit" title="'.htmlspecialchars($defText).'">'.$checkboxLabel.'</label>';
+            $html.= '<input id="' . $id . '_inherit" name="'
+                . $namePrefix . '[inherit]" type="checkbox" value="1" class="checkbox config-inherit" '
+                . $inherit . ' onclick="toggleValueElements(this, Element.previous(this.parentNode))" /> ';
+            $html.= '<label for="' . $id . '_inherit" class="inherit" title="'
+                . htmlspecialchars($defText) . '">' . $checkboxLabel . '</label>';
             $html.= '</td>';
         }
 

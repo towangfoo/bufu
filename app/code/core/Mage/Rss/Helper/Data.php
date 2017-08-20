@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Rss
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -35,21 +35,35 @@
 class Mage_Rss_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
+     * Config path to RSS field
+     */
+    const XML_PATH_RSS_ACTIVE = 'rss/config/active';
+
+    protected $_rssSession;
+
+    protected $_adminSession;
+
+    public function __construct(array $params = array())
+    {
+        $this->_rssSession = isset($params['rss_session']) ? $params['rss_session'] : Mage::getSingleton('rss/session');
+        $this->_adminSession = isset($params['admin_session'])
+            ? $params['admin_session'] : Mage::getSingleton('admin/session');
+    }
+
+    /**
      * Authenticate customer on frontend
      *
      */
     public function authFrontend()
     {
-        $session = Mage::getSingleton('rss/session');
-        if ($session->isCustomerLoggedIn()) {
-            return;
-        }
-        list($username, $password) = $this->authValidate();
-        $customer = Mage::getModel('customer/customer')->authenticate($username, $password);
-        if ($customer && $customer->getId()) {
-            Mage::getSingleton('rss/session')->settCustomer($customer);
-        } else {
-            $this->authFailed();
+        if (!$this->_rssSession->isCustomerLoggedIn()) {
+            list($username, $password) = $this->authValidate();
+            $customer = Mage::getModel('customer/customer')->authenticate($username, $password);
+            if ($customer && $customer->getId()) {
+                $this->_rssSession->settCustomer($customer);
+            } else {
+                $this->authFailed();
+            }
         }
     }
 
@@ -60,17 +74,15 @@ class Mage_Rss_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function authAdmin($path)
     {
-        $session = Mage::getSingleton('rss/session');
-        if ($session->isAdminLoggedIn()) {
-            return;
+        if (!$this->_rssSession->isAdminLoggedIn()) {
+            list($username, $password) = $this->authValidate();
+            Mage::getSingleton('adminhtml/url')->setNoSecret(true);
+            $user = $this->_adminSession->login($username, $password);
+        } else {
+            $user = $this->_rssSession->getAdmin();
         }
-        list($username, $password) = $this->authValidate();
-        Mage::getSingleton('adminhtml/url')->setNoSecret(true);
-        $adminSession = Mage::getSingleton('admin/session');
-        $user = $adminSession->login($username, $password);
-        //$user = Mage::getModel('admin/user')->login($username, $password);
-        if($user && $user->getId() && $user->getIsActive() == '1' && $adminSession->isAllowed($path)){
-            $session->setAdmin($user);
+        if ($user && $user->getId() && $user->getIsActive() == '1' && $this->_adminSession->isAllowed($path)) {
+            $this->_rssSession->setAdmin($user);
         } else {
             $this->authFailed();
         }
@@ -82,7 +94,7 @@ class Mage_Rss_Helper_Data extends Mage_Core_Helper_Abstract
      * @param array $headers
      * @return array
      */
-    public function authValidate($headers=null)
+    public function authValidate($headers = null)
     {
         $userPass = Mage::helper('core/http')->authValidate($headers);
         return $userPass;
@@ -107,12 +119,22 @@ class Mage_Rss_Helper_Data extends Mage_Core_Helper_Abstract
     {
         /* @var $flatHelper Mage_Catalog_Helper_Product_Flat */
         $flatHelper = Mage::helper('catalog/product_flat');
-        if ($flatHelper->isEnabled()) {
+        if ($flatHelper->isAvailable()) {
             /* @var $emulationModel Mage_Core_Model_App_Emulation */
             $emulationModel = Mage::getModel('core/app_emulation');
             // Emulate admin environment to disable using flat model - otherwise we won't get global stats
             // for all stores
             $emulationModel->startEnvironmentEmulation(0, Mage_Core_Model_App_Area::AREA_ADMINHTML);
         }
+    }
+
+    /**
+     * Check if module was activated in system configurations
+     *
+     * @return bool
+     */
+    public function isRssEnabled()
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_RSS_ACTIVE);
     }
 }

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Bundle
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -54,7 +54,9 @@ class Mage_Bundle_Block_Checkout_Cart_Item_Renderer extends Mage_Checkout_Block_
      */
     protected function _getSelectionFinalPrice($selectionProduct)
     {
-        return Mage::helper('bundle/catalog_product_configuration')->getSelectionFinalPrice($this->getItem(), $selectionProduct);
+        $helper = Mage::helper('bundle/catalog_product_configuration');
+        $result = $helper->getSelectionFinalPrice($this->getItem(), $selectionProduct);
+        return $result;
     }
 
     /**
@@ -80,23 +82,22 @@ class Mage_Bundle_Block_Checkout_Cart_Item_Renderer extends Mage_Checkout_Block_
     }
 
     /**
-     * Return cart backorder messages
+     * Return cart item error messages
      *
      * @return array
      */
     public function getMessages()
     {
-        $messages = $this->getData('messages');
-        if (is_null($messages)) {
-            $messages = array();
-        }
-        $options = $this->getItem()->getQtyOptions();
+        $messages = array();
+        $quoteItem = $this->getItem();
 
-        foreach ($options as $option) {
-            if ($option->getMessage()) {
+        // Add basic messages occuring during this page load
+        $baseMessages = $quoteItem->getMessage(false);
+        if ($baseMessages) {
+            foreach ($baseMessages as $message) {
                 $messages[] = array(
-                    'text' => $option->getMessage(),
-                    'type' => ($this->getItem()->getHasError()) ? 'error' : 'notice'
+                    'text' => $message,
+                    'type' => $quoteItem->getHasError() ? 'error' : 'notice'
                 );
             }
         }

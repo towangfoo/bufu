@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -728,6 +728,28 @@ abstract class Mage_Sales_Model_Order_Pdf_Abstract extends Varien_Object
     }
 
     /**
+     * Render item
+     *
+     * @param Varien_Object $item
+     * @param Zend_Pdf_Page $page
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Pdf_Items_Abstract $renderer
+     *
+     * @return Mage_Sales_Model_Order_Pdf_Abstract
+     */
+    public function renderItem(Varien_Object $item, Zend_Pdf_Page $page, Mage_Sales_Model_Order $order, $renderer)
+    {
+        $renderer->setOrder($order)
+            ->setItem($item)
+            ->setPdf($this)
+            ->setPage($page)
+            ->setRenderedModel($this)
+            ->draw();
+
+        return $this;
+    }
+
+    /**
      * Draw Item process
      *
      * @param  Varien_Object $item
@@ -737,15 +759,24 @@ abstract class Mage_Sales_Model_Order_Pdf_Abstract extends Varien_Object
      */
     protected function _drawItem(Varien_Object $item, Zend_Pdf_Page $page, Mage_Sales_Model_Order $order)
     {
-        $type = $item->getOrderItem()->getProductType();
+        $orderItem = $item->getOrderItem();
+        $type = $orderItem->getProductType();
         $renderer = $this->_getRenderer($type);
-        $renderer->setOrder($order);
-        $renderer->setItem($item);
-        $renderer->setPdf($this);
-        $renderer->setPage($page);
-        $renderer->setRenderedModel($this);
 
-        $renderer->draw();
+        $this->renderItem($item, $page, $order, $renderer);
+
+        $transportObject = new Varien_Object(array('renderer_type_list' => array()));
+        Mage::dispatchEvent('pdf_item_draw_after', array(
+            'transport_object' => $transportObject,
+            'entity_item'      => $item
+        ));
+
+        foreach ($transportObject->getRendererTypeList() as $type) {
+            $renderer = $this->_getRenderer($type);
+            if ($renderer) {
+                $this->renderItem($orderItem, $page, $order, $renderer);
+            }
+        }
 
         return $renderer->getPage();
     }

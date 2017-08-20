@@ -1,5 +1,0 @@
-FOOMAN Speedster
-folder to cache minified output
-
-this file can be deleted
-

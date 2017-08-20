@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -224,38 +224,51 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
      */
     public function forgotpasswordAction()
     {
-        $email = (string) $this->getRequest()->getParam('email');
         $params = $this->getRequest()->getParams();
 
-        if (!empty($email) && !empty($params)) {
-            // Validate received data to be an email address
-            if (Zend_Validate::is($email, 'EmailAddress')) {
-                $collection = Mage::getResourceModel('admin/user_collection');
-                /** @var $collection Mage_Admin_Model_Resource_User_Collection */
-                $collection->addFieldToFilter('email', $email);
-                $collection->load(false);
+        if (!(empty($params))) {
+            $email = (string)$this->getRequest()->getParam('email');
 
-                if ($collection->getSize() > 0) {
-                    foreach ($collection as $item) {
-                        $user = Mage::getModel('admin/user')->load($item->getId());
-                        if ($user->getId()) {
-                            $newResetPasswordLinkToken = Mage::helper('admin')->generateResetPasswordLinkToken();
-                            $user->changeResetPasswordLinkToken($newResetPasswordLinkToken);
-                            $user->save();
-                            $user->sendPasswordResetConfirmationEmail();
+            if ($this->_validateFormKey()) {
+                if (!empty($email)) {
+                    // Validate received data to be an email address
+                    if (Zend_Validate::is($email, 'EmailAddress')) {
+                        $collection = Mage::getResourceModel('admin/user_collection');
+                        /** @var $collection Mage_Admin_Model_Resource_User_Collection */
+                        $collection->addFieldToFilter('email', $email);
+                        $collection->load(false);
+
+                        if ($collection->getSize() > 0) {
+                            foreach ($collection as $item) {
+                                /** @var Mage_Admin_Model_User $user */
+                                $user = Mage::getModel('admin/user')->load($item->getId());
+                                if ($user->getId()) {
+                                    $newResetPasswordLinkToken = Mage::helper('admin')->generateResetPasswordLinkToken();
+                                    $user->changeResetPasswordLinkToken($newResetPasswordLinkToken);
+                                    $user->save();
+                                    $user->sendPasswordResetConfirmationEmail();
+                                }
+                                break;
+                            }
                         }
-                        break;
+                        $this->_getSession()
+                            ->addSuccess(
+                                $this->__(
+                                    'If there is an account associated with %s you will receive an email with a link to reset your password.',
+                                    Mage::helper('adminhtml')->escapeHtml($email)
+                                )
+                            );
+                        $this->_redirect('*/*/login');
+                        return;
+                    } else {
+                        $this->_getSession()->addError($this->__('Invalid email address.'));
                     }
+                } else {
+                    $this->_getSession()->addError($this->__('The email address is empty.'));
                 }
-                $this->_getSession()
-                    ->addSuccess(Mage::helper('adminhtml')->__('If there is an account associated with %s you will receive an email with a link to reset your password.', Mage::helper('adminhtml')->escapeHtml($email)));
-                $this->_redirect('*/*/login');
-                return;
             } else {
-                $this->_getSession()->addError($this->__('Invalid email address.'));
+                $this->_getSession()->addError($this->__('Invalid Form Key. Please refresh the page.'));
             }
-        } elseif (!empty($params)) {
-            $this->_getSession()->addError(Mage::helper('adminhtml')->__('The email address is empty.'));
         }
         $this->loadLayout();
         $this->renderLayout();
@@ -290,10 +303,10 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
      */
     public function resetPasswordPostAction()
     {
-        $resetPasswordLinkToken = (string) $this->getRequest()->getQuery('token');
-        $userId = (int) $this->getRequest()->getQuery('id');
-        $password = (string) $this->getRequest()->getPost('password');
-        $passwordConfirmation = (string) $this->getRequest()->getPost('confirmation');
+        $resetPasswordLinkToken = (string)$this->getRequest()->getQuery('token');
+        $userId = (int)$this->getRequest()->getQuery('id');
+        $password = (string)$this->getRequest()->getPost('password');
+        $passwordConfirmation = (string)$this->getRequest()->getPost('confirmation');
 
         try {
             $this->_validateResetPasswordLinkToken($userId, $resetPasswordLinkToken);
@@ -303,12 +316,18 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
             return;
         }
 
+        if (!$this->_validateFormKey()) {
+            $this->_getSession()->addError(Mage::helper('adminhtml')->__('Invalid Form Key. Please refresh the page.'));
+            $this->_redirect('*/*/');
+            return;
+        }
+
         $errorMessages = array();
         if (iconv_strlen($password) <= 0) {
             array_push($errorMessages, Mage::helper('adminhtml')->__('New password field cannot be empty.'));
         }
         /** @var $user Mage_Admin_Model_User */
-        $user = Mage::getModel('admin/user')->load($userId);
+        $user = $this->_getModel('admin/user')->load($userId);
 
         $user->setNewPassword($password);
         $user->setPasswordConfirmation($passwordConfirmation);
@@ -333,7 +352,6 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
             // Empty current reset password token i.e. invalidate it
             $user->setRpToken(null);
             $user->setRpTokenCreatedAt(null);
-            $user->setPasswordConfirmation(null);
             $user->save();
             $this->_getSession()->addSuccess(Mage::helper('adminhtml')->__('Your password has been updated.'));
             $this->_redirect('*/*/login');
@@ -373,7 +391,7 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
         }
 
         $userToken = $user->getRpToken();
-        if (strcmp($userToken, $resetPasswordLinkToken) != 0 || $user->isResetPasswordLinkTokenExpired()) {
+        if (!hash_equals($userToken, $resetPasswordLinkToken) || $user->isResetPasswordLinkTokenExpired()) {
             throw Mage::exception('Mage_Core', Mage::helper('adminhtml')->__('Your password reset link has expired.'));
         }
     }
@@ -386,5 +404,18 @@ class Mage_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
     protected function _isAllowed()
     {
         return true;
+    }
+
+    /**
+     * Retrieve model object
+     *
+     * @link    Mage_Core_Model_Config::getModelInstance
+     * @param   string $modelClass
+     * @param   array|object $arguments
+     * @return  Mage_Core_Model_Abstract|false
+     */
+    protected function _getModel($modelClass = '', $arguments = array())
+    {
+        return Mage::getModel($modelClass, $arguments);
     }
 }

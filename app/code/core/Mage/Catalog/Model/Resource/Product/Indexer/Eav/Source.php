@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -61,7 +61,7 @@ class Mage_Catalog_Model_Resource_Product_Indexer_Eav_Source
             ->where($this->_getIndexableAttributesCondition());
 
         if ($multiSelect == true) {
-            $select->where('ea.backend_type = ?', 'varchar')
+            $select->where('ea.backend_type = ?', 'text')
                 ->where('ea.frontend_input = ?', 'multiselect');
         } else {
             $select->where('ea.backend_type = ?', 'int')
@@ -120,6 +120,9 @@ class Mage_Catalog_Model_Resource_Product_Indexer_Eav_Source
                 array('entity_id', 'attribute_id', 'value')
             )
             ->where('s.store_id != 0');
+
+        $statusCond = $adapter->quoteInto(' = ?', Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
+        $this->_addAttributeToSelect($subSelect, 'status', 'd.entity_id', 's.store_id', $statusCond);
 
         if (!is_null($entityIds)) {
             $subSelect->where('d.entity_id IN(?)', $entityIds);
@@ -200,18 +203,19 @@ class Mage_Catalog_Model_Resource_Product_Indexer_Eav_Source
         $productValueExpression = $adapter->getCheckSql('pvs.value_id > 0', 'pvs.value', 'pvd.value');
         $select = $adapter->select()
             ->from(
-                array('pvd' => $this->getValueTable('catalog/product', 'varchar')),
+                array('pvd' => $this->getValueTable('catalog/product', 'text')),
                 array('entity_id', 'attribute_id'))
             ->join(
                 array('cs' => $this->getTable('core/store')),
                 '',
                 array('store_id'))
             ->joinLeft(
-                array('pvs' => $this->getValueTable('catalog/product', 'varchar')),
+                array('pvs' => $this->getValueTable('catalog/product', 'text')),
                 'pvs.entity_id = pvd.entity_id AND pvs.attribute_id = pvd.attribute_id'
                     . ' AND pvs.store_id=cs.store_id',
                 array('value' => $productValueExpression))
-            ->where('pvd.store_id=?', Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID)
+            ->where('pvd.store_id=?',
+                $adapter->getIfNullSql('pvs.store_id', Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID))
             ->where('cs.store_id!=?', Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID)
             ->where('pvd.attribute_id IN(?)', $attrIds);
 
@@ -236,7 +240,7 @@ class Mage_Catalog_Model_Resource_Product_Indexer_Eav_Source
         $data  = array();
         $query = $select->query();
         while ($row = $query->fetch()) {
-            $values = explode(',', $row['value']);
+            $values = array_unique(explode(',', $row['value']));
             foreach ($values as $valueId) {
                 if (isset($options[$row['attribute_id']][$valueId])) {
                     $data[] = array(

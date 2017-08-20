@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_CatalogSearch
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -52,6 +52,7 @@ class Mage_CatalogSearch_Model_Resource_Helper_Mysql4 extends Mage_Eav_Model_Res
      * Prepare Terms
      *
      * @param string $str The source string
+     * @param int $maxWordLength
      * @return array(0=>words, 1=>terms)
      */
     function prepareTerms($str, $maxWordLength = 0)
@@ -112,10 +113,24 @@ class Mage_CatalogSearch_Model_Resource_Helper_Mysql4 extends Mage_Eav_Model_Res
      *
      * @param mixed $table The table to insert data into.
      * @param array $data Column-value pairs or array of column-value pairs.
-     * @param arrat $fields update fields pairs or values
+     * @param array $fields update fields pairs or values
      * @return int The number of affected rows.
      */
     public function insertOnDuplicate($table, array $data, array $fields = array()) {
         return $this->_getWriteAdapter()->insertOnDuplicate($table, $data, $fields);
+    }
+
+    /**
+     * Get field expression for order by
+     *
+     * @param string $fieldName
+     * @param array $orderedIds
+     *
+     * @return string
+     */
+    public function getFieldOrderExpression($fieldName, array $orderedIds)
+    {
+        $fieldName = $this->_getWriteAdapter()->quoteIdentifier($fieldName);
+        return "FIELD({$fieldName}, {$this->_getReadAdapter()->quote($orderedIds)})";
     }
 }

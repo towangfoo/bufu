@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Flagbit_FactFinder>
-            <active>true</active>
+            <active>false</active>
             <codePool>community</codePool>
         </Flagbit_FactFinder>
     </modules>

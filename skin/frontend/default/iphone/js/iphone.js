@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    design
  * @package     default_iphone
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -63,13 +63,13 @@ document.observe("dom:loaded", function() {
     var loadMore = Class.create({
         initialize: function (list, href, pattern) {
             var that = this;
-            
+
             this.list = list;
             this.list.insert({ after : '<div class="more"><span id="more_button" class="more-button">More</span></div>'});
             this.href = href.readAttribute('href');
             this.button = $('more_button');
             this.holder = new Element('div', { 'class': 'response-holder' });
-            
+
             this.button.observe('click', function () {
                 if ( !that.button.hasClassName('loading') ) {
                     new Ajax.Request(that.href, {
@@ -78,7 +78,8 @@ document.observe("dom:loaded", function() {
                         },
                         onComplete: function(response) {
                             if (200 == response.status) {
-                                that.holder.update(response.responseText).select(pattern).each(function(elem) {
+                                that.holder.innerHTML = response.responseText;
+                                that.holder.select(pattern).each(function(elem) {
                                     that.list.insert({ bottom : elem });
                                 });
                                 that.href = that.holder.select('.next-page')[0].readAttribute('href');
@@ -100,43 +101,43 @@ document.observe("dom:loaded", function() {
             $$('.c-list')[0],
             $$('.next-page')[0],
             '.c-list > li'
-        )
+        );
     }
-    
+
     if ( $$('.downloadable-products-history .list')[0] && $$('.next-page')[0]  ) {
         var loadMoreCategory = new loadMore(
             $$('.downloadable-products-history .list')[0],
             $$('.next-page')[0],
             '.downloadable-products-history .list > li'
-        )
+        );
     }
-    
+
     if ( $$('.review-history .list')[0] && $$('.next-page')[0]  ) {
         var loadMoreCategory = new loadMore(
             $$('.review-history .list')[0],
             $$('.next-page')[0],
             '.review-history .list > li'
-        )
+        );
     }
-    
+
     if ( $$('.recent-orders .data-table')[0] && $$('.next-page')[0]  ) {
         var loadMoreCategory = new loadMore(
             $$('.recent-orders .data-table')[0],
             $$('.next-page')[0],
             '.recent-orders .data-table tbody > tr'
-        )
+        );
     }
-    
+
     //-----------------------------//
 
     $$('label[for]').each(function(label) {
         label.observe('click', function() {});
     });
-    
+
     $$('input.validate-email').each(function (input) {
         input.writeAttribute('type', 'email');
     });
-    
+
     $$('.form-list img[src*="calendar.gif"]').each(function (img) {
         img.up().insert({ 'top' : img });
     });
@@ -148,7 +149,7 @@ document.observe("dom:loaded", function() {
     if ( $('my-reviews-table') ) {
         $('my-reviews-table').wrap('div', { 'class' : 'my-reviews-table-wrap' });
     }
-    
+
     $$('.my-account .dashboard .box-title').each(function (elem) {
         elem.observe('click', function (e) {
             if ( e.target.hasClassName('box-title') ) {
@@ -163,7 +164,7 @@ document.observe("dom:loaded", function() {
         var div = document.createElement('div'),
             supports = div.style['webkitTouchCallout'] !== undefined || div.style['touchCallout'] !== undefined;
 
-        return supports
+        return supports;
     }
 
     $$('input[name=qty], input[name*=super_group], input[name*=qty]').each(function (el) {
@@ -179,15 +180,14 @@ document.observe("dom:loaded", function() {
     if ( $('product-review-table') ) {
         $('product-review-table').wrap('div', {'class' : 'review-table-wrap'}).on('click', 'input[type="radio"]', function (e) {
 
-            $this = e.target;
+            var $this = e.target;
 
             $this.up('tr').select('td').invoke('removeClassName', 'checked');
-
-            $this.up().previousSiblings().each(function (td) {
-                if ( td.hasClassName('value') ) {
-                    td.addClassName('checked');
-                }
-            });
+            if ( $this.up().hasClassName('value') ) {
+                $this.up().addClassName('checked').previousSiblings().each(function (td) {
+                    if (td.hasClassName('value')) td.addClassName('checked');
+                });
+            }
 
         });
     }
@@ -219,7 +219,7 @@ document.observe("dom:loaded", function() {
             selected = [];
             select.select('option').each(function (option) {
                 if (option.selected) {
-                    selected.push(option.text)
+                    selected.push(option.text);
                 }
             });
 
@@ -230,7 +230,7 @@ document.observe("dom:loaded", function() {
                 select.previous().update('Choose options...').removeClassName('filled');
             }
             document.stopObserving('click', closeSelect);
-        }
+        };
 
         select_options.select('.select-close')[0].observe('click', closeSelect );
 
@@ -238,7 +238,7 @@ document.observe("dom:loaded", function() {
             var option = select.select('option[value=' + elem.readAttribute('data-option-value') + ']')[0];
             elem.toggleClassName('active');
             if (option.selected) {
-                option.selected = false
+                option.selected = false;
             } else {
                 option.selected = true;
             }
@@ -252,7 +252,7 @@ document.observe("dom:loaded", function() {
                         e.stopPropagation();
                     });
                     setTimeout(function() {
-                        document.observe('click', closeSelect)
+                        document.observe('click', closeSelect);
                     }, 1);
                 })
         });
@@ -329,16 +329,16 @@ document.observe("dom:loaded", function() {
             sliderLink.observe('click', function(e) {
 
                 e.preventDefault();
-                var transformValue = {}
+                var transformValue = {};
 
                 //homeLink.hasClassName('disabled') ? homeLink.removeClassName('disabled') : '';
 
                 if (last) {
-                    diff = e.timeStamp - last
+                    diff = e.timeStamp - last;
                 }
                 last = e.timeStamp;
                 if (diff && diff < 200) {
-                    return
+                    return;
                 }
                 if (!this.clonedSubmenuList.firstDescendant().hasClassName('subcategory-header')) {
                     var subcategoryHeader = new Element('li', {'class': 'subcategory-header'});
@@ -353,11 +353,11 @@ document.observe("dom:loaded", function() {
 
                     this.clonedSubmenuList.firstDescendant().firstDescendant().observe('click', function(e) {
                         if (last) {
-                            diff = e.timeStamp - last
+                            diff = e.timeStamp - last;
                         }
                         last = e.timeStamp;
                         if (diff && diff < 200) {
-                            return
+                            return;
                         }
                         if ( Modernizr.csstransforms3d ) {
                             transformValue[transformPref] = "translate3d(" + (document.body.offsetWidth + sliderPosition) + "px, 0, 0)";
@@ -366,7 +366,10 @@ document.observe("dom:loaded", function() {
                         }
                         $("nav-container").setStyle(transformValue);
                         sliderPosition = sliderPosition + document.body.offsetWidth;
-                        setTimeout(function() { $$("#nav-container > ul:last-child")[0].remove(); $("nav-container").setStyle({'height' : 'auto'})  }, 250)
+                        setTimeout(function() {
+                            $$("#nav-container > ul:last-child")[0].remove();
+                            $("nav-container").setStyle({'height' : 'auto'});
+                        }, 250);
                     });
                     new NoClickDelay(this.clonedSubmenuList);
                 };
@@ -402,7 +405,7 @@ document.observe("dom:loaded", function() {
 
     function NoClickDelay(el) {
         if ( getSupportedProp(['OTransform']) ) {
-            return
+            return;
         }
         this.element = typeof el == 'object' ? el : document.getElementById(el);
         if( window.Touch ) this.element.addEventListener('touchstart', this, false);
@@ -537,154 +540,204 @@ document.observe("dom:loaded", function() {
     //Slider
 
     var Carousel = Class.create({
-       initialize: function (carousel, itemsContainer, options) {
-           this.options  = Object.extend({
-              visibleElements: 3,
-              threshold: {
-                  x: 30,
-                  y: 40
-              },
-              preventDefaultEvents: false
-           }, options || {});
+        initialize: function (carousel, itemsContainer, options) {
+            this.options  = Object.extend({
+                visibleElements: 3,
+                drawCounter: true,
+                threshold: {
+                    x: 50,
+                    y: 40
+                },
+                preventDefaultEvents: false
+            }, options || {});
 
-           this.carousel = carousel;
-           this.items    = itemsContainer.addClassName('carousel-items');
-           this.itemsWrap = this.items.wrap('div', {'class' : 'carousel-items-wrap'});
-           this.itemsLength = this.items.childElements().size();
-           this.counter  = this.carousel.insert(new Element('div', {'class' : 'counter'})).select('.counter')[0];
-           this.controls = carousel.select('.controls')[0] || this.carousel.insert({ top: new Element('div', { 'class' : 'controls'}) }).select('.controls')[0];
-           this.prevButton = carousel.select('.prev')[0] || this.controls.insert({ top: new Element('span', { 'class' : 'prev'}) }).select('.prev')[0].addClassName('disabled');
-           this.nextButton = carousel.select('.next')[0] || this.controls.insert({ top: new Element('span', { 'class' : 'next'}) }).select('.next')[0];
-           this.originalCoord = { x: 0, y: 0 };
-           this.finalCoord    = { x: 0, y: 0 };
+            this.currentPage = 1;
+            this.carousel = carousel;
+            this.carouselWidth =  this.carousel.getStyle('width') ? this.carousel.getStyle('width').replace('px', '') : $$('body')[0].getStyle('width').replace('px', '');
+            this.items    = itemsContainer.addClassName('carousel-items');
+            this.itemsWrap = this.items.wrap('div', {'class' : 'carousel-items-wrap'});
+            this.itemsLength = this.items.childElements().size();
+            if (this.options.drawCounter) {
+                this.counter  = this.carousel.insert(new Element('div', {'class' : 'counter'})).select('.counter')[0];
+            }
+            this.controls = carousel.select('.controls')[0] || this.carousel.insert({ top: new Element('div', { 'class' : 'controls'}) }).select('.controls')[0];
+            this.prevButton = carousel.select('.prev')[0] || this.controls.insert({ top: new Element('span', { 'class' : 'prev'}) }).select('.prev')[0].addClassName('disabled');
+            this.nextButton = carousel.select('.next')[0] || this.controls.insert({ top: new Element('span', { 'class' : 'next'}) }).select('.next')[0];
+            this.originalCoord = { x: 0, y: 0 };
+            this.finalCoord    = { x: 0, y: 0 };
 
-           this.carousel.wrap('div', { 'class' : 'carousel-wrap' });
+            this.carousel.wrap('div', { 'class' : 'carousel-wrap' });
 
-           this.nextButton.observe('click', this.moveRight.bind(this));
-           this.prevButton.observe('click', this.moveLeft.bind(this));
-           this.itemsWrap.observe('touchstart', this.touchStart.bind(this));
-           this.itemsWrap.observe('touchmove', this.touchMove.bind(this));
-           this.itemsWrap.observe('touchend', this.touchEnd.bind(this));
-       },
-       init: function () {
+            this.nextButton.observe('click', this.moveRight.bind(this));
+            this.prevButton.observe('click', this.moveLeft.bind(this));
+            this.itemsWrap.observe('touchstart', this.touchStart.bind(this));
+            this.itemsWrap.observe('touchmove', this.touchMove.bind(this));
+            this.itemsWrap.observe('touchend', this.touchEnd.bind(this));
+            Event.observe(window, 'resize', this.orientationChange.bind(this));
+        },
+
+        init: function () {
+           this.currentPage = 0;
            this.itemPos  = 0;
-           this.lastItemPos = (this.itemsLength-this.options.visibleElements) * 100/this.options.visibleElements;
-           this.itemWidth = 100/this.options.visibleElements + '%';
+           this.lastItemPos = (this.itemsLength-this.options.visibleElements) * this.carouselWidth/this.options.visibleElements;
+           this.itemWidth = this.carouselWidth/this.options.visibleElements + 'px';
            this.screens  = Math.ceil(this.itemsLength/this.options.visibleElements);
 
-           this.resizeChilds();
-           this.drawCounter();
+           this._resizeChilds();
+           if (this.options.drawCounter) {
+               this.drawCounter();
+           }
 
            return this;
         },
+
         resize: function(visibleElements) {
             var transformValue = {};
             this.options.visibleElements = visibleElements;
-            this.counter.childElements().invoke('remove');
+            if (this.options.drawCounter) {
+                this.counter.childElements().invoke('remove');
+            }
             if ( Modernizr.csstransforms3d ) {
-                transformValue[transformPref] = 'translateX(' + 0 + '%)';
+                transformValue[transformPref] = 'translateX(' + 0 + ')';
             } else if ( Modernizr.csstransforms ) {
-                transformValue[transformPref] = 'translate(' + 0 + '%, 0)';
+                transformValue['left'] = '0';
             }
             this.items.setStyle(transformValue);
             this.prevButton.addClassName('disabled');
             this.nextButton.removeClassName('disabled');
             this.init();
         },
-        resizeChilds: function () {
-           this.items.childElements().each( function(n) {
-              n.setStyle({
-                  'width': this.itemWidth
-              });
-           }, this);
+
+        _resizeChilds: function () {
+            this.items.childElements().each( function(n) {
+                n.setStyle({
+                    'width': this.itemWidth
+                });
+            }, this);
         },
+
+        orientationChange: function() {
+            this._recalculate();
+            this._resizeChilds();
+            this.toPage(this.currentPage);
+        },
+
         drawCounter: function () {
             if (this.screens > 1) {
                  if (this.controls)
-                     this.controls.show()
+                     this.controls.show();
                  for (var i = 0; i < this.screens; i++) {
                    if (i === 0) {
                        this.counter.insert(new Element('span', {'class': 'active'}));
                    } else {
                        this.counter.insert(new Element('span'));
                    }
-               };
+               }
            } else {
                if (this.controls)
                    this.controls.hide();
            }
         },
-        moveRight: function (e) {
-            if(Math.abs(this.itemPos) < this.lastItemPos) {
-                var transformValue = {};
-                this.itemPos -= 100/this.options.visibleElements * this.options.visibleElements;
-                if ( Modernizr.csstransforms3d ) {
-                    transformValue[transformPref] = 'translateX(' + this.itemPos + '%)';
-                    transformValue['position']    = 'relative';
-                } else if ( Modernizr.csstransforms ) {
-                    transformValue[transformPref] = 'translate(' + this.itemPos + '%, 0)';
-                    transformValue['position']    = 'relative';
-                }
-                this.items.setStyle(transformValue);
-                if (Math.abs(this.itemPos) >= this.lastItemPos) {
-                    this.nextButton.addClassName('disabled');
-                }
 
-                if (this.prevButton.hasClassName('disabled')) {
-                    this.prevButton.removeClassName('disabled');
-                };
-                this.counter.select('.active')[0].removeClassName('active').next().addClassName('active');
+        _recalculate: function() {
+            this.carouselWidth =  this.carousel.getStyle('width') ? this.carousel.getStyle('width').replace('px', '') : $$('body')[0].getStyle('width').replace('px', '');
+            this.lastItemPos = (this.itemsLength-this.options.visibleElements) * this.carouselWidth/this.options.visibleElements;
+            this.itemWidth = this.carouselWidth/this.options.visibleElements + 'px';
+        },
+
+        _checkControls: function() {
+            if(this.itemPos === 0) {
+                this.prevButton.addClassName('disabled');
+            } else {
+                this.prevButton.removeClassName('disabled');
+            }
+
+            if(Math.abs(this.itemPos) === this.lastItemPos) {
+                this.nextButton.addClassName('disabled');
+            } else {
+                this.nextButton.removeClassName('disabled');
+            }
+
+            if (this.options.drawCounter) {
+                this.counter.select('.active')[0].removeClassName('active');
+                this.counter.select('span')[this.currentPage].addClassName('active');
             }
         },
-        moveLeft: function (e) {
-            if (this.itemPos !== 0) {
-                var transformValue = {};
-                this.itemPos += 100/this.options.visibleElements * this.options.visibleElements;
-                if ( Modernizr.csstransforms3d ) {
-                    transformValue[transformPref] = 'translateX(' + this.itemPos + '%)';
-                    transformValue['position']    = 'relative';
-                } else if ( Modernizr.csstransforms ) {
-                    transformValue[transformPref] = 'translate(' + this.itemPos + '%, 0)';
-                    transformValue['position']    = 'relative';
-                }
+
+        _setTransformCoordinates: function() {
+            var transformValue = {};
+            if ( Modernizr.csstransforms3d ) {
+                transformValue[transformPref] = 'translateX(' + this.itemPos + 'px)';
+                transformValue['position']    = 'relative';
+            } else if ( Modernizr.csstransforms ) {
+                transformValue['left'] = this.itemPos + 'px';
+                transformValue['position']    = 'relative';
+            }
+            setTimeout(function() {
                 this.items.setStyle(transformValue);
+            }.bind(this), 1);
 
-                if(this.itemPos === 0) {
-                    this.prevButton.addClassName('disabled');
-                };
+            return this;
+        },
 
-                if (this.nextButton.hasClassName('disabled')) {
-                    this.nextButton.removeClassName('disabled');
-                };
-                this.counter.select('.active')[0].removeClassName('active').previous().addClassName('active');
+        toPage: function (page) {
+            this.currentPage = page;
+            this.itemPos = -(this.carouselWidth / this.options.visibleElements * this.options.visibleElements) * page;
+
+            this._setTransformCoordinates();
+            this._checkControls();
+
+            this.finalCoord.x = this.originalCoord.x;
+        },
+
+        moveRight: function () {
+            if(Math.abs(this.itemPos) < this.lastItemPos) {
+                this.toPage(this.currentPage + 1);
+            }
+        },
+        moveLeft: function () {
+            if (this.itemPos !== 0) {
+                this.toPage(this.currentPage - 1);
             }
         },
         touchStart: function (e) {
-            this.originalCoord.x = event.targetTouches[0].pageX;
-            this.originalCoord.y = event.targetTouches[0].pageY;
+            changeX = 0;
+
+            this.isScrolling = undefined;
+
+            this.originalCoord.x = e.targetTouches[0].pageX;
+            this.originalCoord.y = e.targetTouches[0].pageY;
         },
         touchMove: function (e) {
             this.finalCoord.x = e.targetTouches[0].pageX;
             this.finalCoord.y = e.targetTouches[0].pageY;
 
-            var changeX = 0;
             changeX = this.originalCoord.x - this.finalCoord.x;
+            changeY = this.originalCoord.y - this.finalCoord.y;
 
-            if(Math.abs(changeX) > this.options.threshold.x) {
+            if ( typeof this.isScrolling == 'undefined') {
+                this.isScrolling = !!( this.isScrolling || Math.abs(changeX) < Math.abs(this.finalCoord.y - this.originalCoord.y) );
+            }
+
+            if (!this.isScrolling) {
                 e.preventDefault();
             }
         },
         touchEnd: function (e) {
             if ( e.preventSwipe ) {
-                return
+                return;
             }
-            var changeX;
-            changeX = this.originalCoord.x - this.finalCoord.x;
-            if(changeX > this.options.threshold.x) {
-                this.moveRight(e);
-            }
-            if(changeX < this.options.threshold.x * -1) {
-                this.moveLeft(e);
+
+            if (!this.isScrolling) {
+
+                if(changeX > this.options.threshold.x && Math.abs(changeY) < this.options.threshold.y) {
+                    this.moveRight(e);
+                }
+                if(changeX < this.options.threshold.x * -1 && Math.abs(changeY) < this.options.threshold.y) {
+                    this.moveLeft(e);
+                }
+                changeX = changeY = 0;
+
             }
         }
     });
@@ -708,6 +761,13 @@ document.observe("dom:loaded", function() {
     if ( $$('.product-view .product-image li').size() > 1 ) {
         var productGallery = new Carousel($$('.product-view .product-image')[0], $$('.product-image ul')[0], {
             visibleElements: 1,
+            preventDefaults: false
+        }).init();
+    }
+
+    if ( $$('.crosssell li').size() > 1 ) {
+        var crossSells = new Carousel($$('.crosssell')[0], $$('.crosssell ul')[0], {
+            visibleElements: 2,
             preventDefaults: false
         }).init();
     }
@@ -816,10 +876,11 @@ document.observe("dom:loaded", function() {
             this.finalCoord    = { x: 0, y: 0 };
             this.offset = { x: 0, y: 0 };
             this.ret = { x: 0, y: 0 };
-            
+            this.hash = window.location.href.split('#')[1];
+
             this.nextButton.observe('click', this.moveRight.bind(this));
             this.prevButton.observe('click', this.moveLeft.bind(this));
-            
+
             if (this.itemsLength < 2) {
                 this.controls.hide();
             }
@@ -838,6 +899,30 @@ document.observe("dom:loaded", function() {
             });
 
             this.drawCounter();
+
+            if (this.hash) {
+                this.pos += this.step * this.hash;
+
+                var transformValue = {};
+                if ( Modernizr.csstransforms3d ) {
+                    this.wrap.setStyle({
+                        'webkitTransform' : 'translate3d(' + this.pos*-1 + '%, 0, 0)'
+                    });
+                } else if ( Modernizr.csstransforms ) {
+                    transformValue[transformPref] = 'translate(' + this.pos*-1 + '%, 0)';
+                    this.wrap.setStyle(transformValue);
+                }
+
+                if (this.pos.toFixed(2) >= this.lastPos - this.step) {
+                    this.nextButton.addClassName('disabled');
+                }
+
+                if (this.prevButton.hasClassName('disabled')) {
+                    this.prevButton.removeClassName('disabled');
+                };
+
+                this.counter.select('.active')[0].removeClassName('active').next(this.hash - 1).addClassName('active');
+            }
         },
         drawCounter: function () {
             if (this.itemsLength > 1) {
@@ -851,9 +936,8 @@ document.observe("dom:loaded", function() {
             }
         },
         moveRight: function (elem) {
+            if (this.pos.toFixed(2) < this.lastPos - this.step) {
 
-            if (this.pos !== this.lastPos - this.step) {
-            
                 if(elem == event) {
                     this.items.each(function (elm) {
                         elm.setStyle({
@@ -861,7 +945,7 @@ document.observe("dom:loaded", function() {
                             'webkitTransform' : 'scale3d(1, 1, 1)'
                         });
                     });
-                } else {
+                } else if (elem) {
                     elem.setStyle({
                         'webkitTransition' : '300ms linear',
                         'webkitTransform' : 'scale3d(1, 1, 1)'
@@ -882,8 +966,8 @@ document.observe("dom:loaded", function() {
                     transformValue[transformPref] = 'translate(' + this.pos*-1 + '%, 0)';
                     this.wrap.setStyle(transformValue);
                 }
-                
-                if (this.pos == this.lastPos - this.step) {
+
+                if (this.pos.toFixed(2) >= this.lastPos - this.step) {
                     this.nextButton.addClassName('disabled');
                 }
 
@@ -897,7 +981,7 @@ document.observe("dom:loaded", function() {
         },
         moveLeft: function (elem) {
 
-            if (this.pos !== 0) {
+            if (this.pos.toFixed(2) > 0) {
 
                 if(elem == event) {
                     this.items.each(function (elm) {
@@ -927,8 +1011,8 @@ document.observe("dom:loaded", function() {
                     transformValue[transformPref] = 'translate(' + this.pos*-1 + '%, 0)';
                     this.wrap.setStyle(transformValue);
                 }
-                
-                if (this.pos == 0) {
+
+                if (this.pos.toFixed(2) <= 0) {
                     this.prevButton.addClassName('disabled');
                 }
 
@@ -939,7 +1023,6 @@ document.observe("dom:loaded", function() {
 
                 this.counter.select('.active')[0].removeClassName('active').previous().addClassName('active');
             }
-            //console.log('moveLeft()');
         },
         gestureStart : function (e) {
             var $this = e.target;
@@ -951,10 +1034,10 @@ document.observe("dom:loaded", function() {
         },
         gestureChange : function (e) {
             e.preventDefault();
-            var $this = e.target
+            var $this = e.target;
 
             if ( (e.scale * this.scale) > 2 )
-                return
+                return;
 
             $this.setStyle({
                 'webkitTransition' : '',
@@ -985,8 +1068,10 @@ document.observe("dom:loaded", function() {
         touchStart: function (e) {
             var $this = e.target;
 
+            this.isScrolling = undefined;
+
             if (e.targetTouches.length != 1) {
-                return false
+                return false;
             }
 
             this.t1 = Date.now();
@@ -998,15 +1083,24 @@ document.observe("dom:loaded", function() {
         },
         touchMove: function (e) {
 
+            var $this = e.target;
+
             this.finalCoord.x = e.targetTouches[0].clientX;
             this.finalCoord.y = e.targetTouches[0].clientY;
 
-            if (e.targetTouches.length != 1 || this.scale === 1.0 || this.gestureStart)
-                return false
+            if ( typeof this.isScrolling == 'undefined') {
+                this.isScrolling = !!( this.isScrolling || Math.abs(this.finalCoord.x - this.originalCoord.x) < Math.abs(this.finalCoord.y - this.originalCoord.y) );
+            }
+
+            if (!this.isScrolling) {
+                e.preventDefault();
+            }
+
+            if (e.targetTouches.length != 1 || this.scale === 1.0 || this.gestureStart) {
+                return false;
+            }
 
             e.preventDefault();
-
-            var $this = e.target;
 
             var changeX = this.offset.x + this.finalCoord.x - this.originalCoord.x,
                 changeY = this.offset.y + this.finalCoord.y - this.originalCoord.y,
@@ -1037,63 +1131,67 @@ document.observe("dom:loaded", function() {
         },
         touchEnd: function (e) {
 
-            this.t2 = Date.now();
+            if (!this.isScrolling) {
 
-            var $this = e.target,
-                timeDelta = this.t2 - this.t1,
-                changeX = this.originalCoord.x - this.finalCoord.x,
-                changeY = this.originalCoord.y - this.finalCoord.y;
+                this.t2 = Date.now();
 
-            if(changeX > this.options.threshold.x && Math.abs(changeY) < 40 && timeDelta < 300) {
-                this.moveRight($this);
-            }
-            if(changeX < this.options.threshold.x * -1 && Math.abs(changeY) < 40 && timeDelta < 300) {
+                var $this = e.target,
+                    timeDelta = this.t2 - this.t1,
+                    changeX = this.originalCoord.x - this.finalCoord.x,
+                    changeY = this.originalCoord.y - this.finalCoord.y;
 
-                this.moveLeft($this);
-            }
+                if(changeX > this.options.threshold.x && Math.abs(changeY) < 40 && timeDelta < 300) {
+                    this.moveRight($this);
+                }
+                if(changeX < this.options.threshold.x * -1 && Math.abs(changeY) < 40 && timeDelta < 300) {
 
-            if (e.targetTouches.length > 0 || this.gestureStart || timeDelta < 100)
-                return false;
+                    this.moveLeft($this);
+                }
 
-            this.offset.x += this.finalCoord.x - this.originalCoord.x;
-            this.offset.y += this.finalCoord.y - this.originalCoord.y;
+                if (e.targetTouches.length > 0 || this.gestureStart || timeDelta < 100)
+                    return false;
 
-            var topX = (this.dimensions.width  * (this.scale - 1))/2,
-                topY = (this.dimensions.height * (this.scale - 1))/2,
-                moved = false;
+                this.offset.x += this.finalCoord.x - this.originalCoord.x;
+                this.offset.y += this.finalCoord.y - this.originalCoord.y;
 
-            if ( Math.abs(this.offset.x) > topX ) {
+                var topX = (this.dimensions.width  * (this.scale - 1))/2,
+                    topY = (this.dimensions.height * (this.scale - 1))/2,
+                    moved = false;
 
-                moved = true;
-                $this.setStyle({
-                    'webkitTransition' : '-webkit-transform 100ms ease-out',
-                    'webkitTransform' : 'translate3d(' + (this.offset.x  < 0 ? topX*-1 : topX) + 'px,' + this.offset.y + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
-                });
+                if ( Math.abs(this.offset.x) > topX ) {
 
-                this.offset.x = this.offset.x  < 0 ? topX*-1 : topX;
+                    moved = true;
+                    $this.setStyle({
+                        'webkitTransition' : '-webkit-transform 100ms ease-out',
+                        'webkitTransform' : 'translate3d(' + (this.offset.x  < 0 ? topX*-1 : topX) + 'px,' + this.offset.y + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
+                    });
 
-            }
+                    this.offset.x = this.offset.x  < 0 ? topX*-1 : topX;
 
-            if ( Math.abs(this.offset.y) > topY ) {
-                moved = true;
-                $this.setStyle({
-                    'webkitTransition' : '-webkit-transform 100ms ease-out',
-                    'webkitTransform' : 'translate3d(' + this.offset.x + 'px,' + (this.offset.y  < 0 ? topY*-1 : topY) + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
-                });
+                }
 
-                this.offset.y = this.offset.y  < 0 ? topY*-1 : topY;
+                if ( Math.abs(this.offset.y) > topY ) {
+                    moved = true;
+                    $this.setStyle({
+                        'webkitTransition' : '-webkit-transform 100ms ease-out',
+                        'webkitTransform' : 'translate3d(' + this.offset.x + 'px,' + (this.offset.y  < 0 ? topY*-1 : topY) + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
+                    });
 
-            }
+                    this.offset.y = this.offset.y  < 0 ? topY*-1 : topY;
 
-            if ( Math.abs(this.offset.x) > topX && Math.abs(this.offset.y) > topY && !moved ) {
+                }
 
-                $this.setStyle({
-                    'webkitTransition' : '-webkit-transform 100ms ease-out',
-                    'webkitTransform' : 'translate3d(' + (this.offset.x  < 0 ? topX*-1 : topX) + 'px,' + (this.offset.y  < 0 ? topY*-1 : topY) + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
-                });
+                if ( Math.abs(this.offset.x) > topX && Math.abs(this.offset.y) > topY && !moved ) {
 
-                this.offset.x = this.offset.x  < 0 ? topX*-1 : topX;
-                this.offset.y = this.offset.y  < 0 ? topY*-1 : topY;
+                    $this.setStyle({
+                        'webkitTransition' : '-webkit-transform 100ms ease-out',
+                        'webkitTransform' : 'translate3d(' + (this.offset.x  < 0 ? topX*-1 : topX) + 'px,' + (this.offset.y  < 0 ? topY*-1 : topY) + 'px, 0) scale3d(' + this.scale + ',' + this.scale  + ',1)'
+                    });
+
+                    this.offset.x = this.offset.x  < 0 ? topX*-1 : topX;
+                    this.offset.y = this.offset.y  < 0 ? topY*-1 : topY;
+
+                }
 
             }
 
@@ -1128,6 +1226,11 @@ document.observe("dom:loaded", function() {
         $('customer-reviews').select('dt > a').each(function (a) {
             a.replace('<h3>' + a.innerHTML + '</h3>');
         });
+    }
+
+    var filters = $$('.filters-block .currently')[0];
+    if ( filters ) {
+        $$('.toolbar')[0].insert({ 'after' : Element.clone(filters, true) });
     }
 
 });

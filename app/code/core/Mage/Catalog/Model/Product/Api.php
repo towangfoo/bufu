@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -123,13 +123,18 @@ class Mage_Catalog_Model_Product_Api extends Mage_Catalog_Model_Api_Resource
      *
      * @param int|string $productId
      * @param string|int $store
-     * @param array $attributes
+     * @param array      $attributes
+     * @param string     $identifierType
      * @return array
      */
     public function info($productId, $store = null, $attributes = null, $identifierType = null)
     {
-        $product = $this->_getProduct($productId, $store, $identifierType);
+        // make sku flag case-insensitive
+        if (!empty($identifierType)) {
+            $identifierType = strtolower($identifierType);
+        }
 
+        $product = $this->_getProduct($productId, $store, $identifierType);
 
         $result = array( // Basic product data
             'product_id' => $product->getId(),
@@ -352,7 +357,15 @@ class Mage_Catalog_Model_Product_Api extends Mage_Catalog_Model_Api_Resource
      */
     public function getSpecialPrice($productId, $store = null)
     {
-        return $this->info($productId, $store, array('special_price', 'special_from_date', 'special_to_date'));
+        $product = $this->_getProduct($productId, $store);
+
+        $result = array(
+            'special_price'     => $product->getSpecialPrice(),
+            'special_from_date' => $product->getSpecialFromDate(),
+            'special_to_date'   => $product->getSpecialToDate()
+        );
+
+        return $result;
     }
 
     /**

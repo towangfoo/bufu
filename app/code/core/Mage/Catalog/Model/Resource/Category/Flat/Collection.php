@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -54,6 +54,25 @@ class Mage_Catalog_Model_Resource_Category_Flat_Collection extends Mage_Core_Mod
      * @var integer
      */
     protected $_storeId        = null;
+
+    /**
+     * Catalog factory instance
+     *
+     * @var Mage_Catalog_Model_Factory
+     */
+    protected $_factory;
+
+    /**
+     * Initialize factory
+     *
+     * @param Mage_Core_Model_Resource_Abstract $resource
+     * @param array $args
+     */
+    public function __construct($resource = null, array $args = array())
+    {
+        parent::__construct($resource);
+        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('catalog/factory');
+    }
 
     /**
      *  Collection initialization
@@ -304,22 +323,35 @@ class Mage_Catalog_Model_Resource_Category_Flat_Collection extends Mage_Core_Mod
     }
 
     /**
-     * Enter description here ...
+     * Join request_path column from url rewrite table
      *
      * @return Mage_Catalog_Model_Resource_Category_Flat_Collection
      */
     public function addUrlRewriteToResult()
     {
-        $storeId = Mage::app()->getStore()->getId();
-        $this->getSelect()->joinLeft(
-            array('url_rewrite' => $this->getTable('core/url_rewrite')),
-            'url_rewrite.category_id=main_table.entity_id AND url_rewrite.is_system=1 '.
-            'AND url_rewrite.product_id IS NULL'.
-            ' AND ' . $this->getConnection()->quoteInto('url_rewrite.store_id=?', $storeId).
-            ' AND ' . $this->getConnection()->quoteInto('url_rewrite.id_path LIKE ?','category/%'),
-            array('request_path')
-        );
+        /** @var $urlRewrite Mage_Catalog_Helper_Category_Url_Rewrite_Interface */
+        $urlRewrite = $this->_factory->getCategoryUrlRewriteHelper();
+        $urlRewrite->joinTableToCollection($this, $this->_getCurrentStoreId());
+
         return $this;
+    }
+
+    /**
+     * Join request_path column from url rewrite table
+     */
+    public function joinUrlRewrite()
+    {
+        return $this->addUrlRewriteToResult();
+    }
+
+    /**
+     * Retrieves store_id from current store
+     *
+     * @return int
+     */
+    protected function _getCurrentStoreId()
+    {
+        return (int)Mage::app()->getStore()->getId();
     }
 
     /**

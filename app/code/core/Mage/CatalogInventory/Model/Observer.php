@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_CatalogInventory
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -50,6 +50,11 @@ class Mage_CatalogInventory_Model_Observer
      */
     protected $_checkedQuoteItems = array();
 
+    /**
+     * Array of items that need to be reindexed
+     *
+     * @var array
+     */
     protected $_itemsForReindex = array();
 
     /**
@@ -174,9 +179,10 @@ class Mage_CatalogInventory_Model_Observer
             'use_config_min_sale_qty'   => 1,
             'use_config_max_sale_qty'   => 1,
             'use_config_backorders'     => 1,
-            'use_config_notify_stock_qty'=> 1
+            'use_config_notify_stock_qty' => 1
         );
-        if ($currentStockItem = $currentProduct->getStockItem()) {
+        $currentStockItem = $currentProduct->getStockItem();
+        if ($currentStockItem) {
             $stockData += array(
                 'use_config_enable_qty_inc'  => $currentStockItem->getData('use_config_enable_qty_inc'),
                 'enable_qty_increments'             => $currentStockItem->getData('enable_qty_increments'),
@@ -309,13 +315,41 @@ class Mage_CatalogInventory_Model_Observer
         $qty = $quoteItem->getQty();
 
         /**
+         * Check if product in stock. For composite products check base (parent) item stosk status
+         */
+        $stockItem = $quoteItem->getProduct()->getStockItem();
+        $parentStockItem = false;
+        if ($quoteItem->getParentItem()) {
+            $parentStockItem = $quoteItem->getParentItem()->getProduct()->getStockItem();
+        }
+        if ($stockItem) {
+            if (!$stockItem->getIsInStock() || ($parentStockItem && !$parentStockItem->getIsInStock())) {
+                $quoteItem->addErrorInfo(
+                    'cataloginventory',
+                    Mage_CatalogInventory_Helper_Data::ERROR_QTY,
+                    Mage::helper('cataloginventory')->__('This product is currently out of stock.')
+                );
+                $quoteItem->getQuote()->addErrorInfo(
+                    'stock',
+                    'cataloginventory',
+                    Mage_CatalogInventory_Helper_Data::ERROR_QTY,
+                    Mage::helper('cataloginventory')->__('Some of the products are currently out of stock.')
+                );
+                return $this;
+            } else {
+                // Delete error from item and its quote, if it was set due to item out of stock
+                $this->_removeErrorsFromQuoteAndItem($quoteItem, Mage_CatalogInventory_Helper_Data::ERROR_QTY);
+            }
+        }
+
+        /**
          * Check item for options
          */
-        if (($options = $quoteItem->getQtyOptions()) && $qty > 0) {
+        $options = $quoteItem->getQtyOptions();
+        if ($options && $qty > 0) {
             $qty = $quoteItem->getProduct()->getTypeInstance(true)->prepareQuoteItemQty($qty, $quoteItem->getProduct());
             $quoteItem->setData('qty', $qty);
 
-            $stockItem = $quoteItem->getProduct()->getStockItem();
             if ($stockItem) {
                 $result = $stockItem->checkQtyIncrements($qty);
                 if ($result->getHasError()) {
@@ -340,6 +374,7 @@ class Mage_CatalogInventory_Model_Observer
                 }
             }
 
+            $quoteItemHasErrors = false;
             foreach ($options as $option) {
                 $optionValue = $option->getValue();
                 /* @var $option Mage_Sales_Model_Quote_Item_Option */
@@ -349,6 +384,7 @@ class Mage_CatalogInventory_Model_Observer
                 $stockItem = $option->getProduct()->getStockItem();
 
                 if ($quoteItem->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE) {
+                    $stockItem->setParentItem($quoteItem);
                     $stockItem->setProductName($quoteItem->getName());
                 }
 
@@ -399,11 +435,12 @@ class Mage_CatalogInventory_Model_Observer
 
                 if ($result->getHasError()) {
                     $option->setHasError(true);
+                    $quoteItemHasErrors = true;
 
                     $quoteItem->addErrorInfo(
                         'cataloginventory',
                         Mage_CatalogInventory_Helper_Data::ERROR_QTY,
-                        $result->getQuoteMessage()
+                        $result->getMessage()
                     );
 
                     $quoteItem->getQuote()->addErrorInfo(
@@ -412,7 +449,7 @@ class Mage_CatalogInventory_Model_Observer
                         Mage_CatalogInventory_Helper_Data::ERROR_QTY,
                         $result->getQuoteMessage()
                     );
-                } else {
+                } elseif (!$quoteItemHasErrors) {
                     // Delete error from item and its quote, if it was set due to qty lack
                     $this->_removeErrorsFromQuoteAndItem($quoteItem, Mage_CatalogInventory_Helper_Data::ERROR_QTY);
                 }
@@ -420,7 +457,6 @@ class Mage_CatalogInventory_Model_Observer
                 $stockItem->unsIsChildItem();
             }
         } else {
-            $stockItem = $quoteItem->getProduct()->getStockItem();
             /* @var $stockItem Mage_CatalogInventory_Model_Stock_Item */
             if (!$stockItem instanceof Mage_CatalogInventory_Model_Stock_Item) {
                 Mage::throwException(Mage::helper('cataloginventory')->__('The stock item for Product is not valid.'));
@@ -453,6 +489,7 @@ class Mage_CatalogInventory_Model_Observer
             if (!is_null($productTypeCustomOption)) {
                 // Check if product related to current item is a part of grouped product
                 if ($productTypeCustomOption->getValue() == Mage_Catalog_Model_Product_Type_Grouped::TYPE_CODE) {
+                    $stockItem->setProductName($quoteItem->getProduct()->getName());
                     $stockItem->setIsChildItem(true);
                 }
             }
@@ -489,9 +526,6 @@ class Mage_CatalogInventory_Model_Observer
             }
             if (!is_null($result->getMessage())) {
                 $quoteItem->setMessage($result->getMessage());
-                if ($quoteItem->getParentItem()) {
-                    $quoteItem->getParentItem()->setMessage($result->getMessage());
-                }
             }
 
             if (!is_null($result->getItemBackorders())) {
@@ -703,7 +737,7 @@ class Mage_CatalogInventory_Model_Observer
             }
         }
 
-        if( count($productIds)) {
+        if (count($productIds)) {
             Mage::getResourceSingleton('cataloginventory/indexer_stock')->reindexProducts($productIds);
         }
 
@@ -749,8 +783,8 @@ class Mage_CatalogInventory_Model_Observer
                     $items[$item->getProductId()]['qty'] += $qty;
                 } else {
                     $items[$item->getProductId()] = array(
-                        'qty' => $qty,
-                        'item'=> null,
+                        'qty'  => $qty,
+                        'item' => null,
                     );
                 }
             }
@@ -771,7 +805,8 @@ class Mage_CatalogInventory_Model_Observer
         $children = $item->getChildrenItems();
         $qty = $item->getQtyOrdered() - max($item->getQtyShipped(), $item->getQtyInvoiced()) - $item->getQtyCanceled();
 
-        if ($item->getId() && ($productId = $item->getProductId()) && empty($children) && $qty) {
+        $productId = $item->getProductId();
+        if ($item->getId() && $productId && empty($children) && $qty) {
             Mage::getSingleton('cataloginventory/stock')->backItemQty($productId, $qty);
         }
 
@@ -863,6 +898,35 @@ class Mage_CatalogInventory_Model_Observer
     }
 
     /**
+     * Add stock status filter to select
+     *
+     * @param Varien_Event_Observer $observer
+     * @return Mage_CatalogInventory_Model_Observer
+     */
+    public function addStockStatusFilterToSelect(Varien_Event_Observer $observer)
+    {
+        $select         = $observer->getEvent()->getSelect();
+        $entityField    = $observer->getEvent()->getEntityField();
+        $websiteField   = $observer->getEvent()->getWebsiteField();
+
+        if ($entityField === null || $websiteField === null) {
+            return $this;
+        }
+
+        if (!($entityField instanceof Zend_Db_Expr)) {
+            $entityField = new Zend_Db_Expr($entityField);
+        }
+        if (!($websiteField instanceof Zend_Db_Expr)) {
+            $websiteField = new Zend_Db_Expr($websiteField);
+        }
+
+        Mage::getResourseSingleton('cataloginventory/stock_status')
+            ->prepareCatalogProductIndexSelect($select, $entityField, $websiteField);
+
+        return $this;
+    }
+
+    /**
      * Lock DB rows for order products
      *
      * We need do it for resolving problems with inventory on placing
@@ -947,5 +1011,18 @@ class Mage_CatalogInventory_Model_Observer
         Mage::getSingleton('index/indexer')->indexEvents(
             Mage_Catalog_Model_Product::ENTITY, Mage_Index_Model_Event::TYPE_MASS_ACTION
         );
+    }
+
+    /**
+     * Detects whether product status should be shown
+     *
+     * @param Varien_Event_Observer $observer
+     * @return Mage_CatalogInventory_Model_Observer
+     */
+    public function displayProductStatusInfo($observer)
+    {
+        $info = $observer->getEvent()->getStatus();
+        $info->setDisplayStatus(Mage::helper('cataloginventory')->isDisplayProductStockStatus());
+        return $this;
     }
 }

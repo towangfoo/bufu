@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Cms
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -49,6 +49,7 @@ class Mage_Cms_Block_Page extends Mage_Core_Block_Abstract
             } else {
                 $page = Mage::getSingleton('cms/page');
             }
+            $this->addModelTags($page);
             $this->setData('page', $page);
         }
         return $this->getData('page');
@@ -62,14 +63,36 @@ class Mage_Cms_Block_Page extends Mage_Core_Block_Abstract
     protected function _prepareLayout()
     {
         $page = $this->getPage();
+        $breadcrumbsArray = array();
 
         // show breadcrumbs
         if (Mage::getStoreConfig('web/default/show_cms_breadcrumbs')
             && ($breadcrumbs = $this->getLayout()->getBlock('breadcrumbs'))
             && ($page->getIdentifier()!==Mage::getStoreConfig('web/default/cms_home_page'))
             && ($page->getIdentifier()!==Mage::getStoreConfig('web/default/cms_no_route'))) {
-                $breadcrumbs->addCrumb('home', array('label'=>Mage::helper('cms')->__('Home'), 'title'=>Mage::helper('cms')->__('Go to Home Page'), 'link'=>Mage::getBaseUrl()));
-                $breadcrumbs->addCrumb('cms_page', array('label'=>$page->getTitle(), 'title'=>$page->getTitle()));
+            $breadcrumbsArray[] = array(
+                'crumbName' => 'home',
+                'crumbInfo' => array(
+                    'label' => Mage::helper('cms')->__('Home'),
+                    'title' => Mage::helper('cms')->__('Go to Home Page'),
+                    'link'  => Mage::getBaseUrl()
+                )
+            );
+            $breadcrumbsArray[] = array(
+                'crumbName' => 'cms_page',
+                'crumbInfo' => array(
+                    'label' => $page->getTitle(),
+                    'title' => $page->getTitle()
+                )
+            );
+            $breadcrumbsObject = new Varien_Object();
+            $breadcrumbsObject->setCrumbs($breadcrumbsArray);
+
+            Mage::dispatchEvent('cms_generate_breadcrumbs', array('breadcrumbs' => $breadcrumbsObject));
+
+            foreach ($breadcrumbsObject->getCrumbs() as $breadcrumbsItem) {
+                $breadcrumbs->addCrumb($breadcrumbsItem['crumbName'], $breadcrumbsItem['crumbInfo']);
+            }
         }
 
         $root = $this->getLayout()->getBlock('root');

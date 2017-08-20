@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Customer
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -141,7 +141,8 @@ class Mage_Customer_Model_Observer
         $customerAddress = $observer->getCustomerAddress();
         $customer = $customerAddress->getCustomer();
 
-        if (!Mage::helper('customer/address')->isVatValidationEnabled($customer->getStore())
+        $store = Mage::app()->getStore()->isAdmin() ? $customer->getStore() : null;
+        if (!Mage::helper('customer/address')->isVatValidationEnabled($store)
             || Mage::registry(self::VIV_PROCESSED_FLAG)
             || !$this->_canProcessAddress($customerAddress)
         ) {
@@ -217,5 +218,16 @@ class Mage_Customer_Model_Observer
             $customer->getOrigData('group_id')
         );
         $customer->save();
+    }
+
+    /**
+     * Clear customer flow password table
+     *
+     */
+    public function deleteCustomerFlowPassword()
+    {
+        $connection = Mage::getSingleton('core/resource')->getConnection('write');
+        $condition  = array('requested_date < ?' => Mage::getModel('core/date')->date(null, '-1 day'));
+        $connection->delete($connection->getTableName('customer_flowpassword'), $condition);
     }
 }

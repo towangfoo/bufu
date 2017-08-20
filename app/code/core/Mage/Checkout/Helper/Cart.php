@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Checkout
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -31,7 +31,15 @@
  */
 class Mage_Checkout_Helper_Cart extends Mage_Core_Helper_Url
 {
-    const XML_PATH_REDIRECT_TO_CART         = 'checkout/cart/redirect_to_cart';
+    /**
+     * XML path for redirect to cart value
+     */
+    const XML_PATH_REDIRECT_TO_CART = 'checkout/cart/redirect_to_cart';
+
+    /**
+     * Maximal coupon code length according to database table definitions (longer codes are truncated)
+     */
+    const COUPON_CODE_MAX_LENGTH = 255;
 
     /**
      * Retrieve cart instance
@@ -46,17 +54,17 @@ class Mage_Checkout_Helper_Cart extends Mage_Core_Helper_Url
     /**
      * Retrieve url for add product to cart
      *
-     * @param   Mage_Catalog_Model_Product $product
-     * @return  string
+     * @param Mage_Catalog_Model_Product $product
+     * @param array $additional
+     * @return string
      */
     public function getAddUrl($product, $additional = array())
     {
-        $continueUrl    = Mage::helper('core')->urlEncode($this->getCurrentUrl());
-        $urlParamName   = Mage_Core_Controller_Front_Action::PARAM_NAME_URL_ENCODED;
-
         $routeParams = array(
-            $urlParamName   => $continueUrl,
-            'product'       => $product->getEntityId()
+            Mage_Core_Controller_Front_Action::PARAM_NAME_URL_ENCODED => $this->_getHelperInstance('core')
+                ->urlEncode($this->getCurrentUrl()),
+            'product' => $product->getEntityId(),
+            Mage_Core_Model_Url::FORM_KEY => $this->_getSingletonModel('core/session')->getFormKey()
         );
 
         if (!empty($additional)) {
@@ -77,6 +85,17 @@ class Mage_Checkout_Helper_Cart extends Mage_Core_Helper_Url
     }
 
     /**
+     * Return helper instance
+     *
+     * @param  string $helperName
+     * @return Mage_Core_Helper_Abstract
+     */
+    protected function _getHelperInstance($helperName)
+    {
+        return Mage::helper($helperName);
+    }
+
+    /**
      * Retrieve url for remove product from cart
      *
      * @param   Mage_Sales_Quote_Item $item
@@ -85,7 +104,7 @@ class Mage_Checkout_Helper_Cart extends Mage_Core_Helper_Url
     public function getRemoveUrl($item)
     {
         $params = array(
-            'id'=>$item->getId(),
+            'id' => $item->getId(),
             Mage_Core_Controller_Front_Action::PARAM_NAME_BASE64_URL => $this->getCurrentBase64Url()
         );
         return $this->_getUrl('checkout/cart/delete', $params);

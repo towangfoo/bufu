@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -35,12 +35,15 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
 {
     /**
      * Xml connect glue
+     *
+     * @deprecated will delete in the next version
      */
-    const XMLCONNECT_GLUE = '_';
+    const XMLCONNECT_GLUE = Mage_XmlConnect_Model_ImageLimits::SCREEN_SIZE_UPDATE_TYPE_GLUE;
 
     /**
      * Image limits for content
      *
+     * @deprecated will delete in the next version
      * @var array|null
      */
     protected $_content = null;
@@ -48,6 +51,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Image limits for interface
      *
+     * @deprecated will delete in the next version
      * @var array|null
      */
     protected $_interface = null;
@@ -55,6 +59,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Array of interface image paths in xmlConfig
      *
+     * @deprecated will delete in the next version
      * @var array
      */
     protected $_interfacePath = array();
@@ -62,6 +67,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Image limits array
      *
+     * @deprecated will delete in the next version
      * @var array
      */
     protected $_imageLimits = array();
@@ -69,6 +75,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Images paths in the config
      *
+     * @deprecated will delete in the next version
      * @var array|null
      */
     protected $_confPaths = null;
@@ -77,8 +84,9 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
      * Process uploaded file
      * setup file names to the configuration
      *
+     * @deprecated will delete in the next version
      * @param string $field
-     * @retun string
+     * @return string
      */
     public function handleUpload($field)
     {
@@ -92,6 +100,11 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
             $uploader = Mage::getModel('core/file_uploader', $field);
             $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'gif', 'png'));
             $uploader->setAllowRenameFiles(true);
+            $uploader->addValidateCallback(
+                Mage_Core_Model_File_Validator_Image::NAME,
+                Mage::getModel('core/file_validator_image'),
+                'validate'
+            );
             $uploader->save($uploadDir);
             $uploadedFilename = $uploader->getUploadedFileName();
             $uploadedFilename = $this->_getResizedFilename($field, $uploadedFilename, true);
@@ -103,8 +116,12 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
                 Mage::throwException(Mage::helper('xmlconnect')->__('File can\'t be uploaded.'));
             } elseif ($e->getMessage() == 'Disallowed file type.') {
                 $filename = $_FILES[$field]['name'];
+                $io = new Varien_Io_File();
                 Mage::throwException(
-                    Mage::helper('xmlconnect')->__('Error while uploading file "%s". Disallowed file type. Only "jpg", "jpeg", "gif", "png" are allowed.', $filename)
+                    Mage::helper('xmlconnect')->__(
+                        'Error while uploading file "%s".' .
+                        ' Disallowed file type. Only "jpg", "jpeg", "gif", "png" are allowed.',
+                        $io->getFilteredPath($filename))
                 );
             } else {
                 Mage::logException($e);
@@ -116,16 +133,18 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return current screen_size parameter
      *
+     * @deprecated will delete in the next version
      * @return string
      */
     protected function _getScreenSize()
     {
-        return Mage::helper('xmlconnect')->getApplication()->getScreenSize();
+        return $this->filterScreenSize(Mage::helper('xmlconnect')->getApplication()->getScreenSize());
     }
 
     /**
      * Return correct system filename for current screenSize
      *
+     * @deprecated will delete in the next version
      * @throws Mage_Core_Exception
      * @param string $fieldPath
      * @param string $fileName
@@ -148,16 +167,19 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
          */
         if (!file_exists($originalSizeFileName)) {
             $oldFileName = $this->getOldUploadDir() . DS . $fileName;
+            $io = new Varien_Io_File();
             if (file_exists($oldFileName)) {
-                if (!(copy($oldFileName, $originalSizeFileName)
-                    && (is_readable($customSizeFileName) || chmod($customSizeFileName, 0644))
+                if (!(copy($oldFileName, $originalSizeFileName) && (is_readable($customSizeFileName)
+                    || chmod($customSizeFileName, 0644))
                 )) {
                     Mage::throwException(
-                        Mage::helper('xmlconnect')->__('Error while processing file "%s".', $fileName)
+                        Mage::helper('xmlconnect')->__('Error while processing file "%s".',
+                            $io->getFilteredPath($fileName))
                     );
                 }
             } else {
-                Mage::throwException(Mage::helper('xmlconnect')->__('No such file "%s".', $fileName));
+                Mage::throwException(Mage::helper('xmlconnect')->__('No such file "%s".',
+                    $io->getFilteredPath($fileName)));
             }
         }
 
@@ -170,7 +192,9 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
             if (isset($_FILES[$fieldPath]) && is_array($_FILES[$fieldPath]) && isset($_FILES[$fieldPath]['name'])) {
                 $fileName = $_FILES[$fieldPath]['name'];
             }
-            Mage::throwException(Mage::helper('xmlconnect')->__('Error while uploading file "%s".', $fileName));
+            $io = new Varien_Io_File();
+            Mage::throwException(Mage::helper('xmlconnect')->__('Error while uploading file "%s".',
+                $io->getFilteredPath($fileName)));
         }
         return $customSizeFileName;
     }
@@ -178,6 +202,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Resize uploaded file
      *
+     * @deprecated will delete in the next version
      * @param string $fieldPath
      * @param string $file
      * @return null
@@ -228,6 +253,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Convert uploaded file to PNG
      *
+     * @deprecated will delete in the next version
      * @param string $field
      */
     protected function _forcedConvertPng($field)
@@ -283,6 +309,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return CustomSizeDirPrefix
      *
+     * @deprecated will delete in the next version
      * @return string
      */
     public function getCustomSizeDirPrefix()
@@ -293,6 +320,8 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return FileDefaultSizeSuffixAsUrl
      *
+     * @todo get rid of this method
+     * @deprecated will delete in the next version
      * @param string $fileName
      * @return string
      */
@@ -304,22 +333,21 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return getFileCustomDirSuffixAsUrl
      *
+     * @deprecated will delete in the next version
      * @param string $confPath
      * @param string $fileName
      * @return string
      */
     public function getFileCustomDirSuffixAsUrl($confPath, $fileName)
     {
-        return 'custom'
-            . '/'
-            . $this->_getScreenSize()
-            . '/'
+        return 'custom' . '/' . $this->_getScreenSize() . '/'
             . basename($this->_getResizedFilename($confPath, $fileName));
     }
 
     /**
      * Return correct size for given $imageName and device screen_size
      *
+     * @deprecated will delete in the next version
      * @param string $imageName
      * @return int
      */
@@ -340,6 +368,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return setting for interface images (image size limits)
      *
+     * @deprecated will delete in the next version
      * @return array
      */
     public function getInterfaceImageLimits()
@@ -354,6 +383,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return correct size for given $imageName and device screen_size
      *
+     * @deprecated will delete in the next version
      * @param string $imagePath
      * @return int
      */
@@ -385,11 +415,11 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
         $path = trim($path);
         $result = Mage::getBaseDir('media') . DS . 'xmlconnect';
 
-        if (!empty($path)) {
-            if (strpos($path, DS) === 0) {
-                $path = substr($path, 1);
+        if ($path) {
+            if (strpos($path, DS) !== 0) {
+                $path = DS . $path;
             }
-            $result .= DS . $path;
+            $result .= $path;
         }
         return $result;
     }
@@ -405,11 +435,11 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
         $image = trim($image);
         $result = Mage::getBaseUrl('media') . 'xmlconnect';
 
-        if (!empty($image)) {
-            if (strpos($image, '/') === 0) {
-                $image = substr($image, 1);
+        if ($image) {
+            if (strpos($image, '/') !== 0) {
+                $image = '/' . $image;
             }
-            $result .= '/' . $image;
+            $result .= $image;
         }
         return $result;
     }
@@ -437,7 +467,8 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Retrieve thumbnail image url
+     * Retrieve custom size image url
+     *
      *
      * @param string $imageUrl
      * @param int $width
@@ -450,8 +481,8 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
         $customDir = $this->getMediaPath('custom' . DS . $screenSize);
         $this->_verifyDirExist($customDir);
         $imageUrl = explode('/', $imageUrl);
-        $file = $imageUrl[count($imageUrl)-1];
-        $filePath = $this->getDefaultSizeUploadDir() . DS . $file;
+        $file = array_pop($imageUrl);
+        $filePath = Mage_XmlConnect_Model_Images::getBasePath() . DS . $file;
         if (!file_exists($customDir . DS . $file)) {
             $image = new Varien_Image($filePath);
             $widthOriginal = $image->getOriginalWidth();
@@ -481,6 +512,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Ensure correct $screenSize value
      *
+     * @deprecated will delete in the next version
      * @param string $screenSize
      * @return string
      */
@@ -518,6 +550,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return correct size array for given device screen_size(320x480/640x960_a)
      *
+     * @deprecated will delete in the next version
      * @param string $screenSize
      * @return array
      */
@@ -614,6 +647,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return reference to the $path in $array
      *
+     * @deprecated will delete in the next version
      * @param array &$array
      * @param string $path
      * @return mixed reference
@@ -627,8 +661,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
                 if (is_array($target) && isset($target[$node])) {
                     $target =& $target[$node];
                 } else {
-                    $targetNull = null;
-                    return $targetNull;
+                    return null;
                 }
             }
         }
@@ -638,6 +671,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Multiply given $item by $value if non array
      *
+     * @deprecated will delete in the next version
      * @param mixed $item (argument to change)
      * @param mixed $key (used with array_walk_recursive function as a key of given array)
      * @param string $value (contains float)
@@ -669,6 +703,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return customSizeUploadDir path
      *
+     * @deprecated will delete in the next version
      * @param string $screenSize
      * @return string
      */
@@ -683,6 +718,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return originalSizeUploadDir path
      *
+     * @deprecated will delete in the next version
      * @return string
      */
     public function getOriginalSizeUploadDir()
@@ -695,6 +731,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return oldUpload dir path  (media/xmlconnect)
      *
+     * @deprecated from 1.6.1.0
      * @return string
      */
     public function getOldUploadDir()
@@ -707,6 +744,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return default size upload dir path
      *
+     * @deprecated will delete in the next version
      * @return string
      */
     public function getDefaultSizeUploadDir()
@@ -717,6 +755,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Return array for interface images paths in the config
      *
+     * @deprecated will delete in the next version
      * @return array
      */
     public function getInterfaceImagesPathsConf()
@@ -739,6 +778,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
      * - default interface image path for specified $imagePath
      * - array of image paths
      *
+     * @deprecated will delete in the next version
      * @param string $imagePath
      * @return array|string
      */
@@ -768,6 +808,7 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
     /**
      * Check image and get full file path
      *
+     * @deprecated will delete in the next version
      * @param string &$icon
      * @return bool
      */

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Customer
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -78,6 +78,19 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
      */
     const XML_PATH_CUSTOMER_RESET_PASSWORD_LINK_EXPIRATION_PERIOD
         = 'default/customer/password/reset_link_expiration_period';
+
+    /**
+     * Configuration path to require admin password on customer password change
+     */
+    const XML_PATH_CUSTOMER_REQUIRE_ADMIN_USER_TO_CHANGE_USER_PASSWORD
+        = 'customer/password/require_admin_user_to_change_user_password';
+
+    /**
+     * Configuration path to password forgotten flow change
+     */
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_FLOW_SECURE = 'admin/security/forgot_password_flow_secure';
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_EMAIL_TIMES = 'admin/security/forgot_password_email_times';
+    const XML_PATH_CUSTOMER_FORGOT_PASSWORD_IP_TIMES    = 'admin/security/forgot_password_ip_times';
 
     /**
      * VAT class constants
@@ -140,6 +153,67 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCurrentCustomer()
     {
         return $this->getCustomer();
+    }
+
+    /**
+     * Retrieve full customer name from provided object
+     *
+     * @param Varien_Object $object
+     * @return string
+     */
+    public function getFullCustomerName($object = null)
+    {
+        $name = '';
+        if (is_null($object)) {
+            $name = $this->getCustomerName();
+        } else {
+            $config = Mage::getSingleton('eav/config');
+
+            if (
+                $config->getAttribute('customer', 'prefix')->getIsVisible()
+                && (
+                    $object->getPrefix()
+                    || $object->getCustomerPrefix()
+                    )
+                ) {
+                    $name .= ($object->getPrefix() ? $object->getPrefix() : $object->getCustomerPrefix()) . ' ';
+            }
+
+            $name .= $object->getFirstname() ? $object->getFirstname() : $object->getCustomerFirstname();
+
+            if ($config->getAttribute('customer', 'middlename')->getIsVisible()
+                && (
+                    $object->getMiddlename()
+                    || $object->getCustomerMiddlename()
+                    )
+                ) {
+                    $name .= ' ' . (
+                        $object->getMiddlename()
+                        ? $object->getMiddlename()
+                        : $object->getCustomerMiddlename()
+                    );
+            }
+
+            $name .= ' ' . (
+                $object->getLastname()
+                ? $object->getLastname()
+                : $object->getCustomerLastname()
+            );
+
+            if ($config->getAttribute('customer', 'suffix')->getIsVisible()
+                && (
+                    $object->getSuffix()
+                    || $object->getCustomerSuffix()
+                    )
+                ) {
+                    $name .= ' ' . (
+                        $object->getSuffix()
+                        ? $object->getSuffix()
+                        : $object->getCustomerSuffix()
+                    );
+            }
+        }
+        return $name;
     }
 
     /**
@@ -396,6 +470,16 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Retrieve is require admin password on customer password change
+     *
+     * @return bool
+     */
+    public function getIsRequireAdminUserToChangeUserPassword()
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_CUSTOMER_REQUIRE_ADMIN_USER_TO_CHANGE_USER_PASSWORD);
+    }
+
+    /**
      * Get default customer group id
      *
      * @param Mage_Core_Model_Store|string|int $store
@@ -404,6 +488,36 @@ class Mage_Customer_Helper_Data extends Mage_Core_Helper_Abstract
     public function getDefaultCustomerGroupId($store = null)
     {
         return (int)Mage::getStoreConfig(Mage_Customer_Model_Group::XML_PATH_DEFAULT_ID, $store);
+    }
+
+    /**
+     * Retrieve forgot password flow secure type
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordFlowSecure()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_FLOW_SECURE);
+    }
+
+    /**
+     * Retrieve forgot password requests to times per 24 hours from 1 e-mail
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordEmailTimes()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_EMAIL_TIMES);
+    }
+
+    /**
+     * Retrieve forgot password requests to times per hour from 1 IP
+     *
+     * @return int
+     */
+    public function getCustomerForgotPasswordIpTimes()
+    {
+        return (int)Mage::getStoreConfig(self::XML_PATH_CUSTOMER_FORGOT_PASSWORD_IP_TIMES);
     }
 
     /**

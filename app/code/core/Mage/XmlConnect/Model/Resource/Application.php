@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -111,11 +111,27 @@ class Mage_XmlConnect_Model_Resource_Application extends Mage_Core_Model_Resourc
     /**
      * Update all applications "updated at" parameter with current date
      *
+     * @deprecated will remove in new release
      * @return Mage_XmlConnect_Model_Resource_Application
      */
     public function updateAllAppsUpdatedAtParameter()
     {
-        $this->_getWriteAdapter()->update($this->getMainTable(), array('updated_at' => date('Y-m-d H:i:s')));
+        $this->_getWriteAdapter()->update(
+            $this->getMainTable(),
+            array('updated_at' => date('Y-m-d H:i:s'))
+        );
+        return $this;
+    }
+
+    /**
+     * Update all applications "updated at" parameter with current date
+     *
+     * @param Mage_XmlConnect_Model_Application $model
+     * @return Mage_XmlConnect_Model_Resource_Application
+     */
+    public function updateUpdatedAtParameter($model)
+    {
+        $this->_getWriteAdapter()->update($this->getMainTable(), array('updated_at' => $model->getUpdatedAt()));
         return $this;
     }
 }

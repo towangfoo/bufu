@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Core
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -52,7 +52,7 @@
  * @package     Mage_Core
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Mage_Core_Model_Url_Rewrite extends Mage_Core_Model_Abstract
+class Mage_Core_Model_Url_Rewrite extends Mage_Core_Model_Abstract implements Mage_Core_Model_Url_Rewrite_Interface
 {
     const TYPE_CATEGORY = 1;
     const TYPE_PRODUCT  = 2;
@@ -191,6 +191,7 @@ class Mage_Core_Model_Url_Rewrite extends Mage_Core_Model_Abstract
      * @param   Zend_Controller_Request_Http $request
      * @param   Zend_Controller_Response_Http $response
      * @return  Mage_Core_Model_Url
+     * @deprecated since 1.7.0.2. Refactored and moved to Mage_Core_Controller_Request_Rewrite
      */
     public function rewrite(Zend_Controller_Request_Http $request=null, Zend_Controller_Response_Http $response=null)
     {
@@ -294,6 +295,12 @@ class Mage_Core_Model_Url_Rewrite extends Mage_Core_Model_Abstract
         return true;
     }
 
+    /**
+     * Prepare and return QUERY_STRING
+     *
+     * @return bool|string
+     * @deprecated since 1.7.0.2. Refactored and moved to Mage_Core_Controller_Request_Rewrite
+     */
     protected function _getQueryString()
     {
         if (!empty($_SERVER['QUERY_STRING'])) {
@@ -326,6 +333,7 @@ class Mage_Core_Model_Url_Rewrite extends Mage_Core_Model_Abstract
      *
      * @param string $url
      * @param bool $isPermanent
+     * @deprecated since 1.7.0.2. Refactored and moved to Mage_Core_Controller_Request_Rewrite
      */
     protected function _sendRedirectHeaders($url, $isPermanent = false)
     {

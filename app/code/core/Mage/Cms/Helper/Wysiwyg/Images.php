@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Cms
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -49,6 +49,11 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
      */
     protected $_storeId = null;
 
+    /**
+     * Image Storage root directory
+     * @var string
+     */
+    protected $_storageRoot;
 
     /**
      * Set a specified store ID value
@@ -68,8 +73,16 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
      */
     public function getStorageRoot()
     {
-        return Mage::getConfig()->getOptions()->getMediaDir() . DS . Mage_Cms_Model_Wysiwyg_Config::IMAGE_DIRECTORY
-            . DS;
+        if (!$this->_storageRoot) {
+            $path = Mage::getConfig()->getOptions()->getMediaDir()
+                . DS . Mage_Cms_Model_Wysiwyg_Config::IMAGE_DIRECTORY;
+            $this->_storageRoot = realpath($path);
+            if (!$this->_storageRoot) {
+                $this->_storageRoot = $path;
+            }
+            $this->_storageRoot .= DS;
+        }
+        return $this->_storageRoot;
     }
 
     /**
@@ -79,7 +92,7 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
      */
     public function getBaseUrl()
     {
-        return Mage::getBaseUrl('media') . '/';
+        return Mage::getBaseUrl('media');
     }
 
     /**
@@ -100,7 +113,8 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
      */
     public function convertPathToId($path)
     {
-        $path = str_replace($this->getStorageRoot(), '', $path);
+        $storageRoot = realpath($this->getStorageRoot());
+        $path = str_replace($storageRoot, '', $path);
         return $this->idEncode($path);
     }
 
@@ -113,8 +127,9 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
     public function convertIdToPath($id)
     {
         $path = $this->idDecode($id);
-        if (!strstr($path, $this->getStorageRoot())) {
-            $path = $this->getStorageRoot() . $path;
+        $storageRoot = realpath($this->getStorageRoot());
+        if (!strstr($path, $storageRoot)) {
+            $path = $storageRoot . DS . $path;
         }
         return $path;
     }
@@ -198,16 +213,17 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
     {
         if (!$this->_currentPath) {
             $currentPath = $this->getStorageRoot();
-            $path = $this->_getRequest()->getParam($this->getTreeNodeName());
-            if ($path) {
-                $path = $this->convertIdToPath($path);
-                if (is_dir($path)) {
+            $node = $this->_getRequest()->getParam($this->getTreeNodeName());
+            if ($node) {
+                $path = realpath($this->convertIdToPath($node));
+                if (is_dir($path) && false !== stripos($path, $currentPath)) {
                     $currentPath = $path;
                 }
             }
             $io = new Varien_Io_File();
             if (!$io->isWriteable($currentPath) && !$io->mkdir($currentPath)) {
-                $message = Mage::helper('cms')->__('The directory %s is not writable by server.',$currentPath);
+                $message = Mage::helper('cms')->__('The directory %s is not writable by server.',
+                    $io->getFilteredPath($currentPath));
                 Mage::throwException($message);
             }
             $this->_currentPath = $currentPath;
@@ -223,7 +239,8 @@ class Mage_Cms_Helper_Wysiwyg_Images extends Mage_Core_Helper_Abstract
     public function getCurrentUrl()
     {
         if (!$this->_currentUrl) {
-            $path = str_replace(Mage::getConfig()->getOptions()->getMediaDir(), '', $this->getCurrentPath());
+            $mediaPath = realpath(Mage::getConfig()->getOptions()->getMediaDir());
+            $path = str_replace($mediaPath, '', $this->getCurrentPath());
             $path = trim($path, DS);
             $this->_currentUrl = Mage::app()->getStore($this->_storeId)->getBaseUrl('media') .
                                  $this->convertPathToUrl($path) . '/';

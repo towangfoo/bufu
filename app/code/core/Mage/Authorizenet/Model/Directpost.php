@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Authorizenet
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -51,6 +51,7 @@ class Mage_Authorizenet_Model_Directpost extends Mage_Paygate_Model_Authorizenet
     protected $_canUseForMultishipping  = false;
     protected $_canSaveCc               = false;
     protected $_isInitializeNeeded      = true;
+    protected $_canFetchTransactionInfo = false;
 
     /**
      * Do not validate payment form using server methods
@@ -426,6 +427,13 @@ class Mage_Authorizenet_Model_Directpost extends Mage_Paygate_Model_Authorizenet
         if ($orderIncrementId) {
             /* @var $order Mage_Sales_Model_Order */
             $order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
+            //check payment method
+            $payment = $order->getPayment();
+            if (!$payment || $payment->getMethod() != $this->getCode()) {
+                Mage::throwException(
+                    Mage::helper('authorizenet')->__('Payment error. Order was not found.')
+                );
+            }
             if ($order->getId() &&  $order->getState() == Mage_Sales_Model_Order::STATE_PENDING_PAYMENT) {
                 //operate with order
                 $this->_authOrder($order);
@@ -515,6 +523,8 @@ class Mage_Authorizenet_Model_Directpost extends Mage_Paygate_Model_Authorizenet
      * Authorize order or authorize and capture it.
      *
      * @param Mage_Sales_Model_Order $order
+     *
+     * @throws Exception
      */
     protected function _authOrder(Mage_Sales_Model_Order $order)
     {
@@ -536,12 +546,8 @@ class Mage_Authorizenet_Model_Directpost extends Mage_Paygate_Model_Authorizenet
 
         $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
 
-        // Set transaction apporval message
-        $message = Mage::helper('authorizenet')->__(
-            'Amount of %s approved by payment gateway. Transaction ID: "%s".',
-            $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized()),
-            $response->getXTransId()
-        );
+        // Set transaction approval message
+        $message = Mage::helper('authorizenet')->__('Amount of %s approved by payment gateway. Transaction ID: "%s".', $order->getBaseCurrency()->formatTxt($payment->getBaseAmountAuthorized()), $response->getXTransId());
 
         $orderState = Mage_Sales_Model_Order::STATE_PROCESSING;
         $orderStatus = $this->getConfigData('order_status');
@@ -565,7 +571,7 @@ class Mage_Authorizenet_Model_Directpost extends Mage_Paygate_Model_Authorizenet
 
         try {
             if (!$response->hasOrderSendConfirmation() || $response->getOrderSendConfirmation()) {
-                $order->sendNewOrderEmail();
+                $order->queueNewOrderEmail();
             }
 
             Mage::getModel('sales/quote')

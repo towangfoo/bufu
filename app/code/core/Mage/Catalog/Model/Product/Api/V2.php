@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -38,11 +38,17 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
      *
      * @param int|string $productId
      * @param string|int $store
-     * @param stdClass $attributes
+     * @param stdClass   $attributes
+     * @param string     $identifierType
      * @return array
      */
     public function info($productId, $store = null, $attributes = null, $identifierType = null)
     {
+        // make sku flag case-insensitive
+        if (!empty($identifierType)) {
+            $identifierType = strtolower($identifierType);
+        }
+
         $product = $this->_getProduct($productId, $store, $identifierType);
 
         $result = array( // Basic product data
@@ -102,7 +108,7 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
      */
     public function create($type, $set, $sku, $productData, $store = null)
     {
-        if (!$type || !$set || !$sku) {
+        if (!$type || !$set || !$sku || !is_object($productData)) {
             $this->_fault('data_invalid');
         }
 
@@ -194,6 +200,41 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
     }
 
     /**
+     * Update multiple products information at once
+     *
+     * @param array      $productIds
+     * @param array      $productData
+     * @param string|int $store
+     * @param string     $identifierType
+     * @return boolean
+     */
+    public function multiUpdate($productIds, $productData, $store = null, $identifierType = null)
+    {
+        if (count($productIds) != count($productData)) {
+            $this->_fault('multi_update_not_match');
+        }
+
+        $productData = (array)$productData;
+        $failMessages = array();
+
+        foreach ($productIds as $index => $productId) {
+            try {
+                $this->update($productId, $productData[$index], $store, $identifierType);
+            } catch (Mage_Api_Exception $e) {
+                $failMessages[] = sprintf("Product ID %d:\n %s", $productId, $e->getMessage());
+            }
+        }
+
+        if (empty($failMessages)) {
+            return true;
+        } else {
+            $this->_fault('partially_updated', implode("\n", $failMessages));
+        }
+
+        return false;
+    }
+
+    /**
      *  Set additional data before product saved
      *
      *  @param    Mage_Catalog_Model_Product $product
@@ -202,6 +243,9 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
      */
     protected function _prepareDataForSave ($product, $productData)
     {
+        if (!is_object($productData)) {
+            $this->_fault('data_invalid');
+        }
         if (property_exists($productData, 'website_ids') && is_array($productData->website_ids)) {
             $product->setWebsiteIds($productData->website_ids);
         }
@@ -276,7 +320,7 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
     }
 
     /**
-     * Update product special price
+     * Update product special priceim
      *
      * @param int|string $productId
      * @param float $specialPrice
@@ -296,24 +340,4 @@ class Mage_Catalog_Model_Product_Api_V2 extends Mage_Catalog_Model_Product_Api
         $obj->special_to_date = $toDate;
         return $this->update($productId, $obj, $store, $identifierType);
     }
-
-    /**
-     * Retrieve product special price
-     *
-     * @param int|string $productId
-     * @param string|int $store
-     * @return array
-     */
-    public function getSpecialPrice($productId, $store = null)
-    {
-        return $this->info($productId, $store, array(
-            'attributes' => array(
-                'special_price',
-                'special_from_date',
-                'special_to_date'
-                )
-            )
-        );
-    }
-
 }

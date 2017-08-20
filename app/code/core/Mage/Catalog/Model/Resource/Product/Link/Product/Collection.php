@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -116,6 +116,7 @@ class Mage_Catalog_Model_Resource_Product_Link_Product_Collection extends Mage_C
         $this->_product = $product;
         if ($product && $product->getId()) {
             $this->_hasLinkFilter = true;
+            $this->setStore($product->getStore());
         }
         return $this;
     }
@@ -282,6 +283,19 @@ class Mage_Catalog_Model_Resource_Product_Link_Product_Collection extends Mage_C
     }
 
     /**
+     * Get table alias for link model attribute
+     *
+     * @param string $attributeCode
+     * @param string $attributeType
+     *
+     * @return string
+     */
+    protected function _getLinkAttributeTableAlias($attributeCode, $attributeType)
+    {
+        return sprintf('link_attribute_%s_%s', $attributeCode, $attributeType);
+    }
+
+    /**
      * Join attributes
      *
      * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
@@ -293,10 +307,9 @@ class Mage_Catalog_Model_Resource_Product_Link_Product_Collection extends Mage_C
         }
         $attributes = $this->getLinkModel()->getAttributes();
 
-        $attributesByType = array();
         foreach ($attributes as $attribute) {
             $table = $this->getLinkModel()->getAttributeTypeTable($attribute['type']);
-            $alias = sprintf('link_attribute_%s_%s', $attribute['code'], $attribute['type']);
+            $alias = $this->_getLinkAttributeTableAlias($attribute['code'], $attribute['type']);
 
             $joinCondiotion = array(
                 "{$alias}.link_id = links.link_id",
@@ -329,5 +342,39 @@ class Mage_Catalog_Model_Resource_Product_Link_Product_Collection extends Mage_C
             return $this->setAttributeSetIdOrder($dir);
         }
         return parent::setOrder($attribute, $dir);
+    }
+
+    /**
+     * Add specific link model attribute to collection filter
+     *
+     * @param string $attributeCode
+     * @param array|null $condition
+     *
+     * @return Mage_Catalog_Model_Resource_Product_Link_Product_Collection
+     */
+    public function addLinkModelFieldToFilter($attributeCode, $condition = null)
+    {
+        if (!$this->getProduct() || !$this->getProduct()->getId()) {
+            return $this;
+        }
+
+        $attribute = null;
+        foreach ($this->getLinkModel()->getAttributes() as $attributeData) {
+            if ($attributeData['code'] == $attributeCode) {
+                $attribute = $attributeData;
+                break;
+            }
+        }
+
+        if (!$attribute) {
+            return $this;
+        }
+
+        $this->_hasLinkFilter = true;
+
+        $field = $this->_getLinkAttributeTableAlias($attribute['code'], $attribute['type']) . '.value';
+        $this->getSelect()->where($this->_getConditionSql($field, $condition));
+
+        return $this;
     }
 }

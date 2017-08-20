@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -79,7 +79,14 @@ class Mage_XmlConnect_Model_Queue extends Mage_Core_Model_Template
      *
      * @var null|string
      */
-    protected $_appType = null;
+    protected $_appType;
+
+    /**
+     * Application code
+     *
+     * @var string
+     */
+    protected $_appCode;
 
     /**
      * Initialize queue message
@@ -102,8 +109,14 @@ class Mage_XmlConnect_Model_Queue extends Mage_Core_Model_Template
     {
         parent::load($id, $field);
 
+        if (!$this->getTemplateId() && Mage::app()->getRequest()->getParam('template_id', false)) {
+            $this->setTemplateId(Mage::app()->getRequest()->getParam('template_id'));
+        }
+
         if ($this->getTemplateId()) {
-            $this->setName(Mage::getModel('xmlconnect/template')->load($this->getTemplateId())->getName());
+            $template = Mage::getModel('xmlconnect/template')->load($this->getTemplateId());
+            $this->setName($template->getName());
+            $this->setApplicationId($template->getApplicationId());
         }
         return $this;
     }
@@ -295,5 +308,21 @@ EOT;
             }
         }
         return parent::save();
+    }
+
+    /**
+     * Get application code
+     *
+     * @return string
+     */
+    public function getAppCode()
+    {
+        if (null === $this->_appCode) {
+            if ($this->getApplicationId()) {
+                $application = Mage::getModel('xmlconnect/application')->load($this->getApplicationId());
+                $this->_appCode = $application->getCode();
+            }
+        }
+        return $this->_appCode;
     }
 }

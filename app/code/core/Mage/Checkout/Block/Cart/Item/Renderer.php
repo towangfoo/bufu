@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Checkout
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -123,7 +123,6 @@ class Mage_Checkout_Block_Cart_Item_Renderer extends Mage_Core_Block_Template
         if ($this->_ignoreProductUrl) {
             return false;
         }
-
         if ($this->_productUrl || $this->getItem()->getRedirectUrl()) {
             return true;
         }
@@ -133,19 +132,9 @@ class Mage_Checkout_Block_Cart_Item_Renderer extends Mage_Core_Block_Template
         if ($option) {
             $product = $option->getProduct();
         }
-
         if ($product->isVisibleInSiteVisibility()) {
             return true;
         }
-        else {
-            if ($product->hasUrlDataObject()) {
-                $data = $product->getUrlDataObject();
-                if (in_array($data->getVisibility(), $product->getVisibleInSiteVisibilities())) {
-                    return true;
-                }
-            }
-        }
-
         return false;
     }
 
@@ -235,11 +224,45 @@ class Mage_Checkout_Block_Cart_Item_Renderer extends Mage_Core_Block_Template
             'checkout/cart/delete',
             array(
                 'id'=>$this->getItem()->getId(),
+                'form_key' => Mage::getSingleton('core/session')->getFormKey(),
                 Mage_Core_Controller_Front_Action::PARAM_NAME_URL_ENCODED => $this->helper('core/url')->getEncodedUrl()
             )
         );
     }
 
+    /**
+     * Get item ajax delete url
+     *
+     * @return string
+     */
+    public function getAjaxDeleteUrl()
+    {
+        return $this->getUrl(
+            'checkout/cart/ajaxDelete',
+            array(
+                'id'=>$this->getItem()->getId(),
+                Mage_Core_Controller_Front_Action::PARAM_NAME_URL_ENCODED => $this->helper('core/url')->getEncodedUrl(),
+                '_secure' => $this->_getApp()->getStore()->isCurrentlySecure(),
+            )
+        );
+    }
+
+    /**
+     * Get item ajax update url
+     *
+     * @return string
+     */
+    public function getAjaxUpdateUrl()
+    {
+        return $this->getUrl(
+            'checkout/cart/ajaxUpdate',
+            array(
+                'id'=>$this->getItem()->getId(),
+                Mage_Core_Controller_Front_Action::PARAM_NAME_URL_ENCODED => $this->helper('core/url')->getEncodedUrl(),
+                '_secure' => $this->_getApp()->getStore()->isCurrentlySecure(),
+            )
+        );
+    }
     /**
      * Get quote item qty
      *
@@ -414,5 +437,60 @@ class Mage_Checkout_Block_Cart_Item_Renderer extends Mage_Core_Block_Template
     {
         $this->_ignoreProductUrl = $ignore;
         return $this;
+    }
+
+    /**
+     * Common code to be called by product renders of gift registry to create a block, which is be used to
+     * generate html for mrsp price
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return Mage_Catalog_Block_Product_Price
+     */
+    protected function _preparePriceBlock($product)
+    {
+        return $this->getLayout()
+            ->createBlock('catalog/product_price')
+            ->setTemplate('catalog/product/price.phtml')
+            ->setIdSuffix($this->getIdSuffix())
+            ->setProduct($product);
+    }
+
+    /**
+     *  Common code to be called by product renders of gift registry to  generate final html block
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return string
+     */
+    protected function _getPriceContent($product)
+    {
+        return $this->getLayout()->createBlock('catalog/product_price')
+            ->setTemplate('catalog/product/price_msrp.phtml')
+            ->setProduct($product)
+            ->toHtml();
+    }
+
+    /**
+     * Retrieve block cache tags
+     *
+     * @return array
+     */
+    public function getCacheTags()
+    {
+        $tags = $this->getProduct()->getCacheIdTags();
+        $tags = is_array($tags) ? $tags : array();
+
+        return array_merge(parent::getCacheTags(), $tags);
+    }
+
+    /**
+     * Returns true if user is going through checkout process now.
+     *
+     * @return bool
+     */
+    public function isOnCheckoutPage()
+    {
+        $module = $this->getRequest()->getModuleName();
+        $controller = $this->getRequest()->getControllerName();
+        return $module == 'checkout' && ($controller == 'onepage' || $controller == 'multishipping');
     }
 }

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Core
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -89,12 +89,29 @@ class Mage_Core_Model_Url extends Varien_Object
     const DEFAULT_ACTION_NAME       = 'index';
 
     /**
-     * Configuration paths
+     * XML base url path unsecure
      */
     const XML_PATH_UNSECURE_URL     = 'web/unsecure/base_url';
+
+    /**
+     * XML base url path secure
+     */
     const XML_PATH_SECURE_URL       = 'web/secure/base_url';
+
+    /**
+     * XML path for using in adminhtml
+     */
     const XML_PATH_SECURE_IN_ADMIN  = 'default/web/secure/use_in_adminhtml';
+
+    /**
+     * XML path for using in frontend
+     */
     const XML_PATH_SECURE_IN_FRONT  = 'web/secure/use_in_frontend';
+
+    /**
+     * Param name for form key functionality
+     */
+    const FORM_KEY = 'form_key';
 
     /**
      * Configuration data cache
@@ -483,7 +500,7 @@ class Mage_Core_Model_Url extends Varien_Object
             }
             $routePath = $this->getActionPath();
             if ($this->getRouteParams()) {
-                foreach ($this->getRouteParams() as $key=>$value) {
+                foreach ($this->getRouteParams() as $key => $value) {
                     if (is_null($value) || false === $value || '' === $value || !is_scalar($value)) {
                         continue;
                     }
@@ -939,8 +956,8 @@ class Mage_Core_Model_Url extends Varien_Object
     /**
      * Build url by requested path and parameters
      *
-     * @param   string|null $routePath
-     * @param   array|null $routeParams
+     * @param string|null $routePath
+     * @param array|null $routeParams
      * @return  string
      */
     public function getUrl($routePath = null, $routeParams = null)
@@ -974,6 +991,7 @@ class Mage_Core_Model_Url extends Varien_Object
             $noSid = (bool)$routeParams['_nosid'];
             unset($routeParams['_nosid']);
         }
+
         $url = $this->getRouteUrl($routePath, $routeParams);
         /**
          * Apply query params, need call after getRouteUrl for rewrite _current values
@@ -1004,6 +1022,18 @@ class Mage_Core_Model_Url extends Varien_Object
         }
 
         return $this->escape($url);
+    }
+
+    /**
+     * Return singleton model instance
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return Mage_Core_Model_Abstract
+     */
+    protected function _getSingletonModel($name, $arguments = array())
+    {
+        return Mage::getSingleton($name, $arguments);
     }
 
     /**
@@ -1111,8 +1141,12 @@ class Mage_Core_Model_Url extends Varien_Object
      */
     public function sessionUrlVar($html)
     {
-        return preg_replace_callback('#(\?|&amp;|&)___SID=([SU])(&amp;|&)?#',
-            array($this, "sessionVarCallback"), $html);
+        if (strpos($html, '__SID') === false) {
+            return $html;
+        } else {
+            return preg_replace_callback('#(\?|&amp;|&)___SID=([SU])(&amp;|&)?#',
+                array($this, "sessionVarCallback"), $html);
+        }
     }
 
     /**

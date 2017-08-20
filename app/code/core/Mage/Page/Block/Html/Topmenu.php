@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Page
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -41,11 +41,23 @@ class Mage_Page_Block_Html_Topmenu extends Mage_Core_Block_Template
     protected $_menu;
 
     /**
-     * Init top menu tree structure
+     * Current entity key
+     *
+     * @var string|int
+     */
+    protected $_currentEntityKey;
+
+    /**
+     * Init top menu tree structure and cache
      */
     public function _construct()
     {
         $this->_menu = new Varien_Data_Tree_Node(array(), 'root', new Varien_Data_Tree());
+        /*
+        * setting cache to save the topmenu block
+        */
+        $this->setCacheTags(array(Mage_Catalog_Model_Category::CACHE_TAG));
+        $this->setCacheLifetime(false);
     }
 
     /**
@@ -58,13 +70,19 @@ class Mage_Page_Block_Html_Topmenu extends Mage_Core_Block_Template
     public function getHtml($outermostClass = '', $childrenWrapClass = '')
     {
         Mage::dispatchEvent('page_block_html_topmenu_gethtml_before', array(
-            'menu' => $this->_menu
+            'menu' => $this->_menu,
+            'block' => $this
         ));
 
         $this->_menu->setOutermostClass($outermostClass);
         $this->_menu->setChildrenWrapClass($childrenWrapClass);
 
-        $html = $this->_getHtml($this->_menu, $childrenWrapClass);
+        if ($renderer = $this->getChild('catalog.topnav.renderer')) {
+            $renderer->setMenuTree($this->_menu)->setChildrenWrapClass($childrenWrapClass);
+            $html = $renderer->toHtml();
+        } else {
+            $html = $this->_getHtml($this->_menu, $childrenWrapClass);
+        }
 
         Mage::dispatchEvent('page_block_html_topmenu_gethtml_after', array(
             'menu' => $this->_menu,
@@ -80,6 +98,7 @@ class Mage_Page_Block_Html_Topmenu extends Mage_Core_Block_Template
      * @param Varien_Data_Tree_Node $menuTree
      * @param string $childrenWrapClass
      * @return string
+     * @deprecated since 1.8.2.0 use child block catalog.topnav.renderer instead
      */
     protected function _getHtml(Varien_Data_Tree_Node $menuTree, $childrenWrapClass)
     {
@@ -202,5 +221,48 @@ class Mage_Page_Block_Html_Topmenu extends Mage_Core_Block_Template
         }
 
         return $classes;
+    }
+
+    /**
+     * Retrieve cache key data
+     *
+     * @return array
+     */
+    public function getCacheKeyInfo()
+    {
+        $shortCacheId = array(
+            'TOPMENU',
+            Mage::app()->getStore()->getId(),
+            Mage::getDesign()->getPackageName(),
+            Mage::getDesign()->getTheme('template'),
+            Mage::getSingleton('customer/session')->getCustomerGroupId(),
+            'template' => $this->getTemplate(),
+            'name' => $this->getNameInLayout(),
+            $this->getCurrentEntityKey()
+        );
+        $cacheId = $shortCacheId;
+
+        $shortCacheId = array_values($shortCacheId);
+        $shortCacheId = implode('|', $shortCacheId);
+        $shortCacheId = md5($shortCacheId);
+
+        $cacheId['entity_key'] = $this->getCurrentEntityKey();
+        $cacheId['short_cache_id'] = $shortCacheId;
+
+        return $cacheId;
+    }
+
+    /**
+     * Retrieve current entity key
+     *
+     * @return int|string
+     */
+    public function getCurrentEntityKey()
+    {
+        if (null === $this->_currentEntityKey) {
+            $this->_currentEntityKey = Mage::registry('current_entity_key')
+                ? Mage::registry('current_entity_key') : Mage::app()->getStore()->getRootCategoryId();
+        }
+        return $this->_currentEntityKey;
     }
 }

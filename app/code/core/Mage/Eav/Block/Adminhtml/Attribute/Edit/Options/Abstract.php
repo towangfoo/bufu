@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Eav
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -37,7 +37,7 @@ abstract class Mage_Eav_Block_Adminhtml_Attribute_Edit_Options_Abstract extends 
     public function __construct()
     {
         parent::__construct();
-        $this->setTemplate('catalog/product/attribute/options.phtml');
+        $this->setTemplate('eav/attribute/options.phtml');
     }
 
     /**
@@ -137,6 +137,7 @@ abstract class Mage_Eav_Block_Adminhtml_Attribute_Edit_Options_Abstract extends 
                 ->setPositionOrder('desc', true)
                 ->load();
 
+            $helper = Mage::helper('core');
             foreach ($optionCollection as $option) {
                 $value = array();
                 if (in_array($option->getId(), $defaultValues)) {
@@ -150,12 +151,8 @@ abstract class Mage_Eav_Block_Adminhtml_Attribute_Edit_Options_Abstract extends 
                 $value['sort_order'] = $option->getSortOrder();
                 foreach ($this->getStores() as $store) {
                     $storeValues = $this->getStoreOptionValues($store->getId());
-                    if (isset($storeValues[$option->getId()])) {
-                        $value['store'.$store->getId()] = htmlspecialchars($storeValues[$option->getId()]);
-                    }
-                    else {
-                        $value['store'.$store->getId()] = '';
-                    }
+                    $value['store' . $store->getId()] = isset($storeValues[$option->getId()])
+                        ? $helper->escapeHtml($storeValues[$option->getId()]) : '';
                 }
                 $values[] = new Varien_Object($value);
             }
@@ -173,12 +170,11 @@ abstract class Mage_Eav_Block_Adminhtml_Attribute_Edit_Options_Abstract extends 
     public function getLabelValues()
     {
         $values = array();
-        $values[0] = $this->getAttributeObject()->getFrontend()->getLabel();
-        // it can be array and cause bug
         $frontendLabel = $this->getAttributeObject()->getFrontend()->getLabel();
         if (is_array($frontendLabel)) {
-            $frontendLabel = array_shift($frontendLabel);
+            return $frontendLabel;
         }
+        $values[0] = $frontendLabel;
         $storeLabels = $this->getAttributeObject()->getStoreLabels();
         foreach ($this->getStores() as $store) {
             if ($store->getId() != 0) {

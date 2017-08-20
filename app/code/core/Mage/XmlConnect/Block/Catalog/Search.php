@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -35,7 +35,7 @@ class Mage_XmlConnect_Block_Catalog_Search extends Mage_XmlConnect_Block_Catalog
 {
     /**
      * Search results xml renderer
-     * XML also contains filters that can be apply (accorfingly already applyed filters
+     * XML also contains filters that can be apply (accordingly already applied filters
      * and search query) and sort fields
      *
      * @return string
@@ -79,8 +79,8 @@ class Mage_XmlConnect_Block_Catalog_Search extends Mage_XmlConnect_Block_Catalog
         $showFiltersAndOrders = (bool) count($productsXmlObj);
         $requestParams = $this->getRequest()->getParams();
         foreach ($requestParams as $key => $value) {
-            if (0 === strpos($key, parent::REQUEST_SORT_ORDER_PARAM_REFIX)
-                || 0 === strpos($key, parent::REQUEST_FILTER_PARAM_REFIX)
+            if (0 === strpos($key, parent::REQUEST_SORT_ORDER_PARAM_PREFIX)
+                || 0 === strpos($key, parent::REQUEST_FILTER_PARAM_PREFIX)
             ) {
                 $showFiltersAndOrders = false;
                 break;
@@ -118,7 +118,7 @@ class Mage_XmlConnect_Block_Catalog_Search extends Mage_XmlConnect_Block_Catalog
          * Sort fields
          */
         if ($showFiltersAndOrders) {
-            $searchXmlObject->appendChild($this->getProductSortFeildsXmlObject());
+            $searchXmlObject->appendChild($this->getSearchProductSortFieldsXmlObject());
         }
 
         return $searchXmlObject->asNiceXml();

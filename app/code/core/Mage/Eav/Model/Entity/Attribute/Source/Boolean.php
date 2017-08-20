@@ -10,23 +10,30 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Eav
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
 class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
 {
+    /**
+     * Option values
+     */
+    const VALUE_YES = 1;
+    const VALUE_NO = 0;
+
+
     /**
      * Retrieve all options array
      *
@@ -38,11 +45,11 @@ class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Enti
             $this->_options = array(
                 array(
                     'label' => Mage::helper('eav')->__('Yes'),
-                    'value' =>  1
+                    'value' => self::VALUE_YES
                 ),
                 array(
                     'label' => Mage::helper('eav')->__('No'),
-                    'value' =>  0
+                    'value' => self::VALUE_NO
                 ),
             );
         }
@@ -135,5 +142,23 @@ class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Enti
     {
         return Mage::getResourceModel('eav/entity_attribute')
             ->getFlatUpdateSelect($this->getAttribute(), $store);
+    }
+
+    /**
+     * Get a text for index option value
+     *
+     * @param  string|int $value
+     * @return string|bool
+     */
+    public function getIndexOptionText($value)
+    {
+        switch ($value) {
+            case self::VALUE_YES:
+                return 'Yes';
+            case self::VALUE_NO:
+                return 'No';
+        }
+
+        return parent::getIndexOptionText($value);
     }
 }

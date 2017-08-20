@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Varien
  * @package     js
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 if (typeof Product == 'undefined') {
@@ -40,12 +40,12 @@ Product.Config.prototype = {
         this.state      = new Hash();
         this.priceTemplate = new Template(this.config.template);
         this.prices     = config.prices;
-        
+
         // Set default values from config
         if (config.defaultValues) {
             this.values = config.defaultValues;
         }
-        
+
         // Overwrite defaults by url
         var separatorIndex = window.location.href.indexOf('#');
         if (separatorIndex != -1) {
@@ -58,7 +58,7 @@ Product.Config.prototype = {
                 this.values[i] = urlValues[i];
             }
         }
-        
+
         // Overwrite defaults by inputs values if needed
         if (config.inputsInitialized) {
             this.values = {};
@@ -69,10 +69,10 @@ Product.Config.prototype = {
                 }
             }.bind(this));
         }
-            
-        // Put events to check select reloads 
+
+        // Put events to check select reloads
         this.settings.each(function(element){
-            Event.observe(element, 'change', this.configure.bind(this))
+            Event.observe(element, 'change', this.configure.bind(this));
         }.bind(this));
 
         // fill state
@@ -83,7 +83,7 @@ Product.Config.prototype = {
                 element.attributeId = attributeId;
                 this.state[attributeId] = false;
             }
-        }.bind(this))
+        }.bind(this));
 
         // Init settings dropdown
         var childSettings = [];
@@ -91,7 +91,7 @@ Product.Config.prototype = {
             var prevSetting = this.settings[i-1] ? this.settings[i-1] : false;
             var nextSetting = this.settings[i+1] ? this.settings[i+1] : false;
             if (i == 0){
-                this.fillSelect(this.settings[i])
+                this.fillSelect(this.settings[i]);
             } else {
                 this.settings[i].disabled = true;
             }
@@ -105,7 +105,7 @@ Product.Config.prototype = {
         this.configureForValues();
         document.observe("dom:loaded", this.configureForValues.bind(this));
     },
-    
+
     configureForValues: function () {
         if (this.values) {
             this.settings.each(function(element){
@@ -140,7 +140,7 @@ Product.Config.prototype = {
     reloadOptionLabels: function(element){
         var selectedPrice;
         if(element.options[element.selectedIndex].config && !this.config.stablePrices){
-            selectedPrice = parseFloat(element.options[element.selectedIndex].config.price)
+            selectedPrice = parseFloat(element.options[element.selectedIndex].config.price);
         }
         else{
             selectedPrice = 0;
@@ -168,7 +168,8 @@ Product.Config.prototype = {
         var attributeId = element.id.replace(/[a-z]*/, '');
         var options = this.getAttributeOptions(attributeId);
         this.clearSelect(element);
-        element.options[0] = new Option(this.config.chooseText, '');
+        element.options[0] = new Option('', '');
+        element.options[0].innerHTML = this.config.chooseText;
 
         var prevConfig = false;
         if(element.prevSetting){
@@ -316,4 +317,4 @@ Product.Config.prototype = {
 
         }
     }
-}
+};

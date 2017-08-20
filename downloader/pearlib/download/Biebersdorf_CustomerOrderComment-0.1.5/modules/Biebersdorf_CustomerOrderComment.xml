@@ -1,8 +1,0 @@
-<config>
-	<modules>
-		<Biebersdorf_CustomerOrderComment>
-			<active>true</active>
-			<codePool>community</codePool>
-		</Biebersdorf_CustomerOrderComment>
-	</modules>
-</config>

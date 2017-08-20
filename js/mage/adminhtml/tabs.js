@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 var varienTabs = new Class.create();
@@ -49,7 +49,7 @@ varienTabs.prototype = {
                     this.tabs[tab].container = this;
                     this.tabs[tab].show = function(){
                         this.container.showTabContent(this);
-                    }
+                    };
                     if(varienGlobalEvents){
                         varienGlobalEvents.fireEvent('moveTab', {tab:this.tabs[tab]});
                     }
@@ -88,7 +88,7 @@ varienTabs.prototype = {
                     this.tabs[tab].container = this;
                     this.tabs[tab].show = function(){
                         this.container.showTabContent(this);
-                    }
+                    };
                     if(varienGlobalEvents){
                         varienGlobalEvents.fireEvent('moveTab', {tab:this.tabs[tab]});
                     }
@@ -176,7 +176,7 @@ varienTabs.prototype = {
                     onSuccess: function(transport) {
                         try {
                             if (transport.responseText.isJSON()) {
-                                var response = transport.responseText.evalJSON()
+                                var response = transport.responseText.evalJSON();
                                 if (response.error) {
                                     alert(response.message);
                                 }
@@ -185,12 +185,12 @@ varienTabs.prototype = {
                                 }
                             } else {
                                 $(tabContentElement.id).update(transport.responseText);
-                                this.showTabContentImmediately(tab)
+                                this.showTabContentImmediately(tab);
                             }
                         }
                         catch (e) {
                             $(tabContentElement.id).update(transport.responseText);
-                            this.showTabContentImmediately(tab)
+                            this.showTabContentImmediately(tab);
                         }
                     }.bind(this)
                 });
@@ -210,7 +210,7 @@ varienTabs.prototype = {
                 onSuccess: function(transport) {
                     try {
                         if (transport.responseText.isJSON()) {
-                            var response = transport.responseText.evalJSON()
+                            var response = transport.responseText.evalJSON();
                             if (response.error) {
                                 alert(response.message);
                             }
@@ -245,4 +245,4 @@ varienTabs.prototype = {
             varienGlobalEvents.fireEvent('hideTab', {tab:tab});
         }
     }
-}
+};

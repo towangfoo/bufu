@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Authorizenet
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -68,6 +68,8 @@ class Mage_Authorizenet_Directpost_PaymentController extends Mage_Core_Controlle
     public function responseAction()
     {
         $data = $this->getRequest()->getPost();
+        unset($data['redirect_parent']);
+        unset($data['redirect']);
         /* @var $paymentMethod Mage_Authorizenet_Model_DirectPost */
         $paymentMethod = Mage::getModel('authorizenet/directpost');
 
@@ -113,6 +115,8 @@ class Mage_Authorizenet_Directpost_PaymentController extends Mage_Core_Controlle
     public function redirectAction()
     {
         $redirectParams = $this->getRequest()->getParams();
+        unset($redirectParams['redirect_parent']);
+        unset($redirectParams['redirect']);
         $params = array();
         if (!empty($redirectParams['success'])
             && isset($redirectParams['x_invoice_num'])

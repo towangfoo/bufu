@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Rss
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -75,8 +75,6 @@ class Mage_Rss_Block_Catalog_NotifyStock extends Mage_Rss_Block_Abstract
         );
         $rssObj->_addHeader($data);
 
-        $configManageStock = (int) Mage::getStoreConfigFlag(
-            Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK);
         $globalNotifyStockQty = (float) Mage::getStoreConfig(
             Mage_CatalogInventory_Model_Stock_Item::XML_PATH_NOTIFY_STOCK_QTY);
         Mage::helper('rss')->disableFlat();
@@ -84,27 +82,18 @@ class Mage_Rss_Block_Catalog_NotifyStock extends Mage_Rss_Block_Abstract
         $product = Mage::getModel('catalog/product');
         /* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
         $collection = $product->getCollection();
-        $stockItemTable = $collection->getTable('cataloginventory/stock_item');
-
-        $stockItemWhere = '({{table}}.low_stock_date is not null) '
-            . " AND ( ({{table}}.use_config_manage_stock=1 AND {$configManageStock}=1)"
-            . " AND {{table}}.qty < "
-            . "IF({$stockItemTable}.`use_config_notify_stock_qty`, {$globalNotifyStockQty}, {{table}}.notify_stock_qty)"
-            . ' OR ({{table}}.use_config_manage_stock=0 AND {{table}}.manage_stock=1) )';
-
+        Mage::getResourceModel('cataloginventory/stock')->addLowStockFilter($collection, array(
+            'qty',
+            'notify_stock_qty',
+            'low_stock_date',
+            'use_config' => 'use_config_notify_stock_qty'
+        ));
         $collection
             ->addAttributeToSelect('name', true)
-            ->joinTable('cataloginventory/stock_item', 'product_id=entity_id',
-                array(
-                     'qty'=>'qty',
-                     'notify_stock_qty'=>'notify_stock_qty',
-                     'use_config' => 'use_config_notify_stock_qty',
-                     'low_stock_date' => 'low_stock_date'),
-                $stockItemWhere, 'inner')
+            ->addAttributeToFilter('status',
+                array('in' => Mage::getSingleton('catalog/product_status')->getVisibleStatusIds())
+            )
             ->setOrder('low_stock_date');
-
-        $collection->addAttributeToFilter('status',
-            array('in' => Mage::getSingleton('catalog/product_status')->getVisibleStatusIds()));
         Mage::dispatchEvent('rss_catalog_notify_stock_collection_select', array('collection' => $collection));
 
         /*

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -206,7 +206,24 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
                 $formData['disable_auto_group_change'] = empty($formData['disable_auto_group_change']) ? '0' : '1';
             }
 
-            $errors = $customerForm->validateData($formData);
+            $errors = null;
+            if ($customer->getId()&& !empty($data['account']['new_password'])
+                && Mage::helper('customer')->getIsRequireAdminUserToChangeUserPassword()
+            ) {
+                //Validate current admin password
+                if (isset($data['account']['current_password'])) {
+                    $currentPassword = $data['account']['current_password'];
+                } else {
+                    $currentPassword = null;
+                }
+                unset($data['account']['current_password']);
+                $errors = $this->_validateCurrentPassword($currentPassword);
+            }
+
+            if (!is_array($errors)) {
+                $errors = $customerForm->validateData($formData);
+            }
+
             if ($errors !== true) {
                 foreach ($errors as $error) {
                     $this->_getSession()->addError($error);
@@ -290,7 +307,9 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
                 }
             }
 
-            if (Mage::getSingleton('admin/session')->isAllowed('customer/newsletter')) {
+            if (Mage::getSingleton('admin/session')->isAllowed('customer/newsletter')
+                && !$customer->getConfirmation()
+            ) {
                 $customer->setIsSubscribed(isset($data['subscription']));
             }
 
@@ -357,6 +376,7 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
                 $this->_getSession()->addError($e->getMessage());
                 $this->_getSession()->setCustomerData($data);
                 $this->getResponse()->setRedirect($this->getUrl('*/customer/edit', array('id' => $customer->getId())));
+                return;
             } catch (Exception $e) {
                 $this->_getSession()->addException($e,
                     Mage::helper('adminhtml')->__('An error occurred while saving the customer.'));
@@ -511,10 +531,10 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
     public function viewCartAction()
     {
         $this->_initCustomer();
-        $layout = $this->loadLayout()
+        $this->loadLayout()
             ->getLayout()
             ->getBlock('admin.customer.view.cart')
-            ->setWebsiteId();
+            ->setWebsiteId($this->getRequest()->getParam('website_id'));
         $this->renderLayout();
     }
 

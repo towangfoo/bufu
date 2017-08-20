@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Eav
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -808,13 +808,13 @@ abstract class Mage_Eav_Model_Entity_Abstract extends Mage_Core_Model_Resource_A
      *
      * @see Mage_Eav_Model_Entity_Abstract::getAttribute for $attribute format
      * @param integer|string|Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     *
      * @return boolean
      */
     public function isAttributeStatic($attribute)
     {
-        $attrInstance       = $this->getAttribute($attribute);
-        $attrBackendStatic  = $attrInstance->getBackend()->isStatic();
-        return $attrInstance && $attrBackendStatic;
+        $attrInstance = $this->getAttribute($attribute);
+        return $attrInstance && $attrInstance->getBackend()->isStatic();
     }
 
     /**
@@ -1306,9 +1306,11 @@ abstract class Mage_Eav_Model_Entity_Abstract extends Mage_Core_Model_Resource_A
      */
     protected function _processSaveData($saveData)
     {
-        extract($saveData);
+        $this->_attributeValuesToSave   = array();
+        $this->_attributeValuesToDelete = array();
+
         /**
-         * Import variables into the current symbol table from save data array
+         * Import variables from save data array
          *
          * @see Mage_Eav_Model_Entity_Attribute_Abstract::_collectSaveData()
          *
@@ -1318,6 +1320,12 @@ abstract class Mage_Eav_Model_Entity_Abstract extends Mage_Core_Model_Resource_A
          * @var array $update
          * @var array $delete
          */
+        $newObject = $saveData['newObject'];
+        $entityRow = $saveData['entityRow'];
+        $insert    = $saveData['insert'];
+        $update    = $saveData['update'];
+        $delete    = $saveData['delete'];
+
         $adapter        = $this->_getWriteAdapter();
         $insertEntity   = true;
         $entityTable    = $this->getEntityTable();
@@ -1458,18 +1466,24 @@ abstract class Mage_Eav_Model_Entity_Abstract extends Mage_Core_Model_Resource_A
      */
     protected function _processAttributeValues()
     {
-        $adapter = $this->_getWriteAdapter();
-        foreach ($this->_attributeValuesToSave as $table => $data) {
-            $adapter->insertOnDuplicate($table, $data, array('value'));
-        }
+        try {
+            $adapter = $this->_getWriteAdapter();
+            foreach ($this->_attributeValuesToSave as $table => $data) {
+                $adapter->insertOnDuplicate($table, $data, array('value'));
+            }
 
-        foreach ($this->_attributeValuesToDelete as $table => $valueIds) {
-            $adapter->delete($table, array('value_id IN (?)' => $valueIds));
-        }
+            foreach ($this->_attributeValuesToDelete as $table => $valueIds) {
+                $adapter->delete($table, array('value_id IN (?)' => $valueIds));
+            }
 
-        // reset data arrays
-        $this->_attributeValuesToSave   = array();
-        $this->_attributeValuesToDelete = array();
+            // reset data arrays
+            $this->_attributeValuesToSave   = array();
+            $this->_attributeValuesToDelete = array();
+        } catch (Exception $e) {
+            $this->_attributeValuesToSave   = array();
+            $this->_attributeValuesToDelete = array();
+            throw $e;
+        }
 
         return $this;
     }
@@ -1532,6 +1546,9 @@ abstract class Mage_Eav_Model_Entity_Abstract extends Mage_Core_Model_Resource_A
      */
     public function saveAttribute(Varien_Object $object, $attributeCode)
     {
+        $this->_attributeValuesToSave   = array();
+        $this->_attributeValuesToDelete = array();
+
         $attribute      = $this->getAttribute($attributeCode);
         $backend        = $attribute->getBackend();
         $table          = $backend->getTable();

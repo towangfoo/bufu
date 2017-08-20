@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Wishlist
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -39,6 +39,12 @@ abstract class Mage_Wishlist_Controller_Abstract extends Mage_Core_Controller_Fr
      * @var Zend_Filter_LocalizedToNormalized
      */
     protected $_localFilter = null;
+
+    /**
+     * Is need check a Formkey
+     * @var bool
+     */
+    protected $_isCheckFormKey = true;
 
     /**
      * Processes localized qty (entered by user at frontend) into internal php format
@@ -73,10 +79,15 @@ abstract class Mage_Wishlist_Controller_Abstract extends Mage_Core_Controller_Fr
      */
     public function allcartAction()
     {
+        if ($this->_isCheckFormKey && !$this->_validateFormKey()) {
+            $this->_forward('noRoute');
+            return;
+        }
+
         $wishlist   = $this->_getWishlist();
         if (!$wishlist) {
             $this->_forward('noRoute');
-            return ;
+            return;
         }
         $isOwner    = $wishlist->isOwner(Mage::getSingleton('customer/session')->getCustomerId());
 
@@ -89,7 +100,11 @@ abstract class Mage_Wishlist_Controller_Abstract extends Mage_Core_Controller_Fr
         $collection = $wishlist->getItemCollection()
                 ->setVisibilityFilter();
 
-        $qtys = $this->getRequest()->getParam('qty');
+        $qtysString = $this->getRequest()->getParam('qty');
+        if (isset($qtysString)) {
+            $qtys = array_filter(json_decode($qtysString), 'strlen');
+        }
+
         foreach ($collection as $item) {
             /** @var Mage_Wishlist_Model_Item */
             try {
@@ -116,6 +131,11 @@ abstract class Mage_Wishlist_Controller_Abstract extends Mage_Core_Controller_Fr
                     $hasOptions[] = $item;
                 } else {
                     $messages[] = $this->__('%s for "%s".', trim($e->getMessage(), '.'), $item->getProduct()->getName());
+                }
+
+                $cartItem = $cart->getQuote()->getItemByProduct($item->getProduct());
+                if ($cartItem) {
+                    $cart->getQuote()->deleteItem($cartItem);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -187,9 +207,10 @@ abstract class Mage_Wishlist_Controller_Abstract extends Mage_Core_Controller_Fr
             Mage::getSingleton('checkout/session')->addSuccess(
                 Mage::helper('wishlist')->__('%d product(s) have been added to shopping cart: %s.', count($addedItems), join(', ', $products))
             );
+
+            // save cart and collect totals
+            $cart->save()->getQuote()->collectTotals();
         }
-        // save cart and collect totals
-        $cart->save()->getQuote()->collectTotals();
 
         Mage::helper('wishlist')->calculate();
 

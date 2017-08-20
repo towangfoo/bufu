@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Wishlist
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -89,6 +89,21 @@ class Mage_Wishlist_Model_Resource_Item_Collection extends Mage_Core_Model_Resou
      * @var boolean
      */
     protected $_isProductNameJoined = false;
+
+    /**
+     * Customer website ID
+     *
+     * @var int
+     */
+    protected $_websiteId = null;
+
+    /**
+     * Customer group ID
+     *
+     * @var int
+     */
+    protected $_customerGroupId = null;
+
 
     /**
      * Initialize resource model for collection
@@ -171,14 +186,14 @@ class Mage_Wishlist_Model_Resource_Item_Collection extends Mage_Core_Model_Resou
         $attributes = Mage::getSingleton('wishlist/config')->getProductAttributes();
         $productCollection = Mage::getModel('catalog/product')->getCollection();
         foreach ($storeIds as $id) {
-            $productCollection->addStoreFilter($id);
+            $productCollection->addWebsiteFilter(Mage::app()->getStore($id)->getWebsiteId());
         }
 
         if ($this->_productVisible) {
             Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($productCollection);
         }
 
-        $productCollection->addPriceData()
+        $productCollection->addPriceData($this->_customerGroupId, $this->_websiteId)
             ->addTaxPercents()
             ->addIdFilter($this->_productIds)
             ->addAttributeToSelect($attributes)
@@ -487,5 +502,29 @@ class Mage_Wishlist_Model_Resource_Item_Collection extends Mage_Core_Model_Resou
         }
 
         return (int)$this->_itemsQty;
+    }
+
+    /**
+     * Setter for $_websiteId
+     *
+     * @param int $websiteId
+     * @return Mage_Wishlist_Model_Resource_Item_Collection
+     */
+    public function setWebsiteId($websiteId)
+    {
+        $this->_websiteId = $websiteId;
+        return $this;
+    }
+
+    /**
+     * Setter for $_customerGroupId
+     *
+     * @param int $customerGroupId
+     * @return Mage_Wishlist_Model_Resource_Item_Collection
+     */
+    public function setCustomerGroupId($customerGroupId)
+    {
+        $this->_customerGroupId = $customerGroupId;
+        return $this;
     }
 }

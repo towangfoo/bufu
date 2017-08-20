@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -76,18 +76,6 @@ class Mage_Adminhtml_Block_Review_Grid extends Mage_Adminhtml_Block_Widget_Grid
 
     protected function _prepareColumns()
     {
-        $statuses = Mage::getModel('review/review')
-            ->getStatusCollection()
-            ->load()
-            ->toOptionArray();
-
-        $tmpArr = array();
-        foreach( $statuses as $key => $status ) {
-            $tmpArr[$status['value']] = $status['label'];
-        }
-
-        $statuses = $tmpArr;
-
         $this->addColumn('review_id', array(
             'header'        => Mage::helper('review')->__('ID'),
             'align'         => 'right',
@@ -110,7 +98,7 @@ class Mage_Adminhtml_Block_Review_Grid extends Mage_Adminhtml_Block_Widget_Grid
                 'header'        => Mage::helper('review')->__('Status'),
                 'align'         => 'left',
                 'type'          => 'options',
-                'options'       => $statuses,
+                'options'       => Mage::helper('review')->getReviewStatuses(),
                 'width'         => '100px',
                 'filter_index'  => 'rt.status_id',
                 'index'         => 'status_id',
@@ -232,10 +220,7 @@ class Mage_Adminhtml_Block_Review_Grid extends Mage_Adminhtml_Block_Widget_Grid
             'confirm' => Mage::helper('review')->__('Are you sure?')
         ));
 
-        $statuses = Mage::getModel('review/review')
-            ->getStatusCollection()
-            ->load()
-            ->toOptionArray();
+        $statuses = Mage::helper('review')->getReviewStatusesOptionArray();
         array_unshift($statuses, array('label'=>'', 'value'=>''));
         $this->getMassactionBlock()->addItem('update_status', array(
             'label'         => Mage::helper('review')->__('Update Status'),

@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -352,7 +352,8 @@ class Mage_XmlConnect_Model_Simplexml_Form extends Mage_XmlConnect_Model_Simplex
     public function toXmlObject()
     {
         $xmlObj = $this->getXmlObject();
-        if ($useContainer = $this->getUseContainer()) {
+        $useContainer = $this->getUseContainer();
+        if ($useContainer) {
             $this->_addRequiredAttributes($xmlObj);
             foreach ($this->getAttributes() as $key => $val) {
                 $xmlObj->addAttribute($key, $xmlObj->xmlAttribute($val));
@@ -384,5 +385,28 @@ class Mage_XmlConnect_Model_Simplexml_Form extends Mage_XmlConnect_Model_Simplex
             return $this->toXmlObject()->asNiceXml();
         }
         Mage::throwException(Mage::helper('xmlconnect')->__('Container is not defined.'));
+    }
+
+    /**
+     * Add suffix to form element name
+     *
+     * @param string $name
+     * @param string  $suffix
+     * @return string
+     */
+    public function addSuffixToName($name, $suffix)
+    {
+        if (!$name) {
+            return $suffix;
+        }
+        $vars = explode('[', $name);
+        $newName = $suffix;
+        foreach ($vars as $index => $value) {
+            $newName .= '[' . $value;
+            if ($index == 0) {
+                $newName .= ']';
+            }
+        }
+        return $newName;
     }
 }

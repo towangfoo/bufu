@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -113,6 +113,11 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
             $this->_getSession()->setCurrencyId((string) $currencyId);
             $this->_getOrderCreateModel()->setRecollect(true);
         }
+
+        //Notify other modules about the session quote
+        Mage::dispatchEvent('create_order_session_quote_initialized',
+                array('session_quote' => $this->_getSession()));
+
         return $this;
     }
 
@@ -242,9 +247,6 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
             $this->_getOrderCreateModel()->moveQuoteItem($moveItemId, $moveTo);
         }
 
-        /*if ($paymentData = $this->getRequest()->getPost('payment')) {
-            $this->_getOrderCreateModel()->setPaymentData($paymentData);
-        }*/
         if ($paymentData = $this->getRequest()->getPost('payment')) {
             $this->_getOrderCreateModel()->getQuote()->getPayment()->addData($paymentData);
         }
@@ -342,7 +344,6 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
 
     public function reorderAction()
     {
-//        $this->_initSession();
         $this->_getSession()->clear();
         $orderId = $this->getRequest()->getParam('order_id');
         $order = Mage::getModel('sales/order')->load($orderId);
@@ -481,7 +482,13 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
     {
         try {
             $this->_processActionData('save');
-            if ($paymentData = $this->getRequest()->getPost('payment')) {
+            $paymentData = $this->getRequest()->getPost('payment');
+            if ($paymentData) {
+                $paymentData['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_INTERNAL
+                    | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
+                    | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
+                    | Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
+                    | Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
                 $this->_getOrderCreateModel()->setPaymentData($paymentData);
                 $this->_getOrderCreateModel()->getQuote()->getPayment()->addData($paymentData);
             }
@@ -493,7 +500,11 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
 
             $this->_getSession()->clear();
             Mage::getSingleton('adminhtml/session')->addSuccess($this->__('The order has been created.'));
-            $this->_redirect('*/sales_order/view', array('order_id' => $order->getId()));
+            if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view')) {
+                $this->_redirect('*/sales_order/view', array('order_id' => $order->getId()));
+            } else {
+                $this->_redirect('*/sales_order/index');
+            }
         } catch (Mage_Payment_Model_Info_Exception $e) {
             $this->_getOrderCreateModel()->saveQuote();
             $message = $e->getMessage();
@@ -521,9 +532,23 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
      */
     protected function _isAllowed()
     {
+        return Mage::getSingleton('admin/session')->isAllowed($this->_getAclResourse());
+    }
+
+    /**
+     * Get acl resource
+     *
+     * @return string
+     */
+    protected function _getAclResourse()
+    {
         $action = strtolower($this->getRequest()->getActionName());
+        if (in_array($action, array('index', 'save')) && $this->_getSession()->getReordered()) {
+            $action = 'reorder';
+        }
         switch ($action) {
             case 'index':
+            case 'save':
                 $aclResource = 'sales/order/actions/create';
                 break;
             case 'reorder':
@@ -532,14 +557,11 @@ class Mage_Adminhtml_Sales_Order_CreateController extends Mage_Adminhtml_Control
             case 'cancel':
                 $aclResource = 'sales/order/actions/cancel';
                 break;
-            case 'save':
-                $aclResource = 'sales/order/actions/edit';
-                break;
             default:
                 $aclResource = 'sales/order/actions';
                 break;
         }
-        return Mage::getSingleton('admin/session')->isAllowed($aclResource);
+        return $aclResource;
     }
 
     /*

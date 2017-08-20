@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -171,15 +171,16 @@ EOT;
     public function getAllThemes($flushCache = false)
     {
         if (!$this->_themeArray || $flushCache) {
-            $saveLibxmlErrors   = libxml_use_internal_errors(true);
-            $this->_themeArray  = array();
-            $themeDir = $this->getMediaThemePath();
-            $ioFile = new Varien_Io_File();
-            $ioFile->checkAndCreateFolder($themeDir);
-            $ioFile->open(array('path' => $themeDir));
             try {
+                $saveLibxmlErrors   = libxml_use_internal_errors(true);
+                $this->_themeArray  = array();
+                $themeDir = $this->getMediaThemePath();
+
+                $ioFile = new Varien_Io_File();
+                $ioFile->checkAndCreateFolder($themeDir);
+                $ioFile->open(array('path' => $themeDir));
                 $fileList = $ioFile->ls(Varien_Io_File::GREP_FILES);
-                if (!count($fileList)) {
+                if (!count($fileList) || !$this->_checkDefaultThemes($fileList)) {
                     $this->resetTheme();
                     $this->getAllThemes(true);
                 }
@@ -197,6 +198,46 @@ EOT;
             }
         }
         return $this->_themeArray;
+    }
+
+    /**
+     * Check are default themes files present in media folder or not
+     *
+     * @param array $fileList
+     * @return bool
+     */
+    protected function _checkDefaultThemes($fileList)
+    {
+        $cacheKey = 'MAGENTO_MOBILE_DEFAULT_THEMES_CACHE_KEY';
+        $cache = Mage::app()->loadCache($cacheKey);
+        if (Mage::app()->useCache('config') && $cache) {
+            $defaultFiles = unserialize($cache);
+        } else {
+            $ioFile = new Varien_Io_File();
+            $ioFile->open(array('path' => $this->_getDefaultThemePath()));
+            $fileDefaultList = $ioFile->ls(Varien_Io_File::GREP_FILES);
+            $defaultFiles = array();
+            foreach ($fileDefaultList as $defaultFileData) {
+                if ('xml' != $defaultFileData['filetype']) {
+                    continue;
+                }
+                $defaultFiles[] = $defaultFileData['text'];
+            }
+            if (Mage::app()->useCache('config')) {
+                Mage::app()->saveCache(serialize($defaultFiles), $cacheKey, array('config'));
+            }
+        }
+
+        if (empty($defaultFiles)) {
+            Mage::throwException($this->__('Default themes are missed.'));
+        }
+        $matches = 0;
+        foreach ($fileList as $fileData) {
+            if (in_array($fileData['text'], $defaultFiles)) {
+                ++$matches;
+            }
+        }
+        return $matches == count($defaultFiles);
     }
 
     /**
@@ -291,7 +332,8 @@ EOT;
             }
 
             if (!$ioFile->cp($src, $dst)) {
-                Mage::throwException(Mage::helper('xmlconnect')->__('Can\'t copy file "%s" to "%s".', $src, $dst));
+                Mage::throwException(Mage::helper('xmlconnect')->__('Can\'t copy file "%s" to "%s".',
+                    $ioFile->getFilteredPath($src), $ioFile->getFilteredPath($dst)));
             } else {
                 $ioFile->chmod($dst, 0755);
             }

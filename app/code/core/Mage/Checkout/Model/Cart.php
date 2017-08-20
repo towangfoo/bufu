@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Checkout
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -140,21 +140,15 @@ class Mage_Checkout_Model_Cart extends Varien_Object implements Mage_Checkout_Mo
      */
     public function init()
     {
-        $this->getQuote()->setCheckoutMethod('');
+        $quote = $this->getQuote()->setCheckoutMethod('');
 
-        /**
-         * If user try do checkout, reset shipping and payment data
-         */
         if ($this->getCheckoutSession()->getCheckoutState() !== Mage_Checkout_Model_Session::CHECKOUT_STATE_BEGIN) {
-            $this->getQuote()
-                ->removeAllAddresses()
-                ->removePayment();
+            $quote->removeAllAddresses()->removePayment();
             $this->getCheckoutSession()->resetCheckout();
         }
 
-        if (!$this->getQuote()->hasItems()) {
-            $this->getQuote()->getShippingAddress()
-                ->setCollectShippingRates(false)
+        if (!$quote->hasItems()) {
+            $quote->getShippingAddress()->setCollectShippingRates(false)
                 ->removeAllShippingRates();
         }
 
@@ -235,10 +229,6 @@ class Mage_Checkout_Model_Cart extends Varien_Object implements Mage_Checkout_Mo
             $request = new Varien_Object($requestInfo);
         }
 
-        if (!$request->hasQty()) {
-            $request->setQty(1);
-        }
-
         return $request;
     }
 
@@ -254,14 +244,21 @@ class Mage_Checkout_Model_Cart extends Varien_Object implements Mage_Checkout_Mo
         $product = $this->_getProduct($productInfo);
         $request = $this->_getProductRequest($requestInfo);
 
+        /** @var Mage_Catalog_Helper_Product $helper */
+        $helper  = Mage::helper('catalog/product');
+
+        if (!$request->hasQty()) {
+            $request->setQty($helper->getDefaultQty($product));
+        }
+
         $productId = $product->getId();
 
-        if ($product->getStockItem()) {
+        if (!$product->isConfigurable() && $product->getStockItem()) {
             $minimumQty = $product->getStockItem()->getMinSaleQty();
             //If product was not found in cart and there is set minimal qty for it
             if ($minimumQty && $minimumQty > 0 && $request->getQty() < $minimumQty
                 && !$this->getQuote()->hasProductId($productId)
-            ){
+            ) {
                 $request->setQty($minimumQty);
             }
         }

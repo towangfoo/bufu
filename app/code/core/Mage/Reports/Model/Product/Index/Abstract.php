@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Reports
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
@@ -42,14 +42,13 @@ abstract class Mage_Reports_Model_Product_Index_Abstract extends Mage_Core_Model
     protected $_countCacheKey;
 
     /**
-     * Prepare customer/visitor, store data before save
+     * Save object data
      *
+     * @see Mage_Core_Model_Abstract::save()
      * @return Mage_Reports_Model_Product_Index_Abstract
      */
-    protected function _beforeSave()
+    public function save()
     {
-        parent::_beforeSave();
-
         if (!$this->hasVisitorId()) {
             $this->setVisitorId($this->getVisitorId());
         }
@@ -61,6 +60,21 @@ abstract class Mage_Reports_Model_Product_Index_Abstract extends Mage_Core_Model
         }
         if (!$this->hasAddedAt()) {
             $this->setAddedAt(now());
+        }
+
+        // Thanks to new performance tweaks it is possible to switch off visitor logging
+        // This check is needed to make sure report record has either visitor id or customer id
+        if ($this->hasVisitorId() || $this->hasCustomerId()) {
+            try {
+                parent::save();
+            } catch (Exception $exception) {
+                if ($this->hasCustomerId()) {
+                    $this->updateCustomerFromVisitor();
+                    parent::save();
+                } else {
+                    Mage::logException($exception);
+                }
+            }
         }
 
         return $this;
@@ -218,7 +232,16 @@ abstract class Mage_Reports_Model_Product_Index_Abstract extends Mage_Core_Model
      */
     public function registerIds($productIds)
     {
-        $this->_getResource()->registerIds($this, $productIds);
+        try {
+            $this->_getResource()->registerIds($this, $productIds);
+        } catch (Exception $exception) {
+            if ($this->hasCustomerId()) {
+                $this->updateCustomerFromVisitor();
+                $this->_getResource()->registerIds($this, $productIds);
+            } else {
+                Mage::logException($exception);
+            }
+        }
         $this->_getSession()->unsData($this->_countCacheKey);
         return $this;
     }

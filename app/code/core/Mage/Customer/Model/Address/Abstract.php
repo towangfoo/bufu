@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Customer
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -52,6 +52,13 @@ class Mage_Customer_Model_Address_Abstract extends Mage_Core_Model_Abstract
      * @var string
      */
     protected $_eventObject = 'customer_address';
+
+    /**
+     * List of errors
+     *
+     * @var array
+     */
+    protected $_errors = array();
 
     /**
      * Directory country models
@@ -350,53 +357,104 @@ class Mage_Customer_Model_Address_Abstract extends Mage_Core_Model_Abstract
     /**
      * Validate address attribute values
      *
-     * @return bool
+     * @return array | bool
      */
     public function validate()
     {
-        $errors = array();
+        $this->_resetErrors();
+
         $this->implodeStreetAddress();
+
+        $this->_basicCheck();
+
+        Mage::dispatchEvent('customer_address_validation_after', array('address' => $this));
+
+        $errors = $this->_getErrors();
+
+        $this->_resetErrors();
+
+        if (empty($errors) || $this->getShouldIgnoreValidation()) {
+            return true;
+        }
+        return $errors;
+    }
+
+    /**
+     * Perform basic validation
+     *
+     * @return void
+     */
+    protected function _basicCheck()
+    {
         if (!Zend_Validate::is($this->getFirstname(), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the first name.');
+            $this->addError(Mage::helper('customer')->__('Please enter the first name.'));
         }
 
         if (!Zend_Validate::is($this->getLastname(), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the last name.');
+            $this->addError(Mage::helper('customer')->__('Please enter the last name.'));
         }
 
         if (!Zend_Validate::is($this->getStreet(1), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the street.');
+            $this->addError(Mage::helper('customer')->__('Please enter the street.'));
         }
 
         if (!Zend_Validate::is($this->getCity(), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the city.');
+            $this->addError(Mage::helper('customer')->__('Please enter the city.'));
         }
 
         if (!Zend_Validate::is($this->getTelephone(), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the telephone number.');
+            $this->addError(Mage::helper('customer')->__('Please enter the telephone number.'));
         }
 
         $_havingOptionalZip = Mage::helper('directory')->getCountriesWithOptionalZip();
         if (!in_array($this->getCountryId(), $_havingOptionalZip)
             && !Zend_Validate::is($this->getPostcode(), 'NotEmpty')
         ) {
-            $errors[] = Mage::helper('customer')->__('Please enter the zip/postal code.');
+            $this->addError(Mage::helper('customer')->__('Please enter the zip/postal code.'));
         }
 
         if (!Zend_Validate::is($this->getCountryId(), 'NotEmpty')) {
-            $errors[] = Mage::helper('customer')->__('Please enter the country.');
+            $this->addError(Mage::helper('customer')->__('Please enter the country.'));
         }
 
         if ($this->getCountryModel()->getRegionCollection()->getSize()
-               && !Zend_Validate::is($this->getRegionId(), 'NotEmpty')
-               && Mage::helper('directory')->isRegionRequired($this->getCountryId())
+            && !Zend_Validate::is($this->getRegionId(), 'NotEmpty')
+            && Mage::helper('directory')->isRegionRequired($this->getCountryId())
         ) {
-            $errors[] = Mage::helper('customer')->__('Please enter the state/province.');
+            $this->addError(Mage::helper('customer')->__('Please enter the state/province.'));
         }
+    }
 
-        if (empty($errors) || $this->getShouldIgnoreValidation()) {
-            return true;
-        }
-        return $errors;
+    /**
+     * Add error
+     *
+     * @param $error
+     * @return Mage_Customer_Model_Address_Abstract
+     */
+    public function addError($error)
+    {
+        $this->_errors[] = $error;
+        return $this;
+    }
+
+    /**
+     * Retreive errors
+     *
+     * @return array
+     */
+    protected function _getErrors()
+    {
+        return $this->_errors;
+    }
+
+    /**
+     * Reset errors array
+     *
+     * @return Mage_Customer_Model_Address_Abstract
+     */
+    protected function _resetErrors()
+    {
+        $this->_errors = array();
+        return $this;
     }
 }

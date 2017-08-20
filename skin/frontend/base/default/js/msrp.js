@@ -9,17 +9,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 if (!window.Catalog) {
@@ -96,7 +96,6 @@ Catalog.Map = {
             Event.observe(element, 'click', function(event) {
                 setLocation(this.href);
                 Catalog.Map.hideHelp();
-                window.opener.focus();
                 event.stop();
             });
         }
@@ -262,11 +261,12 @@ Catalog.Map = {
             productAddToCartFormOld = productAddToCartForm;
             productAddToCartForm = new VarienForm('product_addtocart_form_from_popup');
             productAddToCartForm.submitLight = productAddToCartFormOld.submitLight;
-        }else if(!$('product_addtocart_form_from_popup')) {
+        } else if(!$('product_addtocart_form_from_popup')) {
             return false;
         } else if ('undefined' == typeof productAddToCartForm) {
             productAddToCartForm = new VarienForm('product_addtocart_form_from_popup');
         }
+
         productAddToCartForm.submit = function(button, url) {
             if (('undefined' != typeof productAddToCartFormOld) && productAddToCartFormOld) {
                 if (Catalog.Map.active) {
@@ -314,7 +314,7 @@ Catalog.Map = {
                     button.disabled = true;
                 }
             }
-        }.bind(productAddToCartForm);
+        };
     }
 };
 
@@ -322,7 +322,7 @@ Event.observe(window, 'resize', function(event) {
     if (Catalog.Map.active) {
         Catalog.Map.showHelp(event);
     }
-})
+});
 
 $(document).observe('bundle:reload-price', function (event) { //reload price
     var data = event.memo, bundle = data.bundle;

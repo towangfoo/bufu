@@ -10,18 +10,18 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
@@ -50,9 +50,8 @@ class Mage_Adminhtml_Block_Report_Tag_Popular_Detail_Grid extends Mage_Adminhtml
         /* @var $collection Mage_Reports_Model_Resource_Tag_Customer_Collection */
         $collection = Mage::getResourceModel('reports/tag_customer_collection');
         $collection->addStatusFilter(Mage::getModel('tag/tag')->getApprovedStatus())
-                ->addTagFilter($this->getRequest()->getParam('id'))
-                ->addDescOrder()
-                ->addProductName();
+            ->addTagFilter($this->getRequest()->getParam('id'))
+            ->addProductToSelect();
 
         $this->setCollection($collection);
 
@@ -69,27 +68,23 @@ class Mage_Adminhtml_Block_Report_Tag_Popular_Detail_Grid extends Mage_Adminhtml
 
         $this->addColumn('firstname', array(
             'header'    =>Mage::helper('reports')->__('First Name'),
-            'sortable'  => false,
             'index'     =>'firstname'
         ));
 
         $this->addColumn('lastname', array(
             'header'    =>Mage::helper('reports')->__('Last Name'),
-            'sortable'  => false,
             'index'     =>'lastname'
         ));
 
         $this->addColumn('product', array(
             'header'    =>Mage::helper('reports')->__('Product Name'),
-            'sortable'  => false,
-            'index'     =>'product'
+            'index'     =>'product_name'
         ));
 
         if (!Mage::app()->isSingleStoreMode()) {
             $this->addColumn('added_in', array(
                 'header'    => Mage::helper('reports')->__('Submitted In'),
-                'sortable'  => false,
-                'index'     => 'store_id',
+                'index'     => 'added_in',
                 'type'      => 'store',
                 'store_view'=> true
             ));

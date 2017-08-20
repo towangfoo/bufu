@@ -10,17 +10,17 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    design
  * @package     default_default
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
@@ -39,9 +39,9 @@
 <div id="XmlconnectThemePreview" class="ipad-portrait"></div>
 
 <div id="ipad-tab-orientation" class="mm-box-blue a-center ipad-tab-portrait">
-    <button type="button" class="scalable" onclick="updatePreview()"><span><span><span><?php echo $this->__('Update Preview');?></span></span></span></button>
-    <button type="button" class="scalable" onclick="changeOrientation()"><span><span><span><?php echo $this->__('Change Orientation');?></span></span></span></button>
-    <p><br />To preview the newly uploaded images, please save your application first.</p>
+    <button type="button" class="scalable" onclick="updatePreview()"><span><?php echo $this->__('Update Preview');?></span></button>
+    <button type="button" class="scalable" onclick="changeOrientation()"><span><?php echo $this->__('Change Orientation');?></span></button>
+    <p><br /><?php echo $this->__('To preview the newly uploaded images, please save your application first.') ?></p>
 </div>
 <div class="mm-pager" style="padding-left:60px;">
     <strong><?php echo $this->__('Screens:'); ?></strong>
@@ -93,7 +93,7 @@ function changeOrientation() {
 }
 function updatePreview(someAction) {
     var loadingClassName = previewIframe.className + '-loading';
-    previewIframe.update('<?php echo $this->__('Loading Preview...'); ?>').addClassName(loadingClassName);
+    previewIframe.update('<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Loading Preview...')); ?>').addClassName(loadingClassName);
     new Ajax.Request(mmPreviewPage + (someAction ? someAction : '') + mmPreviewPagePrefix, {
         parameters: $('edit_form').serialize(true),
         onSuccess : function(transport) {

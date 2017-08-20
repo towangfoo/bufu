@@ -10,25 +10,24 @@
  * http://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Wishlist
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @copyright  Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 
 /**
  * Wishlist item model
  *
- * @method Mage_Wishlist_Model_Resource_Item _getResource()
  * @method Mage_Wishlist_Model_Resource_Item getResource()
  * @method int getWishlistId()
  * @method Mage_Wishlist_Model_Item setWishlistId(int $value)
@@ -50,6 +49,7 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
 {
     const EXCEPTION_CODE_NOT_SALABLE            = 901;
     const EXCEPTION_CODE_HAS_REQUIRED_OPTIONS   = 902;
+
     /**
      * We can store product store product configuration
      * and add grouped attributes after 1.4.2.0
@@ -57,6 +57,7 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
      * @deprecated after 1.4.2.0
      */
     const EXCEPTION_CODE_IS_GROUPED_PRODUCT     = 903;
+    const EXCEPTION_CODE_NOT_SPECIFIED_PRODUCT  = 904;
 
     /**
      * Custom path to download attached file
@@ -113,6 +114,7 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
      */
     protected function _construct()
     {
+        $this->_cacheTag = 'wishlist_item';
         $this->_init('wishlist/item');
     }
 
@@ -329,7 +331,8 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
         $product = $this->_getData('product');
         if (is_null($product)) {
             if (!$this->getProductId()) {
-                Mage::throwException(Mage::helper('wishlist')->__('Cannot specify product.'));
+                throw new Mage_Core_Exception(Mage::helper('wishlist')->__('Cannot specify product.'),
+                    self::EXCEPTION_CODE_NOT_SPECIFIED_PRODUCT);
             }
 
             $product = Mage::getModel('catalog/product')
@@ -361,7 +364,6 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
     public function addToCart(Mage_Checkout_Model_Cart $cart, $delete = false)
     {
         $product = $this->getProduct();
-
         $storeId = $this->getStoreId();
 
         if ($product->getStatus() != Mage_Catalog_Model_Product_Status::STATUS_ENABLED) {
@@ -370,16 +372,6 @@ class Mage_Wishlist_Model_Item extends Mage_Core_Model_Abstract
 
         if (!$product->isVisibleInSiteVisibility()) {
             if ($product->getStoreId() == $storeId) {
-                return false;
-            }
-            $urlData = Mage::getResourceSingleton('catalog/url')
-                ->getRewriteByProductStore(array($product->getId() => $storeId));
-            if (!isset($urlData[$product->getId()])) {
-                return false;
-            }
-            $product->setUrlDataObject(new Varien_Object($urlData));
-            $visibility = $product->getUrlDataObject()->getVisibility();
-            if (!in_array($visibility, $product->getVisibleInSiteVisibilities())) {
                 return false;
             }
         }

@@ -9,26 +9,26 @@
  * http://opensource.org/licenses/afl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
+ * to license@magento.com so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade Magento to newer
  * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
+ * needs please refer to http://www.magento.com for more information.
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 MediabrowserUtility = {
-    openDialog: function(url, width, height, title) {
+    openDialog: function(url, width, height, title, options) {
         if ($('browser_window') && typeof(Windows) != 'undefined') {
             Windows.focus('browser_window');
             return;
         }
-        this.dialogWindow = Dialog.info(null, {
+        this.dialogWindow = Dialog.info(null, Object.extend({
             closable:     true,
             resizable:    false,
             draggable:    true,
@@ -38,13 +38,13 @@ MediabrowserUtility = {
             top:          50,
             width:        width || 950,
             height:       height || 600,
-            zIndex:       1000,
+            zIndex:       options && options.zIndex || 1000,
             recenterAuto: false,
             hideEffect:   Element.hide,
             showEffect:   Element.show,
             id:           'browser_window',
             onClose: this.closeDialog.bind(this)
-        });
+        }, options || {}));
         new Ajax.Updater('modal_dialog_message', url, {evalScripts: true});
     },
     closeDialog: function(window) {
@@ -140,7 +140,7 @@ Mediabrowser.prototype = {
         var div = Event.findElement(event, 'DIV');
         $$('div.filecnt.selected[id!="' + div.id + '"]').each(function(e) {
             e.removeClassName('selected');
-        })
+        });
         div.toggleClassName('selected');
         if(div.hasClassName('selected')) {
             this.showFileButtons();
@@ -265,7 +265,7 @@ Mediabrowser.prototype = {
                 try {
                     this.onAjaxSuccess(transport);
                     if (transport.responseText.isJSON()) {
-                        var response = transport.responseText.evalJSON()
+                        var response = transport.responseText.evalJSON();
                         var newNode = new Ext.tree.AsyncTreeNode({
                             text: response.short_name,
                             draggable:false,
@@ -281,7 +281,7 @@ Mediabrowser.prototype = {
                     alert(e.message);
                 }
             }.bind(this)
-        })
+        });
     },
 
     deleteFolder: function() {
@@ -300,7 +300,7 @@ Mediabrowser.prototype = {
                     alert(e.message);
                 }
             }.bind(this)
-        })
+        });
     },
 
     deleteFiles: function() {
@@ -384,7 +384,7 @@ Mediabrowser.prototype = {
 
     onAjaxSuccess: function(transport) {
         if (transport.responseText.isJSON()) {
-            var response = transport.responseText.evalJSON()
+            var response = transport.responseText.evalJSON();
             if (response.error) {
                 throw response;
             } else if (response.ajaxExpired && response.ajaxRedirect) {
@@ -392,4 +392,4 @@ Mediabrowser.prototype = {
             }
         }
     }
-}
+};
