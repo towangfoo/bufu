@@ -1,0 +1,68 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_CashTicket
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Eugen Gitin <eg@symmetrics.de>
+ * @copyright 2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+?>
+<!-- Get current order -->
+<?php $_order = $this->getInfo()->getOrder() ?>
+<!-- Get api instance and set transaction id from current order -->
+<?php $_api = $this->getApi($_order->getPayment()->getAdditionalData()) ?>
+<!-- Get a response from api -->
+<?php $response = $this->callGetSerialNumbers() ?>
+<!-- Get amount debited from Cash-Ticket -->
+<?php $debitedAmount = (float)$response->Amount ?>
+<!-- Get order amount and format it for the API call -->
+<?php $orderAmount = (float)number_format($_order->getGrandTotal(), 2, '.', '') ?>
+<!-- Get all allowed stats of current transaction  -->
+<?php $allowedStatus = $this->getAllowedStats() ?>
+
+<p><?php echo $this->htmlEscape($this->getMethod()->getTitle()) ?></p>
+<p><?php echo $this->helper('cashticket')->__('Status - ') ?><strong><?php echo $this->getPaymentStatus() ?></strong></p>
+<p><?php echo $this->helper('cashticket')->__('Already debited or modified:') ?> <strong><?php echo ($orderAmount - $debitedAmount) ?> <?php echo $_api->getCurrency() ?></strong></p>
+
+<?php if ($debitedAmount > 0 && in_array($response->TransactionState, $allowedStatus)) : ?>
+    <div class="grid"> 
+    <table cellspacing="0" class="data" id="cashticket_debit_table"> 
+        <thead>
+            <tr class="headings"> 
+                <th><?php echo $this->helper('cashticket')->__('Debit / Modify outstanding amount') ?></th>  
+            </tr>
+        </thead>
+        <tbody> 
+            <tr> 
+                <td> 
+                    <input type="text" id="cashticket_amount" value="<?php echo $debitedAmount ?>" /> <?php echo $_api->getCurrency() ?> <?php echo $this->helper('cashticket')->__('of') ?> <strong><?php echo Mage::app()->getStore()->roundPrice($debitedAmount) ?> <?php echo $_api->getCurrency() ?></strong>
+                    <select id="cashticket_action">
+                        <option value="debit"><?php echo $this->helper('cashticket')->__('Debit amount') ?></option>
+                        <option value="modify"><?php echo $this->helper('cashticket')->__('Modify disposition') ?></option>
+                    </select>
+                    <button type="button" class="f-right" onclick="symmetrics_cashticket.doCashTicketAction($F('cashticket_action'));" style=""><span><?php echo $this->helper('cashticket')->__('Send') ?></span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <input type="hidden" id="cashticket_order_id" value="<?php echo $_order->getId() ?>" />
+    <input type="hidden" id="cashticket_disposition_total" value="<?php echo $debitedAmount ?>" />
+    <input type="hidden" id="cashticket_transaction_id" value="<?php echo $_api->getTransactionId() ?>" />
+<?php else : ?>
+<p><em><?php echo $this->__('No Cash-Ticket actions are possible') ?></em></p>
+<?php endif; ?>

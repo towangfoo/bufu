@@ -1,0 +1,129 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TrustedRating
+ * @author    symmetrics - a CGI Group brand <info@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @author    Ngoc Anh Doan <ngoc-anh.doan@cgi.com>
+ * @copyright 2009-2014 symmetrics - a CGI Group brand
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      https://github.com/symmetrics/trustedshops_trustedrating/
+ * @link      http://www.symmetrics.de/
+ * @link      http://www.de.cgi.com/
+ */
+?>
+<?php
+/**
+ * @see Symmetrics_TrustedRating_Block_Adminhtml_System_Config_Info
+ */
+
+ $registrationUrl = Mage::helper('trustedrating')->__('http://www.trustedshops.com/merchants/membership.html');
+ $registrationUrl .= '?shopsw=MAGENTO&partnerPackage=SYMMETRICS&et_cid=47&et_lid=3338';
+?>
+<script type="text/javascript">
+document.observe('dom:loaded', function() {
+    // Unfold MRG info Banner
+    var banner = $('buyerprotection_info-head');
+    if (banner) {
+        banner.onclick();
+    }
+});
+</script>
+<div style="font-family:Arial,sans-serif;background-color:white;color:#8f8f8f;font-size:13px;line-height:1.2em;">
+    <table border="0" cellpadding="0" cellspacing="0" style="width:800px;">
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:800px;padding:2px;margin:4px;">
+                    <tr>
+                        <td colspan="2">
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Trusted Shops Customer Rating'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('For online buyers, positive and verifiable customer ratings are an important indication of an online shop\'s trustworthiness. The required software is already included in Market Ready Germany for Magento, so you can start collecting customer ratings in your online shop too in just a few clicks.'); ?>
+                            </p>
+                        </td>
+                        <td>
+                            <img class="tsimg"
+                                src="<?php echo Mage::getDesign()->getSkinUrl('images/trustedrating/ts_wortmarke.jpg'); ?>"
+                                alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td><img class="mrgimg" src="<?php echo Mage::getDesign()->getSkinUrl('images/trustedrating/tophr.png') ?>" /></td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:800px;padding:2px;margin:4px;">
+                    <tr>
+                        <td rowspan="5">
+                            <img style="margin: 10px 20px 0 2px;"
+                                class="tsimg"
+                                src="<?php echo Mage::helper('trustedrating/adminhtml')->getTsSeal() ?>"
+                                alt="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Orientation support for your customers'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('Satisfied customers are your best salespeople. Let your customers speak for themselves as to how safe and easy it is to buy from your online shop.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Basis for shop optimisation'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('Your customers are happy to help you optimise your shop with their feedback. After all, the better your online shop works, the more satisfied your customers will be.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Arial;color:#000000;font-size:10pt;font-weight: bold;margin-bottom:0;">
+                                <?php echo $this->__('Increase reach via Facebook, Twitter and Google'); ?>
+                            </p>
+                            <p style="font-family:Arial, sans-serif;color:#000000;font-size:10pt;">
+                                <?php echo $this->__('Your customers spread reviews and rating on Facebook and Twitter directly to friends and followers. Ratings are automatically listed in the Google-Index and are displayed in Google Shopping.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button style=""
+                                    onclick="window.open('<?php echo $registrationUrl ?>')" class="scalable" type="button">
+                                <span>
+                                    <?php echo $this->__('Apply now!'); ?>
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

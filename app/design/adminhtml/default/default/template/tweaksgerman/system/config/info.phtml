@@ -1,0 +1,256 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TweaksGerman
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Andreas Timm <at@symmetrics.de>
+ * @copyright 2009-2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+?>
+<?php
+/**
+ * @see Symmetrics_TweaksGerman_Block_Adminhtml_System_Config_Info
+ */
+?>
+<div style="font-family:Helvetica,sans-serif;background-color:white;color:#8f8f8f;font-size:13px;">
+    <table border="0" cellpadding="0" cellspacing="0" style="width:640px;">
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0"
+                    style="width:640px;padding:2px;margin:4px;">
+                    <tr>
+                        <td rowspan="2">
+                            <img class="mrgimg"
+                                style="margin-left:10px;float:right;position:relative;"
+                                src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/mrg_logo.png'); ?>"
+                                alt="<?php echo $this->__('Market Ready Germany Logo'); ?>" />
+                        </td>
+                        <td>
+                            <p style="font-family:Helvetica, sans-serif;font-size:18px;font-weight:900;color:#494949;line-height:1.3em;">
+                                <?php echo $this->__('Congratulations: <span style=\"color:#000000;\">Market Ready Germany</span><br /> has adapted your shop to the market requirements<br /> in Germany.'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-family:Helvetica, sans-serif;color:#000000;font-size:13px;line-height:1.3em;">
+                                <?php echo $this->__('<span style=\"font-weight:bold;\">Market Ready Germany</span> combines the legal expertise of Trusted Shops with the technical innovations of Enterprise Partners Magento Symmetrics. Thanks to the kind support of our sponsors we can offer the module for free to all users of Magento. We wish you much success!'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img class="mrgimg" src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/tophr.png'); ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:640px;padding:2px;margin:4px;">         
+                    <tr>
+                        <td style="width:310px; padding-right: 20px;">
+                            <img style="margin-top: 10px; margin-left: 2px;"
+                                class="mrgimg"
+                                src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/symmetrics_logo.png'); ?>"
+                                alt="<?php echo $this->__('Symmetrics gmbh - Magento Enterprise Partner, Certified Developer'); ?>" />   
+                        </td>
+                        <td style="width:310px;"> 
+                            <img style="margin-top: 10px; margin-left: 2px;"
+                                class="mrgimg"
+                                src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/ts_logo.png'); ?>"
+                                alt="<?php echo $this->__('Trusted Shops GmbH'); ?>" />             
+                        </td>
+                    </tr>     
+                    <tr>
+                        <td style="width:310px; padding-right: 20px;">                                                                                                 
+                            <p style="font-family:Helvetica,sans-serif;font-size:16px;font-weight:bold;color:#8f8f8f;line-height:1.3em;">
+                                <?php echo $this->__('Cloud Computing for Magento - The Future of E-Commerce has just begun!') ?>   
+                            </p>   
+                        </td>
+                        <td style="width:310px;">                                   
+                            <p style="font-family:Helvetica,sans-serif;font-size:16px;font-weight:bold;color:#8f8f8f;line-height:1.3em;">
+                                <?php echo $this->__('The next step:<br /> The seal of approval for your Magento store.') ?>
+                            </p>
+                        </td>
+                    </tr>     
+                    <tr>
+                        <td style="width:310px; padding-right: 20px;">        
+                            <ul style="list-style-type: square;font-size: 12px;">
+                            <?php  
+                                $list[] = $this->__('automatic scalable and flexible infrastructure');
+                                $list[] = $this->__('professional and optimized environment for Magento');
+                                $list[] = $this->__('high availability and performance');
+                                $list[] = $this->__('on-demand scalability (horizontal and vertical)');
+                                $list[] = $this->__('pay-per-use payment');
+                                $list[] = $this->__('individual infrastructure-solutions for your online-shop');   
+                                foreach ($list as $listPoint) {
+                                    echo '<li style="margin-left: 15px;">' . $listPoint . '</li>';
+                                }              
+                            ?> 
+                            </ul>  
+                            <p>
+                            <?php
+                                echo $this->__('Ask for your individual offer and test our Cloud Computing Cluster - ' .
+                                    'free standard installation for MRG-user!') ?>         
+                            </p>  
+                            <button style="" onclick="window.open('http://www.symmetrics.de/de/kontakt/cloud-computing-hosting.html')" class="scalable" type="button">
+                                <span>
+                                    <?php echo $this->__('Use special conditions now!') ?>
+                                </span>
+                            </button>    
+                            <div>    
+                                <img style="margin-top: 10px; margin-left: 0px;"
+                                    class="mrgimg"
+                                    src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/enterprisepartner.png'); ?>"
+                                    alt="<?php echo $this->__('Magento Enterprise Partner'); ?>" />    
+                                <img style="margin-top: 10px; margin-left: 1px;"
+                                    class="mrgimg"
+                                    src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/founders-award.png'); ?>"
+                                    alt="<?php echo $this->__('Founders Award 2010'); ?>" />    
+                                <img style="margin-top: 10px; margin-left: 1px;"
+                                    class="mrgimg"
+                                    src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/awsprovider.png'); ?>"
+                                    alt="<?php echo $this->__('Amazon Web Services - Solution Provider'); ?>" />        
+                            </div>
+                        </td>
+                        <td style="width:310px;">
+                            <p><?php echo $this->__('The solutions from Trusted Shops<br /> certainly lead to more conversion.') ?></p>
+                            <ul style="margin-left:14px;">
+                                <li type="square">
+                                    <span style="font-weight:bold;">
+                                        <?php echo $this->__('Increase the conversion rate') ?>
+                                    </span>
+                                </li>
+                                <li type="square">
+                                    <span style="font-weight:bold;">
+                                        <?php echo $this->__('Offer a reas buyer protection') ?>
+                                    </span>
+                                </li>
+                                <li type="square">
+                                    <span style="font-weight:bold;">
+                                        <?php echo $this->__('Reduce your risk') ?>
+                                    </span>
+                                </li>
+                            </ul>
+                            <a href="http://www.trustedshops.de/magento" target="_blank">
+                                <img class="mrgimg"
+                                    style="margin-left:-20px;margin-top:-24px;float:right;position:relative;"
+                                    src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/trustedshops_logo.png') ?>"
+                                    alt="<?php echo $this->__('Trusted Shops - Certified Software') ?>" />
+                            </a>
+                            <p><?php echo $this->__('As already more than 10,000<br /> successful online retailers!') ?></p>
+                            <button style=""
+                                onclick="window.open('http://www.trustedshops.de/shopbetreiber/mitgliedschaft_partner.html?shopsw=MAGENTO')"
+                                class="scalable"
+                                type="button">
+                                <span>
+                                    <?php echo $this->__('Use special conditions now!') ?>
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" style="vertical-align: bottom;">
+                <img style="margin-bottom: -5px;"
+                    class="mrgimg"
+                    src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/bottomhr.png') ?>"
+                    alt="" />
+            </td>
+        </tr>
+        <tr style="background-color:#f7f7f7;">
+            <td>
+                <div style="margin-left:8px;font-family:sans-serif;color:#000000;font-size:11px;font-weight:bold;">
+                    <?php echo $this->__('Market Ready Germany sponsored by') ?>
+                </div>
+            </td>
+        </tr>
+        <tr style="background-color:#f7f7f7;">
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" style="width:640px;padding:1px;margin:1px;height:100px">
+                    <tr>
+                        <td style="width:184px;text-align:center;">
+                            <div>
+                                <a href="http://www.cash-ticket.com/marketreadygermany" target="_blank" style="text-decoration: none; display: block;">
+                                    <img class="mrgimg"
+                                        src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/cashticketlogo.png') ?>"
+                                        alt="" />
+                                </a>
+                                <button style="" onclick="window.open('http://www.cash-ticket.com/marketreadygermany')"
+                                    class="scalable" type="button">
+                                    <span style="font-size:9px;">
+                                        <?php echo $this->__('Use special conditions!') ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </td>
+                        <td style="width:184px;text-align:center;">
+                            <div>
+                                <a href="http://www.payone.de/marketready/" target="_blank" style="text-decoration: none; display: block;">
+                                    <img class="mrgimg"
+                                        src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/payonelogo.png'); ?>"
+                                        alt="" />
+                                </a>
+                                <button style="" onclick="window.open('http://www.payone.de/marketready/')"
+                                    class="scalable" type="button">
+                                    <span style="font-size:9px;">
+                                        <?php echo $this->__('Use special conditions!') ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </td>
+                        <td style="width:184px;text-align:center;">
+                            <div>
+                                <a href="http://www.econda.de/produkte/landing-page/partner/market-ready-germany.html?campaign=partner/MRG/00_startseite" target="_blank"  style="text-decoration: none; display: block;">
+                                    <img class="mrgimg"
+                                        src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/econdalogo.png'); ?>"
+                                        alt="" />
+                                </a>
+                                <button style="" onclick="window.open('http://www.econda.de/produkte/landing-page/partner/market-ready-germany.html?campaign=partner/MRG/00_startseite')"
+                                    class="scalable" type="button">
+                                    <span style="font-size:9px;">
+                                        <?php echo $this->__('Use special conditions!') ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </td>
+                        <td style="width:184px;text-align:center;">
+                            <div>
+                                <a href="http://www.fact-finder.de/Magento.html?affiliate=symmetrics" target="_blank"  style="text-decoration: none; display: block;">
+                                    <img class="mrgimg"
+                                        src="<?php echo Mage::getDesign()->getSkinUrl('images/symmetrics/factfinderlogo.png'); ?>"
+                                        alt="" />
+                                </a>
+                                <button style="" onclick="window.open('http://www.fact-finder.de/Magento.html?affiliate=symmetrics')"
+                                    class="scalable" type="button">
+                                    <span style="font-size:9px;">
+                                        <?php echo $this->__('Use special conditions!') ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </td>
+                        <td style="width:184px;">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
