@@ -1,0 +1,28 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category  Symmetrics
+ * @package   Symmetrics_TweaksGerman
+ * @author    symmetrics gmbh <info@symmetrics.de>
+ * @author    Siegfried Schmitz <ss@symmetrics.de>
+ * @copyright 2009-2010 symmetrics gmbh
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @link      http://www.symmetrics.de/
+ */
+?>
+<ul>
+    <li><a href="<?php echo Mage::getUrl('') . Mage::getStoreConfig('checkout/cart/orderurl') ?>"><?php echo Mage::helper('tweaksgerman')->__('How to order') ?></a>.</li>
+    <?php $link = '<a href="' . Mage::getUrl('') . Mage::getStoreConfig('checkout/cart/revocationurl') . '">' ?>
+    <li><?php echo Mage::helper('tweaksgerman')->__('Click here to get the %s details on your Revocation Right</a>', $link) ?>.</li>
+</ul>
