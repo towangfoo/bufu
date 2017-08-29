@@ -7,6 +7,7 @@
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="box sendfriend-form">
 <form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+  <?php echo $this->getBlockHtml('formkey') ?>
     <div class="content">
         <div>
             <h4><?php echo Mage::helper('contacts')->__('Contact Information') ?></h4>
