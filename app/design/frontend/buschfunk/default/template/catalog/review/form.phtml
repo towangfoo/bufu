@@ -10,6 +10,7 @@
     </div>
     <h4><?php echo $this->__("You're reviewing: %s", $this->htmlEscape($this->getProductInfo()->getName())) ?></h4>
     <form action="<?php echo $this->getAction() ?>" method="post" id="review-form" name="addReviewForm">
+      <?php echo $this->getBlockHtml('formkey') ?>
     <fieldset>
         <?php if( $this->getRatings() && $this->getRatings()->getSize()): ?>
         <div class="product-review-box">
