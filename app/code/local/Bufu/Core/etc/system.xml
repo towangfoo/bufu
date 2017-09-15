@@ -8,7 +8,7 @@
                  * BuschFunk Settings for SMTP mailer
                  */
                 -->
-                <smtp>
+                <!-- <smtp>
                     <label>SMTP Settings</label>
                     <fields>
                         <disable translate="label">
@@ -62,7 +62,7 @@
                             <show_in_store>1</show_in_store>
                         </password>
                     </fields>
-                </smtp>
+                </smtp> -->
                 <!--
                 /**
                  * BuschFunk Neuerscheinungen

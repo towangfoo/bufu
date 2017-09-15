@@ -988,6 +988,7 @@
 "Switch/Solo/Maestro(UK Domestic) card start Date: %s/%s","Switch/Solo/Maestro(UK Domestic) card start Date: %s/%s"
 "Symbol","Symbol"
 "Symlinks are enabled. This may expose security risks. We strongly recommend to disable them.","Symlinks are enabled. This may expose security risks. We strongly recommend to disable them."
+"Invalid template path used in layout update.","Invalid template path used in layout update."
 "Synchronization is required.","Synchronization is required."
 "Synchronization of media storages has been successfully completed.","Synchronization of media storages has been successfully completed."
 "Synchronize","Synchronize"

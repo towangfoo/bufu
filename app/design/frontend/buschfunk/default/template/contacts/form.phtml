@@ -3,10 +3,24 @@
  * BuschFunk Template
  * Contact Form
  */
+
+ $telephone = Mage::getStoreConfig("general/imprint/telephone");
+ $email = Mage::getStoreConfig("trans_email/ident_general/email");
+
 ?>
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+
+<div class="page-head">
+<h2>Kontaktieren Sie uns</h2>
+</div>
+<p>Sie erreichen uns zu den Bürozeiten unter<br />
+  Telefon: <a href="tel:<?php echo $telephone ?>"><?php echo $telephone ?></a>, sowie<br />
+  per Email unter <a href="mailto:<?php echo $email ?>"><?php echo $email ?></a>.
+</p>
+<p>Oder verwenden Sie einfach unser Kontaktformular.</p>
+
 <div class="box sendfriend-form">
-<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+ <form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
   <?php echo $this->getBlockHtml('formkey') ?>
     <div class="content">
         <div>
