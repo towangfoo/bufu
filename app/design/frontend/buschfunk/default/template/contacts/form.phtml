@@ -21,7 +21,6 @@
 
 <div class="box sendfriend-form">
  <form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
-  <?php echo $this->getBlockHtml('formkey') ?>
     <div class="content">
         <div>
             <h4><?php echo Mage::helper('contacts')->__('Contact Information') ?></h4>
@@ -54,6 +53,7 @@
         <div class="clear"></div>
         <div class="button-set">
             <p class="required right"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
+            <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
             <a href="#" onclick="contactForm.submit();return false" class="gfx-button">
                 <span>
                     <span class="email-go"><?php echo Mage::helper('contacts')->__('Submit') ?></span>
