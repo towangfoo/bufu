@@ -1,0 +1,22 @@
+<?php
+/* @var $order Mage_Sales_Model_Order */
+$order = $this->getOrder();
+
+/* @var $address Mage_Sales_Model_Order_Address */
+$address = $order->getBillingAddress();
+
+?>
+<?php if ($address->getCompany()) : ?>
+<?php echo $address->getCompany() ?><br />
+<?php endif; ?>
+<?php if ($address->getPrefix()) echo $address->getPrefix() ?>
+ <?php echo $address->getFirstname() ?>
+<?php if ($address->getMiddlename()) echo $address->getMiddlename() ?>
+ <?php echo $address->getLastname() ?>
+<?php if ($address->getSuffix()) echo $address->getSuffix() ?><br />
+<?php echo nl2br($address->getStreetFull()) ?><br />
+<?php echo $address->getPostcode() ?> <?php echo $address->getCity() ?>
+<?php if ($address->getRegion()) echo $address->getRegion() ?><br />
+<?php echo $address->getCountry() ?><br />
+<br />
+Tel.: <?php echo $address->getTelephone() ?>
