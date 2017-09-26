@@ -20,12 +20,12 @@ class Mage_CheckoutNotice_Block_Show extends Mage_Core_Block_Template
 
     public function getSaveAction()
     {
-        return $this->getUrl('checkoutNotice/checkoutNotice/save');
+        return $this->getUrl('checkoutNotice/checkoutNotice/save', array('_secure' => true));
     }
 
     public function getSaveJsonAction()
     {
-        return $this->getUrl('checkoutNotice/checkoutNotice/saveJson');
+        return $this->getUrl('checkoutNotice/checkoutNotice/saveJson', array('_secure' => true));
     }
 
     /**
