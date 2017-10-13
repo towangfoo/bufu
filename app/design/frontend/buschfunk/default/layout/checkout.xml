@@ -296,6 +296,7 @@ One page checkout main layout
                 <block type="checkout/onepage_review" name="checkout.onepage.review" as="review" template="checkout/onepage/review.phtml">
                     <block type="checkoutNotice/show" name="checkout.onepage.checkoutNotice" as="checkoutNotice" template="checkoutNotice/review.phtml"/>
                     <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="checkout/onepage/agreements.phtml"/>
+                    <block type="bufu_shipping/multidelivery" name="checkout.onepage.review.multipartdelivery" as="multipartdelivery" template="checkout/onepage/review/multipartdelivery.phtml"/>
                 </block>
             </block>
         </reference>

@@ -6,6 +6,11 @@
 		</Bufu_Shipping>
 	</modules>
 	<global>
+		<blocks>
+				<bufu_shipping>
+						<class>Bufu_Shipping_Block</class>
+				</bufu_shipping>
+		</blocks>
 		<models>
 			<shipping>
 				<rewrite>

@@ -16,7 +16,9 @@
     <div class="inner">
     <form name="co-checkoutNoticeForm" id="co-checkoutNoticeForm" action="<?php echo $this->getSaveAction() ?>" method="post">
         <label for="<?php echo $this->getFormKey() ?>"><?php echo $this->__("Add your message") ?></label>
-        <textarea id="<?php echo $this->getFormKey() ?>" name="<?php echo $this->getFormKey() ?>" onblur="checkoutNotice.save()"><?php echo $this->getNotice() ?></textarea>
+        <div class="left">
+            <textarea id="<?php echo $this->getFormKey() ?>" name="<?php echo $this->getFormKey() ?>" onblur="checkoutNotice.save()"><?php echo $this->getNotice() ?></textarea>
+        </div>
         <div class="right">
             <div id="checkoutNotice-buttons-container">
                 <a title="<?php echo $this->__('Submit your message') ?>" href="#" onclick="checkoutNotice.save();return false;" class="gfx-button">
