@@ -51,6 +51,9 @@ foreach($_events as $event) {
         case Bufu_Tickets_Helper_Data::STATUS_SOMELEFT:
             $eventItem .= '<p class="status yellow">Restkarten verfügbar</p>';
             break;
+        case Bufu_Tickets_Helper_Data::STATUS_REQUEST:
+            $eventItem .= '<p class="status yellow">Bitte telefonisch nachfragen</p>';
+            break;
         case Bufu_Tickets_Helper_Data::STATUS_SOLDOUT:
             $eventItem .= '<p class="status red">Leider ausverkauft!</p>';
             break;

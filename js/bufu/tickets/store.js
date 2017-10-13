@@ -20,7 +20,7 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa)
 			Element.removeClassName(lastEventItem, 'selected');
 			Element.removeClassName($('bufu_tickets-selectbox-item-'+bufu_lastVisible), 'selected');
 		}
-		
+
 		if (spa == false) {
 			// hide special price
 			$('bufu_tickets_specialPriceNum').hide();
@@ -28,7 +28,7 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa)
 			// show special price
 			$('bufu_tickets_specialPriceNum').show();
 		}
-		
+
 		// set price labels for normal and special price tickets
 		bufu_priceNormal = parseFloat(np.replace(",", "."));
 		bufu_priceSpecial = parseFloat(sp.replace(",", "."));
@@ -38,13 +38,13 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa)
 		// reset amounts of selected cards
 		$('bufu_tickets-normal').value = "";
 		$('bufu_tickets-special').value = "";
-		
+
 		// reset total sum
 		bufu_tickets_updatePriceLabels(true);
 		bufu_canSubmit = false;
-		
+
 		// show / hide for abendkasse and soldout statuses
-		if (avail == 0 || avail == 3) {
+		if (avail == 0 || avail == 3 || avail == 4) {
 			Element.addClassName($('bufu_tickets-addToCart'), 'hidden');
 		} else {
 			Element.removeClassName($('bufu_tickets-addToCart'), 'hidden');
@@ -65,7 +65,7 @@ function bufu_tickets_updatePriceLabels(reset)
 {
 	n = parseInt($('bufu_tickets-normal').value, 10);
 	s = parseInt($('bufu_tickets-special').value, 10);
-	
+
 	if (isNaN(n) || reset) {
 		n = 0;
 	}
@@ -84,9 +84,9 @@ function bufu_tickets_updatePriceLabels(reset)
 	priceStr = bufu_helper_number_format(finalPrice, 2, ',', ".");
 	$('bufu_tickets-currentTotalPrice').innerHTML = priceStr;
 	$('bufu_tickets-totalPriceBox').show();
-	
+
 	// update mage price label as well
-	$('product-price-'+bufu_productId).innerHTML = '<span class="price">'+priceStr+' €</span>';
+	// $('product-price-'+bufu_productId).innerHTML = '<span class="price">'+priceStr+' €</span>';
 }
 
 function bufu_tickets_cartFormSubmit()

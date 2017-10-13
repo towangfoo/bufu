@@ -19,9 +19,7 @@
     // determine whether product is of the attribute set "Ticket"
     $_isATicket = $this->helper('bufu_tickets')->isATicket($_product);
 ?>
-<script type="text/javascript">
-    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
-</script>
+
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="product-info-box">
     <div class="product-essential">

@@ -34,6 +34,7 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
      const STATUS_AVAILABLE = 1;
      const STATUS_SOMELEFT = 2;
      const STATUS_ABENDKASSE = 3;
+     const STATUS_REQUEST = 4;
      const STATUS_SOLDOUT = 0;
 
     /**

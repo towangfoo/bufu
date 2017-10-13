@@ -4,7 +4,7 @@
 }
 
 .catalog-product-view .bufu_tickets-selectbox .dates {
-    width:220px;
+    width:250px;
     float:left;
     overflow:hidden;
     margin-bottom:10px;
@@ -44,7 +44,7 @@
 }
 .catalog-product-view .bufu_tickets-selectbox .details {
     overflow:hidden;
-    width:420px;
+    width:400px;
 }
 .catalog-product-view .bufu_tickets-selectbox .details .item {
     display:none;
@@ -78,7 +78,7 @@
     float:right;
     overflow:hidden;
     width:190px;
-    margin-top:40px;
+    margin-top:26px;
 }
 .catalog-product-view .bufu_tickets-selectbox .addtocart .right .price {
     font-size:22px;

@@ -73,6 +73,7 @@ class Bufu_Tickets_Model_Event extends Mage_Core_Model_Abstract
         $daysLeftToBeUpcoming = 3;
 
         if (!in_array($this->getIsAvailable(), array(
+            Bufu_Tickets_Helper_Data::STATUS_REQUEST,
             Bufu_Tickets_Helper_Data::STATUS_ABENDKASSE,
             Bufu_Tickets_Helper_Data::STATUS_SOLDOUT
         ))) {
