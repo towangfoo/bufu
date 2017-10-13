@@ -23,6 +23,11 @@ class Bufu_Tickets_CartController extends Mage_Core_Controller_Front_Action
      */
     public function addAction()
     {
+        if (!$this->_validateFormKey()) {
+            $this->_goBack();
+            return;
+        }
+
         $cart   = $this->_getCart();
         $params = $this->getRequest()->getParams();
 
@@ -34,10 +39,6 @@ class Bufu_Tickets_CartController extends Mage_Core_Controller_Front_Action
         $params['bufu_tickets'] = array();
 
         try {
-            //$filter = new Zend_Filter_LocalizedToNormalized(
-            //    array('locale' => Mage::app()->getLocale()->getLocaleCode())
-            //);
-
             $product = false;
 
             // add normal price ticket as a product
@@ -47,7 +48,7 @@ class Bufu_Tickets_CartController extends Mage_Core_Controller_Front_Action
                     $this->_goBack();
                     return;
                 }
-                //$params['qty'] = $filter->filter($bufuOptions['nr_normal']);
+
                 $params['qty'] = $bufuOptions['nr_normal'];
                 $params['bufu_tickets'][Bufu_Tickets_Helper_Data::OPTION_TYPE] = $normalProduct->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_TYPE)->getValue();
                 $params['bufu_tickets'][Bufu_Tickets_Helper_Data::OPTION_EVENT_ID] = $normalProduct->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID)->getValue();
@@ -72,7 +73,7 @@ class Bufu_Tickets_CartController extends Mage_Core_Controller_Front_Action
                     $this->_goBack();
                     return;
                 }
-                //$params['qty'] = $filter->filter($bufuOptions['nr_special']);
+
                 $params['qty'] = $bufuOptions['nr_special'];
                 $params['bufu_tickets'][Bufu_Tickets_Helper_Data::OPTION_TYPE] = $specialProduct->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_TYPE)->getValue();
                 $params['bufu_tickets'][Bufu_Tickets_Helper_Data::OPTION_EVENT_ID] = $specialProduct->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID)->getValue();
