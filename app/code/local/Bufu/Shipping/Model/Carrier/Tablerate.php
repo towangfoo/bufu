@@ -108,12 +108,17 @@ class Bufu_Shipping_Model_Carrier_Tablerate extends Mage_Shipping_Model_Carrier_
 				$shippingPrice = $this->getFinalPriceWithHandlingFee($rate['price']);
 			}
 
-			if($ticketItemContained) {
-				// get minimum price from adminhtml
+			// when a Ticket is in the order ...
+			if ($ticketItemContained) {
+				// get ticket shipping price from adminhtml
 				$ticketsMinShipping = floatval(str_replace(",", ".", $this->getConfigData("bufu_tickets_price")));
 
-				if($shippingPrice < $ticketsMinShipping)
+				// if ticket shipping price is higher than current shipping price, use that
+				if ($ticketsMinShipping > $shippingPrice) {
 					$shippingPrice = $ticketsMinShipping;
+					// also set the label accordingly
+					$method->setMethodTitle($this->getConfigData("bufu_tickets_shipping_label"));
+				}
 			}
 
 			$method->setPrice($shippingPrice);

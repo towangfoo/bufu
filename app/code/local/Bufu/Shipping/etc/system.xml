@@ -6,7 +6,7 @@
 				<tablerate>
 					<fields>
 						<bufu_tickets_price translate="label">
-							<label>Minimum shipping price for tickets in DE</label>
+							<label>Mindestversandkosten für Ticketversand</label>
 							<frontend_type>text</frontend_type>
 							<validate>validate-number validate-zero-or-greater</validate>
 							<sort_order>70</sort_order>
@@ -14,6 +14,14 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>0</show_in_store>
 						</bufu_tickets_price>
+						<bufu_tickets_shipping_label translate="label">
+							<label>Name Versandart für Tickets</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>71</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>0</show_in_store>
+						</bufu_tickets_shipping_label>
 					</fields>
 				</tablerate>
 			</groups>

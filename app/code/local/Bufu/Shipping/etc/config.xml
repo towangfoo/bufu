@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Bufu_Shipping>
-			<version>0.1.0</version>
+			<version>0.2.0</version>
 		</Bufu_Shipping>
 	</modules>
 	<global>
@@ -17,7 +17,8 @@
 	<default>
 		<carriers>
 			<tablerate>
-				<bufu_tickets_price>3.90</bufu_tickets_price>
+				<bufu_tickets_price>4.95</bufu_tickets_price>
+				<bufu_tickets_shipping_label>Ticketversand (versichert)</bufu_tickets_shipping_label>
 			</tablerate>
 		</carriers>
 	</default>
