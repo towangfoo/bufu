@@ -71,7 +71,7 @@
 
 .catalog-product-view .bufu_tickets-selectbox .addtocart .left {
     float:left;
-    width:200px;
+    width:180px;
     overflow:hidden;
 }
 .catalog-product-view .bufu_tickets-selectbox .addtocart .right {
@@ -118,5 +118,5 @@
 .catalog-product-view .bufu_tickets-selectbox .addtocart p span.fixed {
     display:block;
     float:left;
-    width:70px;
+    width:60px;
 }
