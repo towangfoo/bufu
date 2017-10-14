@@ -20,6 +20,17 @@ class Bufu_Tickets_Helper_Admin extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Checks if a product has ticke options.
+     * @param Mage_Sales_Model_Order_Item $item
+     * @return array|null
+     */
+    public function getTicketOptions(Mage_Sales_Model_Order_Item $item)
+    {
+        $options = $item->getProductOptions();
+        return isset($options['info_buyRequest']['bufu_tickets']) ? $options['info_buyRequest']['bufu_tickets'] : null;
+    }
+
+    /**
      * Get date from a product which hasTicketOptions() === true !!!
      *
      * @return string $date

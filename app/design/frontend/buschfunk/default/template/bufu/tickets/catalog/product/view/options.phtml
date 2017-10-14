@@ -23,7 +23,11 @@ foreach($_events as $event) {
     if ($cnt % 2 == 0) $liItem .= ' even';
     $liItem .= '" id="bufu_tickets-selectbox-event-'. $event->getId() .'"';
     $spa = ($event->getIsSpecialPriceAvailable() === true) ? "true" : "false";
-    $jsCall = "bufu_tickets_showEvent(". $event->getId() .", ". $event->getIsAvailable() .", '". $event->getPriceNormal($_product) ."', '". $event->getPriceSpecial($_product) ."', ". $spa .")";
+    $qtyTracking = "null";
+    if ($helper->isQuantityTrackingEnabled() && $event->getIsTrackQty()) {
+        $qtyTracking = "[{$event->getQtyNormal()}, {$event->getQtySpecial()}]";
+    }
+    $jsCall = "bufu_tickets_showEvent(". $event->getId() .", ". $event->getIsAvailable() .", '". $event->getPriceNormal($_product) ."', '". $event->getPriceSpecial($_product) ."', ". $spa .", {$qtyTracking})";
     if ($cnt == 0) {
         // add semicolon at the end to js call ...
         $firstItemCall = $jsCall . ";";

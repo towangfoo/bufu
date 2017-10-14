@@ -42,7 +42,7 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Catalog_Model_Product $product
      *
-     * @return Bufu_Tickets_Model_Mysql4_Cvent_Collection
+     * @return Bufu_Tickets_Model_Mysql4_Event_Collection
      */
     public function getEvents(Mage_Catalog_Model_Product $product)
     {
@@ -137,26 +137,33 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
     public function saveEvents(Mage_Catalog_Model_Product $product, $events)
     {
         foreach ($events as $item) {
+            $data = $this->_cleanData($item);
+
             // new event model
+            /* @var $event Bufu_Tickets_Model_Event */
             $event = Mage::getModel('bufu_tickets/event');
 
-            if (isset($item['event_id']) && isset($item['delete_event']) && $item['delete_event'] == "1") {
+            if (isset($data['event_id']) && isset($data['delete_event']) && $data['delete_event'] == "1") {
                 // delete event
-                $event->load($item['event_id'])->delete();
+                $event->load($data['event_id'])->delete();
             }
             else {
                 // create or update event
-                if (isset($item['delete_event'])) unset($item['delete_event']);
-                if (empty($item['event_id'])) unset($item['event_id']);
-                $event->setData($item);
-                if (isset($item['special_price_available'])) {
+                if (isset($data['delete_event'])) unset($data['delete_event']);
+                if (empty($data['event_id'])) unset($data['event_id']);
+                $event->setData($data);
+                if (isset($data['special_price_available'])) {
                     $event->setIsSpecialPriceAvailable(1);
                 } else {
                     $event->setIsSpecialPriceAvailable(0);
                 }
                 // store UTC date!
-                $event->setEventDate($this->getUtcTime($event['event_date']));
+                $event->setEventDate($this->getUtcTime($data['event_date']));
                 $event->setProductId($product->getId());
+
+                // when tracking quantities, update status
+                $event->refreshQuantityTracking();
+
                 $event->save();
             }
         }
@@ -220,5 +227,73 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $event = Mage::getModel('bufu_tickets/event')->load($product->getProduct()->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID)->getValue());
         return $event->getEventTitle();
+    }
+
+    /**
+     * Get setting whether ticket quantity tracking is enabled
+     * @return boolean
+     */
+    public function isQuantityTrackingEnabled()
+    {
+        return (bool) Mage::getStoreConfig('bufu_tickets/settings/track_qty');
+    }
+
+    /**
+     * Get threshold quantity.
+     * @param integer $status
+     * @return integer
+     */
+    public function getQuantityThreshold($status)
+    {
+        switch ($status) {
+            case self::STATUS_SOMELEFT:
+              return (int) Mage::getStoreConfig('bufu_tickets/settings/threshold_someleft');
+            case self::STATUS_SOLDOUT:
+              return (int) Mage::getStoreConfig('bufu_tickets/settings/threshold_soldout');
+            default:
+              return null;
+        }
+    }
+
+    /**
+     * Clean event data for correct saving.
+     * @param array $data
+     * @param array $cleanWhat
+     * @return array
+     */
+    protected function _cleanData($data, $cleanWhat = array('qty'))
+    {
+        $result = $data;
+
+        if (in_array('qty', $cleanWhat)) {
+            $result = $this->_cleanQty($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Clean request data in order to correctly store quantity tracking information
+     * @param array $row
+     * @return array
+     */
+    protected function _cleanQty($row)
+    {
+        $result = $row;
+        if (
+            (array_key_exists('qty_normal', $result) && strlen($result['qty_normal']) > 0)
+            || (array_key_exists('qty_special', $result) && strlen($result['qty_special']) > 0)
+        ) {
+            $result['is_track_qty']   = 1;
+            $result['qty_normal']  = (array_key_exists('qty_normal', $result))  ? (int) $result['qty_normal']  : 0;
+            $result['qty_special'] = (array_key_exists('qty_special', $result)) ? (int) $result['qty_special'] : 0;
+        }
+        else {
+            $result['is_track_qty']   = 0;
+            $result['qty_normal']  = null;
+            $result['qty_special'] = null;
+        }
+
+        return $result;
     }
 }

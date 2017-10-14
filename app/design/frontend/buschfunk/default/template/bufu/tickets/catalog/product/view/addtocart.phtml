@@ -9,7 +9,7 @@
         <input type="hidden" name="bufu_tickets[event_id]" id="bufu_tickets-eventId" value="" />
         <input type="hidden" name="bufu_tickets[product_id]" value="<?php echo $this->getProduct()->getId() ?>" />
         <p>Tickets in den Warenkorb:</p>
-        <p><span class="fixed">Normale</span> <input type="text" name="bufu_tickets[nr_normal]" id="bufu_tickets-normal" onfocus="this.value = ''" onkeyup="bufu_tickets_updatePriceLabels()" onblur="bufu_tickets_updatePriceLabels()" value="0" /> x <span id="bufu_tickets-normalPricePerTicket">0,00</span> €</p>
+        <p id="bufu_tickets_normalPriceNum"><span class="fixed">Normale</span> <input type="text" name="bufu_tickets[nr_normal]" id="bufu_tickets-normal" onfocus="this.value = ''" onkeyup="bufu_tickets_updatePriceLabels()" onblur="bufu_tickets_updatePriceLabels()" value="0" /> x <span id="bufu_tickets-normalPricePerTicket">0,00</span> €</p>
         <p id="bufu_tickets_specialPriceNum"><span class="fixed">Ermäßigte</span> <input type="text" name="bufu_tickets[nr_special]" id="bufu_tickets-special" onfocus="this.value = ''" onkeyup="bufu_tickets_updatePriceLabels()" onblur="bufu_tickets_updatePriceLabels()" value="0" /> x <span id="bufu_tickets-specialPricePerTicket">0,00</span> €</p>
         <p id="bufu_tickets-submitBtn" class="submit-disabled">
             <span class="fixed">&nbsp;</span>

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Bufu_Tickets>
-            <version>0.2.1</version>
+            <version>0.3.0</version>
         </Bufu_Tickets>
     </modules>
     <global>
@@ -84,6 +84,25 @@
                 </observers>
             </catalog_product_prepare_save>
         </events>
+        <acl>
+          <resources>
+            <admin>
+              <children>
+                <system>
+                  <children>
+                    <config>
+                      <children>
+                        <bufu_tickets>
+                          <title>Bufu_Tickets Configuration</title>
+                        </bufu_tickets>
+                      </children>
+                    </config>
+                  </children>
+                </system>
+              </children>
+            </admin>
+          </resources>
+        </acl>
     </adminhtml>
     <frontend>
         <layout>
@@ -111,5 +130,25 @@
                 </args>
             </bufu_tickets>
         </routers>
+        <events>
+            <sales_order_place_after>
+                <observers>
+                    <bufu_tickets_track_qty>
+                        <type>singleton</type>
+                        <class>Bufu_Tickets_Model_Observer</class>
+                        <method>sales_order_place_after</method>
+                    </bufu_tickets_track_qty>
+                </observers>
+            </sales_order_place_after>
+        </events>
     </frontend>
+    <default>
+    		<bufu_tickets>
+      			<settings>
+                <track_qty>1</track_qty>
+        				<threshold_someleft>10</threshold_someleft>
+                <threshold_soldout>0</threshold_soldout>
+      			</settings>
+    		</bufu_tickets>
+  	</default>
 </config>

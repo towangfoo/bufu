@@ -7,7 +7,7 @@ var bufu_custom_options_price_add = 0;
 
 var bufu_productId = 0;
 
-function bufu_tickets_showEvent(id, avail, np, sp, spa)
+function bufu_tickets_showEvent(id, avail, np, sp, spa, qtyTracking)
 {
 	if (id != bufu_lastVisible) {
 		eventItem = $('bufu_tickets-selectbox-event-'+id);
@@ -34,6 +34,20 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa)
 		bufu_priceSpecial = parseFloat(sp.replace(",", "."));
 		$('bufu_tickets-normalPricePerTicket').innerHTML = bufu_helper_number_format(np, 2, ',', ".");
 		$('bufu_tickets-specialPricePerTicket').innerHTML = bufu_helper_number_format(sp, 2, ',', ".");
+
+		// set quantity limits
+		$('bufu_tickets-normal').removeAttribute("disabled");
+		$('bufu_tickets-special').removeAttribute("disabled");
+		if (qtyTracking !== null) {
+				$('bufu_tickets-normal').setAttribute("max", qtyTracking[0]);
+				$('bufu_tickets-special').setAttribute("max", qtyTracking[1]);
+				if (qtyTracking[0] === 0) {
+					$('bufu_tickets-normal').setAttribute("disabled", "disabled");
+				}
+				if (qtyTracking[1] === 0) {
+					$('bufu_tickets-special').setAttribute("disabled", "disabled");
+				}
+		}
 
 		// reset amounts of selected cards
 		$('bufu_tickets-normal').value = "";
@@ -72,6 +86,18 @@ function bufu_tickets_updatePriceLabels(reset)
 	if (isNaN(s) || reset) {
 		s = 0;
 	}
+
+	if ($('bufu_tickets-normal').hasAttribute("max")) {
+			maxN = parseInt($('bufu_tickets-normal').getAttribute("max"), 10);
+			n = Math.min(n, maxN);
+			$('bufu_tickets-normal').value = (n > 0) ? n : "";
+	}
+	if ($('bufu_tickets-special').hasAttribute("max")) {
+			maxS = parseInt($('bufu_tickets-special').getAttribute("max"), 10);
+			s = Math.min(s, maxS);
+			$('bufu_tickets-special').value = (s > 0) ? s : "";
+	}
+
 	finalPrice = n*(bufu_priceNormal+bufu_custom_options_price_add) + s*(bufu_priceSpecial+bufu_custom_options_price_add);
 	if (n > 0 || s > 0) {
 		bufu_canSubmit = true;

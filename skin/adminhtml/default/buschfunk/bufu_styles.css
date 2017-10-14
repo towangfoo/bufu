@@ -45,3 +45,10 @@
     margin-top:5px;
     height:60px;
 }
+
+#product_info_tabs_bufu_tickets_events_content table td.price_qty input[type=text] {
+    width:60%;
+}
+#product_info_tabs_bufu_tickets_events_content table td.price_qty label {
+  display: inline;
+}
