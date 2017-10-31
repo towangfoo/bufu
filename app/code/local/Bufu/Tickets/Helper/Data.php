@@ -31,11 +31,12 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Status for tickets
      */
-     const STATUS_AVAILABLE = 1;
-     const STATUS_SOMELEFT = 2;
-     const STATUS_ABENDKASSE = 3;
-     const STATUS_REQUEST = 4;
-     const STATUS_SOLDOUT = 0;
+    const STATUS_AVAILABLE = 1;
+    const STATUS_SOMELEFT = 2;
+    const STATUS_ABENDKASSE = 3;
+    const STATUS_REQUEST = 4;
+    const STATUS_SOLDOUT = 0;
+    const STATUS_SELLING_SOON = 5;
 
     /**
      * Get events attached to a product

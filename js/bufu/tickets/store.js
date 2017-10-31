@@ -54,11 +54,11 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa, qtyTracking)
 		bufu_tickets_updatePriceLabels(true);
 		bufu_canSubmit = false;
 
-		// show / hide for abendkasse and soldout statuses
-		if (avail == 0 || avail == 3 || avail == 4) {
-			Element.addClassName($('bufu_tickets-addToCart'), 'hidden');
+		// show / hide depending on status
+		if (avail === 1 || avail === 2) {
+            Element.removeClassName($('bufu_tickets-addToCart'), 'hidden');
 		} else {
-			Element.removeClassName($('bufu_tickets-addToCart'), 'hidden');
+            Element.addClassName($('bufu_tickets-addToCart'), 'hidden');
 		}
 
 		$('bufu_tickets-eventId').value = id;
@@ -86,16 +86,15 @@ function bufu_tickets_updatePriceLabels(reset)
 	}
 
 	if ($('bufu_tickets-normal').hasAttribute("max")) {
-			maxN = parseInt($('bufu_tickets-normal').getAttribute("max"), 10);
-			n = Math.min(n, maxN);
-			$('bufu_tickets-normal').value = (n > 0) ? n : "";
+        maxN = parseInt($('bufu_tickets-normal').getAttribute("max"), 10);
+        n = Math.min(n, maxN);
+        $('bufu_tickets-normal').value = (n > 0) ? n : "";
 
-			maxS = maxN - n;
-			s = Math.min(s, maxS);
-			$('bufu_tickets-special').value = (s > 0) ? s : "";
+        maxS = maxN - n;
+        s = Math.min(s, maxS);
+        $('bufu_tickets-special').value = (s > 0) ? s : "";
 	}
 
-	finalPrice = n*(bufu_priceNormal+bufu_custom_options_price_add) + s*(bufu_priceSpecial+bufu_custom_options_price_add);
 	if (n > 0 || s > 0) {
 		bufu_canSubmit = true;
 		$('bufu_tickets-submitBtn').removeClassName('submit-disabled');
@@ -104,12 +103,11 @@ function bufu_tickets_updatePriceLabels(reset)
 		$('bufu_tickets-submitBtn').addClassName('submit-disabled');
 		bufu_canSubmit = false;
 	}
-	priceStr = bufu_helper_number_format(finalPrice, 2, ',', ".");
+
+    var finalPrice = n*(bufu_priceNormal+bufu_custom_options_price_add) + s*(bufu_priceSpecial+bufu_custom_options_price_add);
+	var priceStr = bufu_helper_number_format(finalPrice, 2, ',', ".");
 	$('bufu_tickets-currentTotalPrice').innerHTML = priceStr;
 	$('bufu_tickets-totalPriceBox').show();
-
-	// update mage price label as well
-	// $('product-price-'+bufu_productId).innerHTML = '<span class="price">'+priceStr+' €</span>';
 }
 
 function bufu_tickets_cartFormSubmit()
@@ -193,7 +191,7 @@ function bufu_custom_options_price_update() {
 	try {
 		bufu_custom_options_price_add = price;
 		bufu_tickets_updatePriceLabels();
-	}catch (e) {
-
+	} catch (e) {
+//        console.log(e);
     }
 }
