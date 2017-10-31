@@ -128,6 +128,12 @@
     </div>
 
     <div class="product-collateral">
+        <?php if($_product->getBufuBandcampAlbumid()) : ?>
+            <iframe style="margin: 5px 0; border: 0; width: 661px; height: 300px;" src="https://bandcamp.com/EmbeddedPlayer/album=<?php echo $_product->getBufuBandcampAlbumid() ?>/size=large/bgcol=ffffff/linkcol=e99708/artwork=small/transparent=true/" seamless>
+                <?php echo $_helper->productAttribute($_product, $this->htmlEscape($_product->getName()), 'name') ?> bei Bandcamp anhören
+            </iframe>
+        <?php endif; ?>
+
         <?php if ($_description = $this->getChildHtml('description')):?>
             <div class="collateral-box">
                 <div class="head">
