@@ -26,7 +26,7 @@ if (isset($_totals['shipping'])) {
 }
 
 // tax information
-$tax_parts = $_totals['tax']->getFullInfo();
+$tax_parts = (array_key_exists('tax', $_totals)) ? $_totals['tax']->getFullInfo() : array();
 
 ?>
 <table cellspacing="0" id="shopping-cart-totals-table">
