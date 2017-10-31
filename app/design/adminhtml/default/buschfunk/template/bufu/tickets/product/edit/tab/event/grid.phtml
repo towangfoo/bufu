@@ -25,8 +25,9 @@
                 <col width="15%" />
                 <col width="20%" />
                 <col width="30%" />
-                <col width="10%" />
-                <col width="10%" />
+                <col width="6%" />
+                <col width="7%" />
+                <col width="7%" />
                 <col width="1" />
                 <col width="1" />
 
@@ -36,9 +37,10 @@
                 <th><span class="nobr"><?php echo $this->__('Date')?> <span class="required">*</span></span></th>
                 <th><?php echo $this->__('Location')?> <span class="required">*</span></th>
                 <th><?php echo $this->__('Title and Description')?> <span class="required">*</span></th>
-                <th><?php echo $this->__('Normal price')?> <span class="required">*</span> / <?php echo $this->__('Qty available')?></th>
-                <th><?php echo $this->__('Special Price')?> <span class="required">*</span> / <?php echo $this->__('Qty available')?></th>
-                <th><span class="nobr"><?php echo $this->__('Availability')?></span></th>
+                <th><?php echo $this->__('Qty available')?></th>
+                <th><?php echo $this->__('Normal price')?> <span class="required">*</span></th>
+                <th><?php echo $this->__('Special Price')?></th>
+                <th><span class="nobr"><?php echo $this->__('Availability')?> <span class="required">*</span></span></th>
                 <th></th>
             </tr>
             </thead>
@@ -67,7 +69,7 @@
         translations.soldOut = '<?php echo $this->__('Sold out')?>';
         translations.deleteItem = '<?php echo $this->__('Delete')?>';
         translations.useSpecialPrice = '<?php echo $this->__('Available')?>';
-        translations.Qty = '<?php echo $this->__('Qty.')?>';
+        translations.Qty = '<?php echo $this->__('Qty. total')?>';
 
     // main container is bufu_tickets_events_body
     ticketEvents = new BufuTicketsEvents('bufu_tickets_events_body', translations, <?php echo $this->getEventItemDefaults()->toJson() ?>);

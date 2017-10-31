@@ -60,7 +60,6 @@ class Bufu_Tickets_Block_Adminhtml_Catalog_Product_Edit_Tab_Event_Grid extends M
                 'price_normal' => $event->getPriceNormal(),
                 'qty_normal' => $event->getQtyNormal(),
                 'price_special' => $event->getPriceSpecial(),
-                'qty_special' => $event->getQtySpecial(),
                 'availability' => (int) $event->getIsAvailable(),
                 'specialPriceAvailable' => $event->getIsSpecialPriceAvailable(),
                 'is_track_qty' => (bool) $event->getIsTrackQty(),
@@ -84,7 +83,6 @@ class Bufu_Tickets_Block_Adminhtml_Catalog_Product_Edit_Tab_Event_Grid extends M
             'priceNormal'  => '',
             'priceSpecial' => '',
             'qtyNormal'    => '',
-            'qtySpecial'   => '',
         ));
     }
 

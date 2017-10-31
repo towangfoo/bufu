@@ -8,13 +8,11 @@
  * @method integer getIsAvailable()
  * @method boolean getIsTrackQty()
  * @method integer getQtyNormal()
- * @method integer getQtySpecial()
  * @method Bufu_Tickets_Model_Event setEventDate(string $date)
  * @method Bufu_Tickets_Model_Event setIsSpecialPriceAvailable(integer $avail)
  * @method Bufu_Tickets_Model_Event setIsAvailable(integer $status)
  * @method Bufu_Tickets_Model_Event setProductId(integer $product)
  * @method Bufu_Tickets_Model_Event setQtyNormal(integer $qty)
- * @method Bufu_Tickets_Model_Event setQtySpecial(integer $qty)
  */
 class Bufu_Tickets_Model_Event extends Mage_Core_Model_Abstract
 {
@@ -124,23 +122,12 @@ class Bufu_Tickets_Model_Event extends Mage_Core_Model_Abstract
             return;
         }
 
-        if ($this->getIsSpecialPriceAvailable()) {
-            $qtySpecial = (int) $this->getQtySpecial();
 
-            if ($qtyNormal <= $thresholdSomeLeft && $qtySpecial <= $thresholdSomeLeft) {
-                $status = Bufu_Tickets_Helper_Data::STATUS_SOMELEFT;
-            }
-            if ($qtyNormal <= $thresholdSoldout && $qtySpecial <= $thresholdSoldout) {
-                $status = Bufu_Tickets_Helper_Data::STATUS_SOLDOUT;
-            }
+        if ($qtyNormal <= $thresholdSomeLeft) {
+            $status = Bufu_Tickets_Helper_Data::STATUS_SOMELEFT;
         }
-        else {
-            if ($qtyNormal <= $thresholdSomeLeft) {
-                $status = Bufu_Tickets_Helper_Data::STATUS_SOMELEFT;
-            }
-            if ($qtyNormal <= $thresholdSoldout) {
-                $status = Bufu_Tickets_Helper_Data::STATUS_SOLDOUT;
-            }
+        if ($qtyNormal <= $thresholdSoldout) {
+            $status = Bufu_Tickets_Helper_Data::STATUS_SOLDOUT;
         }
 
         $this->setIsAvailable($status);

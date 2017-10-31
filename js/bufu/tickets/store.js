@@ -40,12 +40,9 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa, qtyTracking)
 		$('bufu_tickets-special').removeAttribute("disabled");
 		if (qtyTracking !== null) {
 				$('bufu_tickets-normal').setAttribute("max", qtyTracking[0]);
-				$('bufu_tickets-special').setAttribute("max", qtyTracking[1]);
 				if (qtyTracking[0] === 0) {
 					$('bufu_tickets-normal').setAttribute("disabled", "disabled");
-				}
-				if (qtyTracking[1] === 0) {
-					$('bufu_tickets-special').setAttribute("disabled", "disabled");
+                    $('bufu_tickets-special').setAttribute("disabled", "disabled");
 				}
 		}
 
@@ -77,6 +74,7 @@ function bufu_tickets_setProductId(id)
 
 function bufu_tickets_updatePriceLabels(reset)
 {
+    var n, s, maxN, maxS;
 	n = parseInt($('bufu_tickets-normal').value, 10);
 	s = parseInt($('bufu_tickets-special').value, 10);
 
@@ -91,9 +89,8 @@ function bufu_tickets_updatePriceLabels(reset)
 			maxN = parseInt($('bufu_tickets-normal').getAttribute("max"), 10);
 			n = Math.min(n, maxN);
 			$('bufu_tickets-normal').value = (n > 0) ? n : "";
-	}
-	if ($('bufu_tickets-special').hasAttribute("max")) {
-			maxS = parseInt($('bufu_tickets-special').getAttribute("max"), 10);
+
+			maxS = maxN - n;
 			s = Math.min(s, maxS);
 			$('bufu_tickets-special').value = (s > 0) ? s : "";
 	}

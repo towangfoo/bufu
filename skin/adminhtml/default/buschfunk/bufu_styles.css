@@ -33,7 +33,7 @@
     float:right;
 }
 
-#bufuTicketsEvents p.notice.not-available {
+#product_info_tabs_bufu_tickets_events_content p.notice.not-available {
     background: #FFF9E9 url("images/error_msg_icon.gif") 10px 8px no-repeat;
     border: 1px solid #EEE2BE;
     color: #444444;
@@ -41,14 +41,8 @@
     min-height: 23px;
     padding: 8px 8px 2px 32px;
 }
-#bufuTicketsEvents .form-list textarea {
+#product_info_tabs_bufu_tickets_events_content table textarea {
     margin-top:5px;
-    height:60px;
-}
-
-#product_info_tabs_bufu_tickets_events_content table td.price_qty input[type=text] {
-    width:60%;
-}
-#product_info_tabs_bufu_tickets_events_content table td.price_qty label {
-  display: inline;
+    height:80px;
+    width:86%;
 }

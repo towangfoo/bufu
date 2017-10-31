@@ -16,19 +16,19 @@ BufuTicketsEvents.prototype = {
         '</td>'+
         '<td>'+
             '<input type="text" class="required-entry input-text" name="bufu_tickets[events][{{id}}][event_title]" value="{{title}}" /><br />'+
-            '<textarea name="bufu_tickets[events][{{id}}][event_desc]" class="input-text" rows="6" cols="28" wrap="off">{{desc}}</textarea>'+
+            '<textarea name="bufu_tickets[events][{{id}}][event_desc]" class="input-text" wrap="off">{{desc}}</textarea>'+
         '</td>'+
-        '<td class="price_qty">'+
-            '<p><input type="text" class="required-entry validate-zero-or-greater input-text event-price_normal" name="bufu_tickets[events][{{id}}][price_normal]" value="{{price_normal}}" />'+
-            ' <label>[{T{currency}}]</label></p>'+
+        '<td>'+
             '<p><input type="text" class="validate-zero-or-greater input-text event-qty_normal" name="bufu_tickets[events][{{id}}][qty_normal]" value="{{qty_normal}}" />'+
             ' <label>[{T{Qty}}]</label></p>'+
         '</td>'+
         '<td class="price_qty">'+
+            '<p><input type="text" class="required-entry validate-zero-or-greater input-text event-price_normal" name="bufu_tickets[events][{{id}}][price_normal]" value="{{price_normal}}" />'+
+            ' <label>[{T{currency}}]</label></p>'+
+        '</td>'+
+        '<td class="price_qty">'+
             '<p><input type="text" class="required-entry validate-zero-or-greater input-text event-price_special" name="bufu_tickets[events][{{id}}][price_special]" value="{{price_special}}" />'+
             ' <label>[{T{currency}}]</label></p>'+
-            '<p><input type="text" class="validate-zero-or-greater input-text event-qty_special" name="bufu_tickets[events][{{id}}][qty_special]" value="{{qty_special}}" />'+
-            ' <label>[{T{Qty}}]</label></p>'+
             '<p><input type="checkbox" id="bufu_tickets_events_{{id}}_specialPriceAvailable" name="bufu_tickets[events][{{id}}][special_price_available]" value="1" />'+
             ' <label for="bufu_tickets_events_{{id}}_specialPriceAvailable">{T{useSpecialPrice}}</label></p>'+
         '</td>'+
@@ -76,7 +76,6 @@ BufuTicketsEvents.prototype = {
             data.price_normal = this.eventDefaults.priceNormal;
             data.qty_normal = this.eventDefaults.qtyNormal;
             data.price_special = this.eventDefaults.priceSpecial;
-            data.qty_special = this.eventDefaults.qtySpecial;
             data.availability = this.eventDefaults.availability;
             data.specialPriceAvailable = true;
         }

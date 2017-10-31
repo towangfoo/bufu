@@ -64,7 +64,6 @@ class Bufu_Tickets_Model_Observer
             // get product options
             $options = $adminHelper->getTicketOptions($item);
             $eventId = (int) $options[Bufu_Tickets_Helper_Data::OPTION_EVENT_ID];
-            $type    = $options[Bufu_Tickets_Helper_Data::OPTION_TYPE];
             $qty     = $item->getQtyOrdered();
 
             // load event
@@ -75,12 +74,8 @@ class Bufu_Tickets_Model_Observer
             }
 
             // update inventory / quantity tracking
-            if ($type === Bufu_Tickets_Helper_Data::TICKET_TYPE_NORMAL) {
-                $event->setQtyNormal($event->getQtyNormal() - $qty);
-            }
-            else if ($type === Bufu_Tickets_Helper_Data::TICKET_TYPE_SPECIAL) {
-                $event->setQtySpecial($event->getQtySpecial() - $qty);
-            }
+            // both ticket types are tracked on the same quantity quota
+            $event->setQtyNormal($event->getQtyNormal() - $qty);
             $event->refreshQuantityTracking();
             $event->save();
         }

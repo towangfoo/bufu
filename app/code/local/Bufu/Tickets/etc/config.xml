@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Bufu_Tickets>
-            <version>0.3.0</version>
+            <version>0.3.1</version>
         </Bufu_Tickets>
     </modules>
     <global>
@@ -143,12 +143,12 @@
         </events>
     </frontend>
     <default>
-    		<bufu_tickets>
-      			<settings>
+        <bufu_tickets>
+            <settings>
                 <track_qty>1</track_qty>
-        				<threshold_someleft>10</threshold_someleft>
+                <threshold_someleft>10</threshold_someleft>
                 <threshold_soldout>0</threshold_soldout>
-      			</settings>
-    		</bufu_tickets>
-  	</default>
+            </settings>
+        </bufu_tickets>
+    </default>
 </config>
