@@ -37,6 +37,7 @@ function bufu_tickets_showEvent(id, avail, np, sp, spa, qtyTracking)
 
 		// set quantity limits
 		$('bufu_tickets-normal').removeAttribute("disabled");
+		$('bufu_tickets-normal').removeAttribute("max");
 		$('bufu_tickets-special').removeAttribute("disabled");
 		if (qtyTracking !== null) {
 				$('bufu_tickets-normal').setAttribute("max", qtyTracking[0]);
