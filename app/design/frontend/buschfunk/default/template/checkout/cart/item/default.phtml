@@ -152,7 +152,17 @@
     </td>
     <?php endif; ?>
     <td class="a-center">
-        <input name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="4" class="input-text qty" maxlength="8" />
+        <?php
+            $checkTicketQty = '';
+            $ticketHelper = Mage::helper('bufu_tickets');
+            if ($ticketHelper->hasTicketOptions($_item) && $ticketHelper->isQuantityTrackingEnabled()) {
+                $event = $ticketHelper->getEventFromTicketProduct($_item);
+                if ($event->getIsTrackQty()) {
+                    $checkTicketQty = 'onkeyup="bufu_tickets_cart_checkQty(this, '. $event->getQtyNormal() .')" ';
+                }
+            }
+        ?>
+        <input name="cart[<?php echo $_item->getId() ?>][qty]" value="<?php echo $this->getQty() ?>" size="4" class="input-text qty" maxlength="8" <?= $checkTicketQty ?>/>
     </td>
     <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
     <td class="a-right">

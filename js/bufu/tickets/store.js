@@ -105,7 +105,7 @@ function bufu_tickets_updatePriceLabels(reset)
 		bufu_canSubmit = false;
 	}
 
-    var finalPrice = n*(bufu_priceNormal+bufu_custom_options_price_add) + s*(bufu_priceSpecial+bufu_custom_options_price_add);
+  var finalPrice = n*(bufu_priceNormal+bufu_custom_options_price_add) + s*(bufu_priceSpecial+bufu_custom_options_price_add);
 	var priceStr = bufu_helper_number_format(finalPrice, 2, ',', ".");
 	$('bufu_tickets-currentTotalPrice').innerHTML = priceStr;
 	$('bufu_tickets-totalPriceBox').show();
