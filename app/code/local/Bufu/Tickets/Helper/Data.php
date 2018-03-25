@@ -37,6 +37,7 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
     const STATUS_REQUEST = 4;
     const STATUS_SOLDOUT = 0;
     const STATUS_SELLING_SOON = 5;
+    const STATUS_NOT_AVAILABLE = 6;
 
     /**
      * Get events attached to a product

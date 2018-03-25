@@ -74,6 +74,9 @@ foreach($_events as $event) {
         case Bufu_Tickets_Helper_Data::STATUS_SELLING_SOON:
             $eventItem .= '<p class="status yellow">VVK startet in Kürze</p>';
             break;
+        case Bufu_Tickets_Helper_Data::STATUS_NOT_AVAILABLE:
+            $eventItem .= '<p class="status red">Karten z.Z. nicht verfügbar</p>';
+            break;
         case Bufu_Tickets_Helper_Data::STATUS_AVAILABLE:
             $eventItem .= '<p class="status green">Ausreichend Karten verfügbar</p>';
             break;

@@ -34,6 +34,7 @@ BufuTicketsEvents.prototype = {
         '</td>'+
         '<td>'+
             '<select class="select" name="bufu_tickets[events][{{id}}][is_available]" id="bufu_tickets_events_{{id}}_is_available">'+
+                '<option value="6">{T{currentlyNotAvailable}}</option>'+
                 '<option value="5">{T{sellingSoon}}</option>'+
                 '<option value="1">{T{available}}</option>'+
                 '<option value="2">{T{someLeft}}</option>'+
