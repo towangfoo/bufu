@@ -131,6 +131,15 @@
             </bufu_tickets>
         </routers>
         <events>
+            <checkout_cart_update_items_after>
+                <observers>
+                    <bufu_tickets_track_qty>
+                        <type>singleton</type>
+                        <class>Bufu_Tickets_Model_Observer</class>
+                        <method>checkout_cart_update_items_after</method>
+                    </bufu_tickets_track_qty>
+                </observers>
+            </checkout_cart_update_items_after>
             <sales_order_place_after>
                 <observers>
                     <bufu_tickets_track_qty>

@@ -82,4 +82,58 @@ class Bufu_Tickets_Model_Observer
 
         return $this;
     }
+
+    /**
+     * Observer for event 'checkout_cart_update_items_after'.
+     * Called before items in the cart are updated.
+     * Check for tracking quantities being forced when updating quantities in the cart.
+     *
+     * Frontend observer.
+     *
+     * @param  Varien_Event_Observer $observer
+     * @return Bufu_Tickets_Model_Observer
+     */
+    public function checkout_cart_update_items_after(Varien_Event_Observer $observer)
+    {
+        $helper = Mage::helper("bufu_tickets");
+        if (!$helper->isQuantityTrackingEnabled()) {
+          return $this;
+        }
+
+        /* @var $cart Mage_Checkout_Model_Cart */
+        $cart = $observer->getEvent()->getCart();
+
+        /* @var $info array */
+        $data = $observer->getEvent()->getInfo();
+
+        $hasCorrectedQty = false;
+        foreach ($data as $itemId => $params) {
+            $quoteItem = $cart->getQuote()->getItemById($itemId);
+            if (!$quoteItem) {
+                Mage::throwException($this->__('Quote item is not found.'));
+            }
+
+            if (!$quoteItem instanceof Bufu_Tickets_Model_Quote_Item) {
+                continue;
+            }
+
+            $eventData = $helper->getEventFromTicketProduct($quoteItem);
+            if (!$eventData instanceof Bufu_Tickets_Model_Event) {
+                continue;
+            }
+
+            if ($eventData->getIsTrackQty()) {
+                $maxQty = intval($eventData->getQtyNormal());
+                $qty    = intval($params['qty']);
+                if ($qty > $maxQty) {
+                    $quoteItem->setQty($maxQty)->save();
+                    $hasCorrectedQty = true;
+                }
+            }
+        }
+
+        if ($hasCorrectedQty) {
+            $cart->save();
+        }
+    }
 }
