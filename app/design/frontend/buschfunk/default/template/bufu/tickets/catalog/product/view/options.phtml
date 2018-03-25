@@ -13,7 +13,29 @@ $firstItemCall = "";
 $liItems = array();
 $detailItems = array();
 $cnt = 0;
+$lastDate = [null, null, null];
+$monthNames = [
+  '01' => 'Januar',
+  '02' => 'Februar',
+  '03' => 'März',
+  '04' => 'April',
+  '05' => 'Mai',
+  '06' => 'Juni',
+  '07' => 'Juli',
+  '08' => 'August',
+  '09' => 'September',
+  '10' => 'Oktober',
+  '11' => 'November',
+  '12' => 'Dezember',
+];
 foreach($_events as $event) {
+    /* @var $event Bufu_Tickets_Model_Event */
+    $thisDate = explode('.', $event->getEventLocalDate());
+    if ($thisDate[1] != $lastDate[1] || $thisDate[2] != $lastDate[2]) {
+      $liItems[] = '<li class="month-divider">'. $monthNames[$thisDate[1]] .' '. $thisDate[2] .'</li>';
+    }
+    $lastDate = $thisDate;
+
     // update status to account for upcoming dates that can only be purchased at the abendkasse
     $event->updateUpcomingStatus();
 

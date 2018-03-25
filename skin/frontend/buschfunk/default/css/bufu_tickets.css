@@ -24,6 +24,13 @@
     white-space:nowrap;
     font-size:0.9em;
 }
+.catalog-product-view .bufu_tickets-selectbox .dates li.month-divider {
+    cursor: default;
+    background: #F0EDE8 url('../images/defaults/bg_base_head_grey.jpg') left top repeat-x;
+    border-color: transparent;
+    font-weight: bold;
+}
+
 .catalog-product-view .bufu_tickets-selectbox .dates li a {
     text-decoration:none;
     color:#222;
