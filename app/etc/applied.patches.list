@@ -63,3 +63,61 @@ patching file js/mage/adminhtml/backup.js
 patching file lib/Varien/Filter/FormElementName.php
 
 
+-e 2018-04-12 10:44:26 UTC | SUPEE-10570_CE_v1.9.3.7 | CE_1.9.3.7 | v1 | c5eb35aabb6e391c10bd3435ee30fa58faa2fb93 | Tue Feb 27 22:18:16 2018 +0200 | ce-1.9.3.7-dev
+patching file app/Mage.php
+patching file app/code/core/Mage/Admin/Helper/Block.php
+patching file app/code/core/Mage/Admin/Model/Block.php
+patching file app/code/core/Mage/Admin/Model/Resource/Block.php
+patching file app/code/core/Mage/Admin/Model/User.php
+patching file app/code/core/Mage/Adminhtml/Block/Catalog/Product/Grid.php
+patching file app/code/core/Mage/Adminhtml/Block/Newsletter/Template/Grid/Renderer/Sender.php
+patching file app/code/core/Mage/Adminhtml/Block/Sales/Order/Grid.php
+patching file app/code/core/Mage/Adminhtml/Block/Sales/Order/View/Info.php
+patching file app/code/core/Mage/Adminhtml/Block/System/Store/Edit/Form.php
+patching file app/code/core/Mage/Adminhtml/Block/Tag/Assigned/Grid.php
+patching file app/code/core/Mage/Adminhtml/Block/Widget/Grid/Column/Renderer/Store.php
+patching file app/code/core/Mage/Adminhtml/Block/Widget/Tabs.php
+patching file app/code/core/Mage/Adminhtml/Model/Config/Data.php
+patching file app/code/core/Mage/Adminhtml/Model/System/Store.php
+patching file app/code/core/Mage/Adminhtml/controllers/Catalog/ProductController.php
+patching file app/code/core/Mage/Adminhtml/controllers/CustomerController.php
+patching file app/code/core/Mage/Adminhtml/controllers/System/BackupController.php
+patching file app/code/core/Mage/Core/Model/Session/Abstract/Varien.php
+patching file app/code/core/Mage/Core/Model/Variable.php
+patching file app/code/core/Mage/Customer/Helper/Data.php
+patching file app/code/core/Mage/Customer/Model/Resource/Customer.php
+patching file app/code/core/Mage/Customer/controllers/AccountController.php
+patching file app/code/core/Mage/Customer/etc/config.xml
+patching file app/code/core/Mage/Customer/sql/customer_setup/upgrade-1.6.2.0.5.1.1-1.6.2.0.5.1.2.php
+patching file app/code/core/Mage/Downloadable/etc/config.xml
+patching file app/code/core/Mage/Downloadable/etc/system.xml
+patching file app/code/core/Mage/Downloadable/sql/downloadable_setup/upgrade-1.6.0.0.2.1.1-1.6.0.0.2.1.2.php
+patching file app/code/core/Mage/ImportExport/Model/Import.php
+patching file app/code/core/Mage/ImportExport/Model/Import/Entity/Product.php
+patching file app/code/core/Mage/Shipping/Model/Info.php
+patching file app/code/core/Mage/Widget/controllers/Adminhtml/Widget/InstanceController.php
+patching file app/code/core/Mage/XmlConnect/Block/Adminhtml/Connect/Dashboard/StoreSwitcher.php
+patching file app/design/adminhtml/default/default/template/catalog/product/attribute/options.phtml
+patching file app/design/adminhtml/default/default/template/catalog/product/attribute/set/main.phtml
+patching file app/design/adminhtml/default/default/template/customer/tab/view.phtml
+patching file app/design/adminhtml/default/default/template/customer/tab/view/sales.phtml
+patching file app/design/adminhtml/default/default/template/dashboard/store/switcher.phtml
+patching file app/design/adminhtml/default/default/template/downloadable/product/composite/fieldset/downloadable.phtml
+patching file app/design/adminhtml/default/default/template/downloadable/product/edit/downloadable/links.phtml
+patching file app/design/adminhtml/default/default/template/downloadable/sales/items/column/downloadable/creditmemo/name.phtml
+patching file app/design/adminhtml/default/default/template/downloadable/sales/items/column/downloadable/invoice/name.phtml
+patching file app/design/adminhtml/default/default/template/downloadable/sales/items/column/downloadable/name.phtml
+patching file app/design/adminhtml/default/default/template/eav/attribute/options.phtml
+patching file app/design/adminhtml/default/default/template/newsletter/preview/store.phtml
+patching file app/design/adminhtml/default/default/template/report/store/switcher.phtml
+patching file app/design/adminhtml/default/default/template/sales/order/view/info.phtml
+patching file app/design/adminhtml/default/default/template/store/switcher.phtml
+patching file app/design/adminhtml/default/default/template/store/switcher/enhanced.phtml
+patching file app/design/adminhtml/default/default/template/system/convert/profile/wizard.phtml
+patching file app/design/adminhtml/default/default/template/tax/rate/title.phtml
+patching file app/design/adminhtml/default/default/template/widget/form/renderer/fieldset.phtml
+patching file app/locale/en_US/Mage_Catalog.csv
+patching file app/locale/en_US/Mage_ImportExport.csv
+patching file lib/Zend/Mail/Transport/Sendmail.php
+
+
