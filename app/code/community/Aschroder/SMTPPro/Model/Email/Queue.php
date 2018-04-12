@@ -126,7 +126,10 @@ class Aschroder_SMTPPro_Model_Email_Queue extends Mage_Core_Model_Email_Queue {
                     Mage::logException($e);
                     Mage::setIsDeveloperMode($oldDevMode);
 
-                    return false;
+                    // @FIXME returning here causes all subsequent emails to not be sent!
+                    // let's continue instead, shall we!
+                    // return false;
+                    continue;
                 }
 
                 // after each valid message has been sent - pause if required
