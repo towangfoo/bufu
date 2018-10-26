@@ -181,6 +181,8 @@
 "Order","Order"
 "Order #%s","Order #%s"
 "Origin of the Shipment","Origin of the Shipment"
+"Field ""%s"" has wrong value.","Field ""%s"" has wrong value."
+"Method toOptionArray not found in source model.","Method toOptionArray not found in source model."
 "Origin serviceAreaCode is missing","Origin serviceAreaCode is missing"
 "Other","Other"
 "Others","Others"
