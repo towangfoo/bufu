@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+Copyright © 2017 Wyomind. All rights reserved.
+-->
+<config>
+    <modules>
+        <Wyomind_Watchlog>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Wyomind_Watchlog>
+    </modules>
+</config>

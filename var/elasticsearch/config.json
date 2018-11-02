@@ -1,0 +1,373 @@
+{
+    "default": {
+        "client_config": {
+            "enable_debug_mode": "1",
+            "enable_suggest": "1",
+            "servers": [
+                {
+                    "transport": "Http",
+                    "host": "127.0.0.1",
+                    "port": 9200,
+                    "path": "\/",
+                    "timeout": 30
+                }
+            ],
+            "verify_host": "0",
+            "timeout": "30",
+            "index_prefix": "",
+            "number_of_shards": "1",
+            "number_of_replicas": "0",
+            "safe_reindex": "1",
+            "query_operator": "AND",
+            "enable_source": "0",
+            "enable_fuzzy_query": "1",
+            "fuzzy_query_mode": "AUTO",
+            "analyze_sku": "0",
+            "alias": "konsum",
+            "enable_icu_folding": "0"
+        },
+        "config": {
+            "license": {
+                "label": "ElasticSearch",
+                "version": "4.8.1",
+                "extension_code": "els",
+                "get_online_license": "1",
+                "activation_key": "MIF6ODONJCR1IO2W0",
+                "activation_code": "8ef6e20a31d5852268e52ba906db8d3c"
+            },
+            "general": {
+                "enable_response_header": "0"
+            },
+            "autocomplete": {
+                "enable": "1",
+                "enable_fast": "1",
+                "labels": "a:0:{}",
+                "enable_suggests": "1",
+                "suggests_limit": "5"
+            },
+            "product": {
+                "auto_redirect": "1",
+                "enable": "1",
+                "enable_autocomplete": "1",
+                "autocomplete_limit": "5",
+                "image": "1",
+                "image_size": "50",
+                "enable_thumbnails_generation": "1",
+                "custom_options": "1"
+            },
+            "category": {
+                "enable": "1",
+                "enable_autocomplete": "1",
+                "autocomplete_limit": "5",
+                "enable_search": "1",
+                "limit": "",
+                "show_path": "1",
+                "attributes": "description,name"
+            },
+            "cms": {
+                "enable": "0",
+                "enable_autocomplete": "1",
+                "autocomplete_limit": "5",
+                "enable_search": "1",
+                "limit": "",
+                "attributes": "identifier,title,content_heading,content",
+                "excluded_pages": ""
+            }
+        },
+        "analyzers": [
+            "std",
+            "keyword",
+            "keyword_prefix",
+            "keyword_suffix",
+            "text_prefix",
+            "text_suffix",
+            "language"
+        ],
+        "currency_object": "a:1:{s:3:\"EUR\";O:13:\"Zend_Currency\":1:{s:11:\"\u0000*\u0000_options\";a:12:{s:8:\"position\";i:8;s:6:\"script\";N;s:6:\"format\";N;s:7:\"display\";i:2;s:9:\"precision\";i:2;s:4:\"name\";s:4:\"Euro\";s:8:\"currency\";s:3:\"EUR\";s:6:\"symbol\";s:3:\"\u20ac\";s:6:\"locale\";s:5:\"de_DE\";s:5:\"value\";i:0;s:7:\"service\";N;s:3:\"tag\";s:11:\"Zend_Locale\";}}}",
+        "currency_rate": "a:1:{s:3:\"EUR\";d:1;}",
+        "base_url": "http:\/\/bufu-shop.test\/",
+        "package": "buschfunk",
+        "theme": "",
+        "types": {
+            "product": {
+                "block": "Wyomind_Elasticsearch_Block_Autocomplete_Product",
+                "index_properties": {
+                    "name": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 5,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "analyzer": "text_prefix",
+                                "search_analyzer": "std"
+                            },
+                            "suffix": {
+                                "type": "string",
+                                "analyzer": "text_suffix",
+                                "search_analyzer": "std"
+                            }
+                        }
+                    },
+                    "weight": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "analyzer": "text_prefix",
+                                "search_analyzer": "std"
+                            },
+                            "suffix": {
+                                "type": "string",
+                                "analyzer": "text_suffix",
+                                "search_analyzer": "std"
+                            }
+                        }
+                    },
+                    "manufacturer": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "index_options": "docs",
+                        "norms": {
+                            "enabled": false
+                        },
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std",
+                                "index_options": "docs",
+                                "norms": {
+                                    "enabled": false
+                                }
+                            }
+                        }
+                    },
+                    "color": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "index_options": "docs",
+                        "norms": {
+                            "enabled": false
+                        },
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std",
+                                "index_options": "docs",
+                                "norms": {
+                                    "enabled": false
+                                }
+                            }
+                        }
+                    },
+                    "status": {
+                        "type": "integer",
+                        "ignore_malformed": true,
+                        "index": "not_analyzed"
+                    },
+                    "tax_class_id": {
+                        "type": "integer",
+                        "ignore_malformed": true,
+                        "index": "not_analyzed"
+                    },
+                    "visibility": {
+                        "type": "integer",
+                        "ignore_malformed": true,
+                        "index": "not_analyzed"
+                    },
+                    "bufu_artist": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 3,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "analyzer": "text_prefix",
+                                "search_analyzer": "std"
+                            },
+                            "suffix": {
+                                "type": "string",
+                                "analyzer": "text_suffix",
+                                "search_analyzer": "std"
+                            }
+                        }
+                    },
+                    "bufu_medium": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "index_options": "docs",
+                        "norms": {
+                            "enabled": false
+                        },
+                        "include_in_all": false,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std",
+                                "index_options": "docs",
+                                "norms": {
+                                    "enabled": false
+                                }
+                            }
+                        }
+                    },
+                    "description": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": false,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            }
+                        }
+                    },
+                    "short_description": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            }
+                        }
+                    },
+                    "bufu_tracklist": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            }
+                        }
+                    },
+                    "sku": {
+                        "type": "string",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "keyword": {
+                                "type": "string",
+                                "analyzer": "std"
+                            }
+                        }
+                    },
+                    "price": {
+                        "type": "double",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "keyword": {
+                                "type": "string",
+                                "index": "not_analyzed"
+                            }
+                        }
+                    },
+                    "rating_filter": {
+                        "type": "double",
+                        "include_in_all": true,
+                        "boost": 1
+                    },
+                    "_categories": {
+                        "type": "string",
+                        "include_in_all": true,
+                        "analyzer": "language"
+                    },
+                    "_parent_ids": {
+                        "type": "integer",
+                        "store": true,
+                        "index": "no"
+                    },
+                    "_url": {
+                        "type": "string",
+                        "store": true,
+                        "index": "no"
+                    }
+                },
+                "filter": "Wyomind_Elasticsearch_Helper_Filter_Product",
+                "additional_fields": [
+                    "_parent_ids"
+                ]
+            },
+            "category": {
+                "block": "Wyomind_Elasticsearch_Block_Autocomplete_Category",
+                "index_properties": {
+                    "description": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            }
+                        }
+                    },
+                    "name": {
+                        "type": "string",
+                        "analyzer": "language",
+                        "include_in_all": true,
+                        "boost": 1,
+                        "fields": {
+                            "std": {
+                                "type": "string",
+                                "analyzer": "std"
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "analyzer": "text_prefix",
+                                "search_analyzer": "std"
+                            },
+                            "suffix": {
+                                "type": "string",
+                                "analyzer": "text_suffix",
+                                "search_analyzer": "std"
+                            }
+                        }
+                    },
+                    "_url": {
+                        "type": "string",
+                        "store": true,
+                        "index": "no"
+                    },
+                    "_path": {
+                        "type": "string",
+                        "store": true,
+                        "index": "no"
+                    }
+                },
+                "filter": "Wyomind_Elasticsearch_Helper_Filter_Category",
+                "additional_fields": []
+            }
+        }
+    }
+}
