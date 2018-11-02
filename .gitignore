@@ -12,6 +12,7 @@ var/export
 var/log
 var/report
 var/tmp
+var/backups
 media
 media/catalog
 media/tmp
