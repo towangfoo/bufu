@@ -1616,6 +1616,7 @@ td.attributes-col p.artist-name { font-style:italic; font-size:0.9em; }
 
 .shopping-cart-totals .checkout-types { padding:8px 15px 15px; }
 .shopping-cart-totals .checkout-types li { clear:both;  margin:0; }
+.shopping-cart-totals .checkout-types .paypal-or { display: block; margin-top: 1em; }
 
 .checkoutNotice {
 	float:left;

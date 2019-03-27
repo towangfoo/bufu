@@ -15,7 +15,11 @@
     <h2><?php echo $this->__('My Shopping Cart') ?></h2>
     <?php if(!$this->hasError()): ?>
     <ul class="checkout-types">
-        <?php echo $this->getChildHtml('top_methods') ?>
+    <?php foreach ($this->getMethods('top_methods') as $method): ?>
+        <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+        <li><?php echo $methodHtml; ?></li>
+        <?php endif; ?>
+    <?php endforeach; ?>
     </ul>
     <?php endif; ?>
 </div>
@@ -102,7 +106,11 @@
     <?php echo $this->getChildHtml('totals'); ?>
     <?php if(!$this->hasError()): ?>
     <ul class="checkout-types">
-        <?php echo $this->getChildHtml('methods') ?>
+    <?php foreach ($this->getMethods('methods') as $method): ?>
+        <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+        <li><?php echo $methodHtml; ?></li>
+        <?php endif; ?>
+    <?php endforeach; ?>
     </ul>
     <?php endif; ?>
 </div>
