@@ -185,11 +185,16 @@ class Bufu_Tickets_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Get event model from a product which hasTicketOptions() === true !!!
      *
-     * @return Bufu_Tickets_Model_Event
+     * @return Bufu_Tickets_Model_Event | null
      */
     public function getEventFromTicketProduct(Mage_Sales_Model_Quote_Item $product)
     {
-        $event = Mage::getModel('bufu_tickets/event')->load($product->getProduct()->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID)->getValue());
+        $customOption = $product->getProduct()->getCustomOption(Bufu_Tickets_Helper_Data::OPTION_EVENT_ID);
+        if (!$customOption) {
+          return null;
+        }
+
+        $event = Mage::getModel('bufu_tickets/event')->load($customOption->getValue());
         return $event;
     }
 
