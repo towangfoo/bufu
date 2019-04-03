@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2019 Amasty (https://www.amasty.com)
+ * @package Amasty_Orderarchive
+ */
+-->
+<config>
+    <modules>
+        <Amasty_Orderarchive>
+            <active>true</active>
+            <codePool>local</codePool>
+            <edition>community</edition>
+            <depends>
+                <Amasty_Base/>
+                <Mage_Sales/>
+            </depends>
+        </Amasty_Orderarchive>
+    </modules>
+</config>

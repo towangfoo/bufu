@@ -1,0 +1,15 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2019 Amasty (https://www.amasty.com)
+ * @package Amasty_Orderarchive
+ */
+?>
+<script>
+    function startArchiving() {
+        $('amorderarchive_button_archiving').disable();
+        window.location.href = '<?php echo $this->getUrl('*/ajax/archiving');?>';
+    }
+</script>
+
+<?php echo $this->getButtonHtml();

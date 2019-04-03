@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2019 Amasty (https://www.amasty.com)
+ * @package Amasty_Orderarchive
+ */
+-->
+
+<config>
+    <menu>
+        <sales>
+            <children>
+                <amorderarchive translate="title" module="amorderarchive">
+                    <title>Archive Orders</title>
+                    <action>adminhtml/orderArchive</action>
+                    <sort_order>15</sort_order>
+                </amorderarchive>
+            </children>
+        </sales>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <sales>
+                        <children>
+                            <amorderarchive translate="title" module="amorderarchive">
+                                <title>Archive Orders</title>
+                                <sort_order>400</sort_order>
+                                <children>
+                                    <actions translate="title">
+                                        <title>Actions</title>
+                                        <children>
+                                            <add_to_archive translate="title"><title>Add to Archive</title></add_to_archive>
+                                            <remove_from_archive translate="title"><title>Remove from Archive</title></remove_from_archive>
+                                            <remove_permanently translate="title"><title>Delete Permanently</title></remove_permanently>
+                                        </children>
+                                    </actions>
+                                </children>
+                            </amorderarchive>
+                        </children>
+                    </sales>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <amorderarchive translate="title" module="amorderarchive">
+                                        <title>Archive Orders</title>
+                                    </amorderarchive>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+
+    <translate>
+        <modules>
+            <Amasty_Orderarchive>
+                <files>
+                    <default>Amasty_Orderarchive.csv</default>
+                </files>
+            </Amasty_Orderarchive>
+        </modules>
+    </translate>
+</config>

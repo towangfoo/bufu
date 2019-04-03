@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2019 Amasty (https://www.amasty.com)
+ * @package Amasty_Orderarchive
+ */
+-->
+<layout>
+    <adminhtml_orderarchive_index>
+        <reference name="content">
+            <block type="amorderarchive/adminhtml_orderArchive" name="amorderarchive.gridarchive.container" />
+        </reference>
+    </adminhtml_orderarchive_index>
+</layout>
