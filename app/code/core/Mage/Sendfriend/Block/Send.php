@@ -97,7 +97,11 @@ class Mage_Sendfriend_Block_Send extends Mage_Core_Block_Template
     {
         $data = $this->getData('form_data');
         if (!$data instanceof Varien_Object) {
+            $formData = Mage::getSingleton('catalog/session')->getFormData(true);
             $data = new Varien_Object();
+            if ($formData) {
+                $data->addData($formData);
+            }
             $this->setData('form_data', $data);
         }
 
@@ -147,6 +151,16 @@ class Mage_Sendfriend_Block_Send extends Mage_Core_Block_Template
     public function getMaxRecipients()
     {
         return Mage::helper('sendfriend')->getMaxRecipients();
+    }
+
+    /**
+     * Retrieve count of recipients
+     *
+     * @return int
+     */
+    public function getRecipientsCount()
+    {
+        return count($this->getFormData()->getData('recipients/email'));
     }
 
     /**
