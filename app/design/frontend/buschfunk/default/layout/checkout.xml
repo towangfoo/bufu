@@ -273,8 +273,9 @@ One page checkout main layout
         </reference>
         <reference name="left">
             <action method="unsetChildren"></action>
-            <block type="core/template" name="checkout.backtoshop" before="-" template="checkout/onepage/backtoshop.phtml" />
+            <!--<block type="core/template" name="checkout.backtoshop" before="-" template="checkout/onepage/backtoshop.phtml" />-->
             <block type="checkout/onepage_progress" name="checkout.progress" after="checkout.backtoshop" template="checkout/onepage/progress.phtml"/>
+            <block type="core/template" name="opc.ssl_seal" after="-" template="checkout/ssl-seal.phtml"/>
             <block type="cms/block" name="additional_links" after="-">
                 <action method="setBlockId"><block_id>additional_links</block_id></action>
             </block>

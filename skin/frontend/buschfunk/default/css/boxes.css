@@ -1883,6 +1883,13 @@ tr.grand_total td, p.grand_total { padding-top:5px; padding-bottom:5px; }
     text-align:center;
 }
 
+/** PayPal Express Checkout Review Step **/
+.one-page-checkout .section.margin-top { margin-top: 15px; }
+.one-page-checkout .box.info-set .box-title { font-size: 14px; font-weight: bold; margin: 0; }
+.one-page-checkout .box.info-set .box-content { margin-top: 6px; }
+.paypal-express-checkout-review-agreements { margin-top: 30px; }
+
+
 /* Multiple Addresses checkout */
 .multi-address-checkout-description {
     margin-top:-15px;

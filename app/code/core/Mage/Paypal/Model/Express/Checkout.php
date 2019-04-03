@@ -432,14 +432,15 @@ class Mage_Paypal_Model_Express_Checkout
             if ($shippingAddress) {
                 if ($exportedShippingAddress) {
                     $this->_setExportedAddressData($shippingAddress, $exportedShippingAddress);
-
-                    if ($quote->getPayment()->getAdditionalInformation(self::PAYMENT_INFO_BUTTON) == 1) {
-                        // PayPal doesn't provide detailed shipping info: prefix, middlename, lastname, suffix
-                        $shippingAddress->setPrefix(null);
-                        $shippingAddress->setMiddlename(null);
-                        $shippingAddress->setLastname(null);
-                        $shippingAddress->setSuffix(null);
-                    }
+                    // Patched to set both first and lastname from PayPal
+                    // @see https://magento.stackexchange.com/questions/99884/paypal-express-firstname-and-lastname-instead-of-shiptoname
+                    // if ($quote->getPayment()->getAdditionalInformation(self::PAYMENT_INFO_BUTTON) == 1) {
+                    //     // PayPal doesn't provide detailed shipping info: prefix, middlename, lastname, suffix
+                    //     $shippingAddress->setPrefix(null);
+                    //     $shippingAddress->setMiddlename(null);
+                    //     $shippingAddress->setLastname(null);
+                    //     $shippingAddress->setSuffix(null);
+                    // }
 
                     $shippingAddress->setCollectShippingRates(true);
                     $shippingAddress->setSameAsBilling(0);

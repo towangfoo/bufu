@@ -1231,10 +1231,16 @@ class Mage_Paypal_Model_Api_Nvp extends Mage_Paypal_Model_Api_Abstract
             $shippingAddress = clone $address;
             Varien_Object_Mapper::accumulateByMap($data, $shippingAddress, $this->_shippingAddressMap);
             $this->_applyStreetAndRegionWorkarounds($shippingAddress);
-            // PayPal doesn't provide detailed shipping name fields, so the name will be overwritten
-            $shippingAddress->addData(array(
-                'firstname'  => $data['SHIPTONAME'],
-            ));
+            // // PayPal doesn't provide detailed shipping name fields, so the name will be overwritten
+            // $shippingAddress->addData(array(
+            //     'firstname'  => $data['SHIPTONAME'],
+            // ));
+            // Patched to set both first and lastname from PayPal
+            // @see https://magento.stackexchange.com/questions/99884/paypal-express-firstname-and-lastname-instead-of-shiptoname
+            $shiptofirstname = substr($data['SHIPTONAME'], 0, strrpos($data['SHIPTONAME'], ' '));
+            $shiptolastname  = substr($data['SHIPTONAME'], strrpos($data['SHIPTONAME'], ' ') + 1);
+            $shippingAddress->setFirstname($shiptofirstname);
+            $shippingAddress->setLastname($shiptolastname);
             $this->setExportedShippingAddress($shippingAddress);
         }
     }
