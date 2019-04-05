@@ -20,96 +20,113 @@
  *
  * @category   RicoNeitzel
  * @package    RicoNeitzel_PaymentFilter
- * @copyright  Copyright (c) 2010 Vinai Kopp http://netzarbeiter.com/
+ * @copyright  Copyright (c) 2011 Vinai Kopp http://netzarbeiter.com/
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
+
 class RicoNeitzel_PaymentFilter_Model_Config_Source_Payment_Methods
-	extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
+    extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
 {
-	protected $_options;
+    protected $_options;
 
-	protected $_storeCode = Mage_Core_Model_Store::ADMIN_CODE;
+    protected $_storeCode = Mage_Core_Model_Store::ADMIN_CODE;
 
-	public function toOptionArray()
-	{
-		if (!$this->_options)
-		{
-			$store = Mage::app()->getStore($this->_storeCode);
-			$this->_options = Mage::helper('payfilter')->getPaymentMethodOptions($store->getId());
-		}
-		return $this->_options;
-	}
+    public function toOptionArray()
+    {
+        if (!$this->_options) {
+            $store = Mage::app()->getStore($this->_storeCode);
+            $this->_options = Mage::helper('payfilter')->getPaymentMethodOptions($store->getId());
+        }
+        return $this->_options;
+    }
 
-	public function getAllOptions()
-	{
-		return $this->toOptionArray();
-	}
+    public function getAllOptions()
+    {
+        return $this->toOptionArray();
+    }
 
-	/**
-	 * Bugfix for Magento 1.3 - do not return the option array entry, only the label.
-	 *
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function getOptionText($value)
-	{
-		$option = parent::getOptionText($value);
-		if (is_array($option) && isset($option['label']))
-		{
-			$option = $option['label'];
-		}
-		return $option;
-	}
+    /**
+     * Get a text for option value
+     *
+     * @param string|integer $value
+     * @return string
+     */
+    public function getOptionText($value)
+    {
+        $isMultiple = false;
+        if (strpos($value, ',')) {
+            $isMultiple = true;
+            $value = explode(',', $value);
+        }
 
-	/**
-	 * Retrieve Column(s) for Flat Catalog
-	 *
-	 * @return array
-	 */
-	public function getFlatColums()
-	{
-		$columns = array();
-		$columns[$this->getAttribute()->getAttributeCode()] = array(
-			'type'      => 'varchar(255)',
-			'unsigned'  => false,
-			'is_null'   => true,
-			'default'   => null,
-			'extra'     => null
-		);
+        $options = $this->getAllOptions();
 
-		return $columns;
-	}
+        if ($isMultiple) {
+            $values = array();
+            foreach ($options as $item) {
+                if (in_array($item['value'], $value)) {
+                    $values[] = $item['label'];
+                }
+            }
+            return $values;
+        } else {
+            foreach ($options as $item) {
+                if ($item['value'] == $value) {
+                    return $item['label'];
+                }
+            }
+            return false;
+        }
+    }
 
-	/**
-	 * Retrieve Indexes for Flat Catalog
-	 *
-	 * @return array
-	 */
-	public function getFlatIndexes()
-	{
-		$indexes = array();
+    /**
+     * Retrieve Column(s) for Flat Catalog
+     *
+     * @return array
+     */
+    public function getFlatColums()
+    {
+        $columns = array();
+        $columns[$this->getAttribute()->getAttributeCode()] = array(
+            'type' => 'varchar(255)',
+            'unsigned' => false,
+            'is_null' => true,
+            'default' => null,
+            'extra' => null
+        );
 
-		$index = 'IDX_' . strtoupper($this->getAttribute()->getAttributeCode());
-		$indexes[$index] = array(
-			'type'      => 'index',
-			'fields'    => array($this->getAttribute()->getAttributeCode())
-		);
+        return $columns;
+    }
 
-		$sortable   = $this->getAttribute()->getUsedForSortBy();
+    /**
+     * Retrieve Indexes for Flat Catalog
+     *
+     * @return array
+     */
+    public function getFlatIndexes()
+    {
+        $indexes = array();
 
-		return $indexes;
-	}
+        $index = 'IDX_' . strtoupper($this->getAttribute()->getAttributeCode());
+        $indexes[$index] = array(
+            'type' => 'index',
+            'fields' => array($this->getAttribute()->getAttributeCode())
+        );
 
-	/**
-	 * Retrieve Select For Flat Attribute update
-	 *
-	 * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
-	 * @param int $store
-	 * @return Varien_Db_Select|null
-	 */
-	public function getFlatUpdateSelect($store)
-	{
-		return Mage::getResourceModel('eav/entity_attribute_option')
-			->getFlatUpdateSelect($this->getAttribute(), $store);
-	}
+        //$sortable = $this->getAttribute()->getUsedForSortBy();
+
+        return $indexes;
+    }
+
+    /**
+     * Retrieve Select For Flat Attribute update
+     *
+     * @param int $store
+     * @return Varien_Db_Select|null
+     */
+    public function getFlatUpdateSelect($store)
+    {
+        return Mage::getResourceModel('eav/entity_attribute_option')
+            ->getFlatUpdateSelect($this->getAttribute(), $store);
+    }
 }

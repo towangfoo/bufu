@@ -20,30 +20,34 @@
  *
  * @category   RicoNeitzel
  * @package    RicoNeitzel_PaymentFilter
- * @copyright  Copyright (c) 2010 Vinai Kopp http://netzarbeiter.com/
+ * @copyright  Copyright (c) 2011 Vinai Kopp http://netzarbeiter.com/
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 /**
- * Backend model for attribute with multiple values, Netzarbeiter_ProductPayments version
+ * Backend model for attribute with multiple values, RicoNeitzel_PaymentFilter version
  *
- * @category   Netzarbeiter
- * @package    Netzarbeiter_ProductPayments
+ * @category   RicoNeitzel
+ * @package    RicoNeitzel_PaymentFilter
  * @author     Vinai Kopp <vinai@netzarbeiter.com>
  */
 class RicoNeitzel_PaymentFilter_Model_Entity_Backend_Payment_Methods
-	extends Mage_Eav_Model_Entity_Attribute_Backend_Array
+    extends Mage_Eav_Model_Entity_Attribute_Backend_Array
 {
     public function beforeSave($object)
     {
         $data = $object->getData($this->getAttribute()->getAttributeCode());
-        
-        if (! isset($data)) $data = array();
-		elseif (is_string($data)) $data = explode(',', $data);
-		elseif (! is_array($data)) $data = array();
-		
+
+        if (!isset($data)) {
+            $data = array();
+        } elseif (is_string($data)) {
+            $data = explode(',', $data);
+        } elseif (!is_array($data)) {
+            $data = array();
+        }
+
         $object->setData($this->getAttribute()->getAttributeCode(), $data);
-		
+
         /**
          * Mage_Eav_Model_Entity_Attribute_Backend_Array::beforeSave() makes a string from the array values
          */

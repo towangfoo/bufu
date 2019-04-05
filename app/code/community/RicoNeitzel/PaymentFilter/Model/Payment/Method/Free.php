@@ -24,8 +24,21 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-$this->startSetup();
+class RicoNeitzel_PaymentFilter_Model_Payment_Method_Free
+    extends Mage_Payment_Model_Method_Free
+{
+    /**
+     * Temporary fix
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function isAvailable($quote = null)
+    {
+        if (is_null($quote)) {
+            $quote = Mage::getModel('sales/quote')->setGrandTotal(0);
+        }
+        return parent::isAvailable($quote);
+    }
 
-$this->updateAttribute('catalog_product', 'product_payment_methods', 'is_filterable_in_search', '0');
-
-$this->endSetup();
+}
