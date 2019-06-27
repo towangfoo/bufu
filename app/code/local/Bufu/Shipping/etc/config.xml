@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Bufu_Shipping>
-			<version>0.2.0</version>
+			<version>0.3.0</version>
 		</Bufu_Shipping>
 	</modules>
 	<global>
@@ -19,6 +19,19 @@
 			</shipping>
 		</models>
 	</global>
+	<frontend>
+		<events>
+			<checkout_cart_save_before>
+					<observers>
+							<bufu_set_default_shipping_method>
+									<type>singleton</type>
+									<class>Bufu_Shipping_Model_Observer</class>
+									<method>checkout_cart_save_before</method>
+							</bufu_set_default_shipping_method>
+					</observers>
+			</checkout_cart_save_before>
+		</events>
+	</frontend>
 	<default>
 		<carriers>
 			<tablerate>
