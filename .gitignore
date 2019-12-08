@@ -21,3 +21,4 @@ media/useruploads
 project.xml
 project.properties
 .idea/
+**/.DS_Store
