@@ -6,6 +6,7 @@ networks:
 
 services:
   mysql:
+    container_name: konsum_mysql
     image: bufu/konsum-mysql
     build:
       context: .
@@ -24,6 +25,7 @@ services:
       - backend
 
   nginx:
+    container_name: konsum_nginx
     image: bufu/konsum-nginx
     build:
       context: .
@@ -49,6 +51,7 @@ services:
           - ${APP_HOST}
 
   php-fpm:
+    container_name: konsum_phpfpm
     image: bufu/konsum-php-fpm
     build:
       context: .
@@ -68,7 +71,21 @@ services:
     networks:
       - backend
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: konsum_phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
+    networks:
+      - backend
+
   workspace:
+    container_name: konsum_workspace
     image: bufu/konsum-workspace
     build:
       context: .
