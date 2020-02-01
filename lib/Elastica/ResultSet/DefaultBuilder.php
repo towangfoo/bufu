@@ -41,7 +41,7 @@ class DefaultBuilder implements BuilderInterface
         }
 
         foreach ($data['hits']['hits'] as $hit) {
-            $results[] = new Rewsult($hit);
+            $results[] = new Result($hit);
         }
 
         return $results;
