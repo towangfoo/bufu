@@ -20,7 +20,6 @@ RUN /tmp/scripts/install_software.sh
 
 # nginx config
 COPY ${SERVICE_DIR}/nginx.conf /etc/nginx/
-ARG APP_USER
 RUN /tmp/scripts/modify_config.sh /etc/nginx/nginx.conf \
     "__APP_USER" \
     "${APP_USER}" \
@@ -30,13 +29,14 @@ RUN /tmp/scripts/modify_config.sh /etc/nginx/nginx.conf \
 ;
 
 # nginx app config
-COPY ${SERVICE_DIR}/sites-available/* /etc/nginx/sites-available/
+ARG NGINX_HOSTNAME
 ARG NGINX_ROOT
+
+COPY ${SERVICE_DIR}/sites-available/* /etc/nginx/sites-available/
 RUN /tmp/scripts/modify_config.sh /etc/nginx/sites-available/default.conf \
     "__NGINX_ROOT" \
     "${NGINX_ROOT}" \
-;
-RUN /tmp/scripts/modify_config.sh /etc/nginx/sites-available/default.conf \
+ && /tmp/scripts/modify_config.sh /etc/nginx/sites-available/default.conf \
     "__NGINX_HOSTNAME" \
     "${NGINX_HOSTNAME}" \
 ;

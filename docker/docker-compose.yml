@@ -31,13 +31,12 @@ services:
       context: .
       dockerfile: ./nginx/Dockerfile
       args:
-        - APP_CODE_PATH=${APP_CODE_PATH_CONTAINER}
         - APP_GROUP=${APP_GROUP}
         - APP_GROUP_ID=${APP_GROUP_ID}
         - APP_USER=${APP_USER}
         - APP_USER_ID=${APP_USER_ID}
         - NGINX_HOSTNAME=${NGINX_HOSTNAME}
-        - NGINX_ROOT=${NGINX_ROOT}
+        - NGINX_ROOT=${APP_CODE_PATH_CONTAINER}
         - TZ=${TIMEZONE}
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
