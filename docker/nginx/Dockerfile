@@ -36,6 +36,10 @@ RUN /tmp/scripts/modify_config.sh /etc/nginx/sites-available/default.conf \
     "__NGINX_ROOT" \
     "${NGINX_ROOT}" \
 ;
+RUN /tmp/scripts/modify_config.sh /etc/nginx/sites-available/default.conf \
+    "__NGINX_HOSTNAME" \
+    "${NGINX_HOSTNAME}" \
+;
 
 # workdir
 WORKDIR /etc/nginx/
